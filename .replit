@@ -1,0 +1,20 @@
+run = "vite"
+entrypoint = "index.html"
+hidden = [".config"]
+modules = ["nodejs-18", "web"]
+
+[nix]
+channel = "stable-23_05"
+
+[deployment]
+deploymentTarget = "static"
+build = ["npm", "run", "build"]
+publicDir = "dist"
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
+localPort = 5173
+externalPort = 80
