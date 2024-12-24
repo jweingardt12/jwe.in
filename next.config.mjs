@@ -3,7 +3,7 @@ import withMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'export',
   images: { 
     unoptimized: true,
     domains: ['substackcdn.com'],
