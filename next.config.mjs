@@ -3,14 +3,11 @@ import withMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export', // Enable static export
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'substackcdn.com',
-      },
-    ],
+    unoptimized: true,
+    domains: ['substackcdn.com'],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
