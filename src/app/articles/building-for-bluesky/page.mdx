@@ -1,3 +1,4 @@
+
 import { ArticleLayout } from '@/components/ArticleLayout'
 import Image from 'next/image'
 import eggs from './eggs.png'
@@ -7,15 +8,15 @@ export const article = {
   date: '2023-12-24',
   title: 'Building for Bluesky',
   description:
-    'When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn't anticipated.'
+    'When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn\'t anticipated.'
 }
 
-<ArticleLayout article={article}>
-  When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn't anticipated.
+export default (props) => <ArticleLayout article={article} {...props} />
 
-  <Image 
-    src={eggs} 
-    alt="Screenshot of app" 
-    className="rounded-md"
-  />
-</ArticleLayout>
+When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn't anticipated.
+
+<Image 
+  src={eggs} 
+  alt="Screenshot of app" 
+  className="rounded-md"
+/>
