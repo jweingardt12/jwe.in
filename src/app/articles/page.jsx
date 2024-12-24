@@ -1,4 +1,3 @@
-'use client'
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
