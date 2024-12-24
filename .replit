@@ -8,9 +8,9 @@ modules = ["nodejs-18:v18-20230807-bd784b9"]
 channel = "stable-23_05"
 
 [deployment]
-build = ["sh", "-c", "next build"]
+build = ["sh", "-c", "npm run build"]
 deploymentTarget = "static"
-publicDir = "/public"
+publicDir = "out/"
 
 [languages]
 [languages.javascript]
