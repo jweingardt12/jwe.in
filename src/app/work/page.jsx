@@ -57,14 +57,14 @@ function HeroSection() {
               visibleParts[0] ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            What&nbsp;I've&nbsp;done.
+            What&nbsp;I&apos;ve&nbsp;done.
           </span>{' '}
           <span
             className={`transition-opacity duration-300 ${
               visibleParts[1] ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            Where&nbsp;I've&nbsp;done&nbsp;it.
+            Where&nbsp;I&apos;ve&nbsp;done&nbsp;it.
           </span>
           <span
             className={`block mt-2 relative transition-opacity duration-300 ${
@@ -82,16 +82,16 @@ function HeroSection() {
           </span>
         </h1>
         <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-          I've been lucky enough to work at some of the fastest-growing tech
-          companies, where I've built products that changed industries and
-          people’s lives.
+          I&apos;ve been lucky enough to work at some of the fastest-growing tech
+          companies, where I&apos;ve built products that changed industries and
+          people&apos;s lives.
         </p>
       </div>
 
       {/* Image Section */}
       <div className="mt-12 mx-auto max-w-2xl">
         <div className="rounded-xl bg-gray-900/5 p-2 ring-1 ring-gray-900/10 dark:ring-gray-700">
-          <img
+          <Image
             alt="App screenshot"
             src="https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd97c08c-ff80-4bfb-9d76-5aad2413d17d_1600x890.png"
             className="w-full rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-700"
