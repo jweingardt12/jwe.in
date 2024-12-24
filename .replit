@@ -1,32 +1,19 @@
-run = "vite"
-entrypoint = "index.html"
-hidden = [".config"]
-modules = ["nodejs-18", "web"]
+
+run = "npm run dev"
+entrypoint = "src/app/page.jsx"
+hidden = [".config", "package-lock.json"]
+modules = ["nodejs-18:v18-20230807-bd784b9"]
 
 [nix]
 channel = "stable-23_05"
 
 [deployment]
-deploymentTarget = "static"
-build = ["sh", "-c", "npm run dev"]
-publicDir = ".next"
+build = ["npm", "run", "build"]
+run = ["npm", "start"]
+deploymentTarget = "cloudrun"
 
-[[ports]]
-localPort = 3000
-externalPort = 3000
-
-[[ports]]
-localPort = 5173
-externalPort = 80
-
-[workflows]
-runButton = "Build site"
-
-[[workflows.workflow]]
-name = "Build site"
-mode = "sequential"
-author = 38214105
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
+[languages]
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+[languages.javascript.languageServer]
+start = "typescript-language-server --stdio"
