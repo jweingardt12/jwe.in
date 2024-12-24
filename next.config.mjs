@@ -20,9 +20,8 @@ const nextConfig = {
   },
   // Enable dynamic rendering for articles routes
   experimental: {
-    appDir: true,
-  },
-  dynamicParams: true
+    mdxRs: true
+  }
 }
 
 export default withMDX()(nextConfig)
