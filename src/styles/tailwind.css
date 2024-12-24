@@ -2,3 +2,36 @@
 @import 'tailwindcss/components';
 @import './prism.css';
 @import 'tailwindcss/utilities';
+
+/* Fade out and move down */
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(1rem); /* Moves down */
+  }
+}
+
+/* Fade in and move up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem); /* Starts from below */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+.animate-fade-out-down {
+  animation: fadeOutDown 0.5s ease-in-out;
+}

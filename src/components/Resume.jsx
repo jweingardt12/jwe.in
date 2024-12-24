@@ -78,7 +78,7 @@ export function Resume({ resume }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-zinc-800">
             <h3 className="mb-4 text-lg font-medium text-zinc-900 dark:text-zinc-100">
-              Why are you downloading my CV?
+              Quickk ask - who are you?
             </h3>
             <div className="space-y-3">
               {[

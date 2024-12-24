@@ -8,6 +8,9 @@ import logoHelioStream from '@/images/logos/helio-stream.svg'
 import logoOpenShuttle from '@/images/logos/open-shuttle.svg'
 import logoPlanetaria from '@/images/logos/planetaria.svg'
 
+
+
+
 const projects = [
   {
     name: 'Planetaria',
@@ -95,4 +98,93 @@ export default function Projects() {
       </ul>
     </SimpleLayout>
   )
+}
+function Resume() {
+  const resume = [
+    {
+      company: 'CloudKitchens',
+      title: 'Product Manager',
+      logo: logoPlanetaria,
+      start: '2020',
+      end: {
+        label: 'Present',
+        dateTime: new Date().getFullYear().toString(),
+      },
+    },
+    {
+      company: 'Ritual',
+      title: 'Regional GM',
+      logo: logoRitual,
+      start: '2017',
+      end: '2020',
+    },
+    {
+      company: 'Countable',
+      title: 'Growth Lead',
+      logo: logoCountable,
+      start: '2015',
+      end: '2017',
+    },
+    {
+      company: 'Uber',
+      title: 'Launcher',
+      logo: logoUber,
+      start: '2013',
+      end: '2015',
+    },
+  ];
+
+  return (
+    <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+      <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <MailIcon className="h-6 w-6 flex-none" />
+        <span className="ml-3">Where I've been</span>
+      </h2>
+      <ol className="mt-6 space-y-4">
+        {resume.map((role, index) => (
+          <li key={index} className="flex gap-4">
+            {/* Company Logo */}
+            <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+              <Image src={role.logo} alt="" className="h-7 w-7" unoptimized />
+            </div>
+            {/* Role Details */}
+            <dl className="flex flex-auto flex-wrap gap-x-2">
+              <dt className="sr-only">Company</dt>
+              <dd className="w-full text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                {role.company}
+              </dd>
+              <dt className="sr-only">Role</dt>
+              <dd className="text-xs text-zinc-500 dark:text-zinc-400">
+                {role.title}
+              </dd>
+              <dt className="sr-only">Date</dt>
+              <dd
+                className="ml-auto text-xs text-zinc-400 dark:text-zinc-500"
+                aria-label={`${role.start} to ${role.end.label || role.end}`}
+              >
+                <time dateTime={role.start}>{role.start}</time> —{' '}
+                <time dateTime={role.end.dateTime || role.end}>
+                  {role.end.label || role.end}
+                </time>
+              </dd>
+            </dl>
+          </li>
+        ))}
+      </ol>
+      <Button href="#" variant="secondary" className="group mt-6 w-full">
+        Download CV
+        <svg
+          className="h-4 w-4 ml-2 stroke-zinc-400 transition group-hover:stroke-zinc-600 dark:group-hover:stroke-zinc-50"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 5v14m-7-7h14"></path>
+        </svg>
+      </Button>
+    </div>
+  );
 }
