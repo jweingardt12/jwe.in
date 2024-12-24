@@ -2,6 +2,8 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-template-curly-in-string": "off"
+    "no-template-curly-in-string": "off",
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-img-element": "off"
   }
 }
