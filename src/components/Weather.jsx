@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Weather } from '@/components/Weather';
 import Image from 'next/image';
 import avatarImage from '@/images/avatar.jpg';

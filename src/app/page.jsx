@@ -57,7 +57,7 @@ export default async function Home() {
             Jason Weingardt
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            I’m Jason, a product manager based in Washington. I’m the founder and CEO of Planetaria, where we develop
+            I'm Jason, a product manager based in Washington. I’m the founder and CEO of Planetaria, where we develop
             technologies that empower regular people to explore space on their
             own terms.
           </p>

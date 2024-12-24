@@ -81,8 +81,8 @@ function HeroSection() {
           </span>
         </h1>
         <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-          I’ve been lucky enough to work at some of the fastest-growing tech
-          companies, where I’ve built products that changed industries and
+          I've been lucky enough to work at some of the fastest-growing tech
+          companies, where I've built products that changed industries and
           people’s lives.
         </p>
       </div>

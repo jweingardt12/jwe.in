@@ -9,11 +9,15 @@ channel = "stable-23_05"
 
 [deployment]
 build = ["npm", "run", "build"]
-run = ["npm", "start"]
-deploymentTarget = "cloudrun"
+deploymentTarget = "static"
+publicDir = ".next"
 
 [languages]
 [languages.javascript]
 pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
 [languages.javascript.languageServer]
 start = "typescript-language-server --stdio"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

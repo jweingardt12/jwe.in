@@ -1,4 +1,7 @@
 import Image from 'next/image'
+import { MailIcon } from '@heroicons/react/outline'
+import { Button } from '@/components/Button';
+import Link from 'next/link';
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
@@ -62,7 +65,7 @@ function LinkIcon(props) {
 
 export const metadata = {
   title: 'Projects',
-  description: 'Things I’ve made trying to put my dent in the universe.',
+  description: 'Things I made trying to put my dent in the universe.',
 }
 
 export default function Projects() {
