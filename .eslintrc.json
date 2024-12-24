@@ -1,3 +1,24 @@
-{
-  "extends": "next/core-web-vitals"
-}
+import { FlatCompat } from '@eslint/eslintrc'
+
+// Initialize FlatCompat for backward compatibility
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname, // Make sure Node.js >= 20.11.0 for `import.meta.dirname`
+})
+
+const eslintConfig = [
+  {
+    // Extend core-web-vitals rules
+    extends: ['next/core-web-vitals'],
+  },
+  ...compat.config({
+    // Extend Next.js rules
+    extends: ['next'],
+    rules: {
+      // Customize rules
+      'react/no-unescaped-entities': 'off',
+      '@next/next/no-page-custom-font': 'off',
+    },
+  }),
+]
+
+export default eslintConfig
