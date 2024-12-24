@@ -1,23 +1,12 @@
 
-import createMDX from '@next/mdx'
- 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-    providerImportSource: "@mdx-js/react"
-  },
-})
- 
+import withMDX from '@next/mdx'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
     domains: ['substackcdn.com'],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  }
+  },
 }
- 
-export default withMDX(nextConfig)
+
+export default withMDX()(nextConfig)
