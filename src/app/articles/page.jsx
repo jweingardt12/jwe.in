@@ -33,7 +33,11 @@ function Article({ article }) {
   )
 }
 
-export { metadata } from './metadata'
+export const metadata = {
+  title: 'Articles',
+  description:
+    'All of my long-form thoughts on programming, leadership, product design, and more, collected in chronological order.',
+}
 
 export default async function ArticlesIndex() {
   let articles = await getAllArticles()
