@@ -21,7 +21,7 @@ const nextConfig = {
     outputFileTracingIncludes: {
       '/articles/*': ['./src/app/articles/**/*.mdx'],
     },
-  },
+  }
 }
 
 const withMDX = nextMDX({
@@ -32,4 +32,13 @@ const withMDX = nextMDX({
   },
 })
 
-export default withMDX(nextConfig)
+export default withMDX({
+  ...nextConfig,
+  // Add these settings for static export
+  trailingSlash: true,
+  images: {
+    ...nextConfig.images,
+    loader: 'custom',
+    loaderFile: './image-loader.js',
+  }
+})
