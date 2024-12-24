@@ -3,7 +3,7 @@ import withMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Enable static export
+  output: 'export',
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
     unoptimized: true,
@@ -18,6 +18,12 @@ const nextConfig = {
     }
     return config
   },
+  // Enable dynamic rendering for articles routes
+  experimental: {
+    staticPaths: {
+      '/articles/building-for-bluesky': { dynamic: 'force-dynamic' }
+    }
+  }
 }
 
 export default withMDX()(nextConfig)
