@@ -5,7 +5,12 @@ import withMDX from '@next/mdx'
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
-    domains: ['substackcdn.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'substackcdn.com',
+      },
+    ],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
