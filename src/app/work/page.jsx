@@ -2,6 +2,7 @@
 import { SimpleLayout } from '@/components/SimpleLayout';
 import { Container } from '@/components/Container';
 import { useEffect, useState } from 'react';
+import Image from 'next/image'; // Import the Image component
 
 const timeline = [
   {
@@ -90,10 +91,12 @@ function HeroSection() {
       {/* Image Section */}
       <div className="mt-12 mx-auto max-w-2xl">
         <div className="rounded-xl bg-gray-900/5 p-2 ring-1 ring-gray-900/10 dark:ring-gray-700">
-          <img
+          <Image
             alt="App screenshot"
             src="https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd97c08c-ff80-4bfb-9d76-5aad2413d17d_1600x890.png"
             className="w-full rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-700"
+            width={1600}
+            height={890}
           />
         </div>
       </div>
