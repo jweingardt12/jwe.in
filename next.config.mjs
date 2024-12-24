@@ -15,6 +15,15 @@ const nextConfig = {
   },
 }
 
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+    domains: ['substackcdn.com'],
+  },
+}
+
 const withMDX = nextMDX({
   extension: /\.mdx?$/,
   options: {
