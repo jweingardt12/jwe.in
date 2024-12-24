@@ -20,10 +20,9 @@ const nextConfig = {
   },
   // Enable dynamic rendering for articles routes
   experimental: {
-    staticPaths: {
-      '/articles/building-for-bluesky': { dynamic: 'force-dynamic' }
-    }
-  }
+    appDir: true,
+  },
+  dynamicParams: true
 }
 
 export default withMDX()(nextConfig)
