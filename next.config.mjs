@@ -3,11 +3,12 @@ import withMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx'],
+  output: 'export',
   images: {
-    domains: ['substackcdn.com'],
+    unoptimized: true,
     domains: ['substackcdn.com'],
   },
+  pageExtensions: ['js', 'jsx', 'mdx'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -16,10 +17,6 @@ const nextConfig = {
       }
     }
     return config
-  },
-  // Enable dynamic rendering for articles routes
-  experimental: {
-    mdxRs: true
   }
 }
 
