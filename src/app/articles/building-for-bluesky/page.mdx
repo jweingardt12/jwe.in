@@ -12,11 +12,18 @@ export const article = {
     'When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn't anticipated.'
 }
 
-export default function MDXPage({ children }) {
-  return <ArticleLayout article={article}>{children}</ArticleLayout>
+export default function MDXPage() {
+  return (
+    <ArticleLayout article={article}>
+      ## Introduction
+
+      When we released the first version of our app...
+      
+      <Image 
+        src={eggs} 
+        alt="Screenshot of app" 
+        className="rounded-md"
+      />
+    </ArticleLayout>
+  )
 }
-
-## Introduction
-
-When we released the first version of our app...
-{/* Rest of your MDX content */}
