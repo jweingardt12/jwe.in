@@ -9,7 +9,13 @@ const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
-    domains: ['substackcdn.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'substackcdn.com',
+        pathname: '/**',
+      },
+    ],
   },
   experimental: {
     outputFileTracingIncludes: {
