@@ -1,0 +1,100 @@
+2024-12-24T20:20:18Z info: Deployment: 8d60135c-3d21-4d2a-9dfa-a2ace621a00f
+2024-12-24T20:20:18Z info: Build: cbbd0142-ceb1-4442-8579-abef1408ffdd
+2024-12-24T20:20:18Z info: Connecting to builder
+2024-12-24T20:20:21Z info: Builder connected
+2024-12-24T20:20:21Z info: Installing packages
+2024-12-24T20:20:21Z info: Starting Build
+
+> tailwindui-template@0.1.0 build
+> next build
+
+
+  ▲ Next.js 14.2.21
+
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+
+ ✓ Compiled successfully
+
+   Linting and checking validity of types ...
+
+   Collecting page data ...
+
+   Generating static pages (0/14) ...
+
+n [Error]: Route /articles/building-for-bluesky/ with `dynamic = "error"` couldn't be rendered statically because it used `searchParams.toJSON`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering
+    at l (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/948.js:1:36813)
+    at Object.get (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/377.js:2:34044)
+    at stringify (<anonymous>)
+    at eP (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:async_hooks:338:14)
+    at Timeout._onTimeout (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  code: 'NEXT_STATIC_GEN_BAILOUT',
+  digest: '4162652549'
+}
+n [Error]: Route /articles/building-for-bluesky/ with `dynamic = "error"` couldn't be rendered statically because it used `searchParams.toJSON`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering
+    at l (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/948.js:1:36813)
+    at Object.get (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/377.js:2:34044)
+    at stringify (<anonymous>)
+    at eP (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  code: 'NEXT_STATIC_GEN_BAILOUT',
+  digest: '4006255050'
+}
+n [Error]: Route /articles/building-for-bluesky/ with `dynamic = "error"` couldn't be rendered statically because it used `searchParams.toJSON`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering
+    at l (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/948.js:1:36813)
+    at Object.get (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/377.js:2:34044)
+    at stringify (<anonymous>)
+    at eP (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  code: 'NEXT_STATIC_GEN_BAILOUT',
+  digest: '4006255050'
+}
+
+   Generating static pages (3/14) 
+
+   Generating static pages (6/14) 
+
+   Generating static pages (10/14) 
+
+ ⚠ Sending SIGTERM signal to static worker due to timeout of 60 seconds. Subsequent errors may be a result of the worker exiting.
+
+ ⚠ Restarted static page generation for /articles/building-for-bluesky because it took more than 60 seconds
+ ⚠ See more info here https://nextjs.org/docs/messages/static-page-generation-timeout
+
+n [Error]: Route /articles/building-for-bluesky/ with `dynamic = "error"` couldn't be rendered statically because it used `searchParams.toJSON`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering
+    at l (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/948.js:1:36813)
+    at Object.get (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/377.js:2:34044)
+    at stringify (<anonymous>)
+    at eP (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  code: 'NEXT_STATIC_GEN_BAILOUT',
+  digest: '4006255050'
+}
+
+n [Error]: Route /articles/building-for-bluesky/ with `dynamic = "error"` couldn't be rendered statically because it used `searchParams.toJSON`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering
+    at l (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/948.js:1:36813)
+    at Object.get (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/.next/server/chunks/377.js:2:34044)
+    at stringify (<anonymous>)
+    at eP (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/home/runner/8d60135c-3d21-4d2a-9dfa-a2ace621a00f/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7) {
+  code: 'NEXT_STATIC_GEN_BAILOUT',
+  digest: '4006255050'
+}
+
