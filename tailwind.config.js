@@ -1,5 +1,4 @@
 const typographyPlugin = require('@tailwindcss/typography');
-
 const typographyStyles = require('./typography');
 
 /** @type {import('tailwindcss').Config} */
@@ -9,39 +8,53 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        fadeUp: 'fadeUp 0.5s ease-in-out', // Fade in and move up
-        fadeOutDown: 'fadeOutDown 0.5s ease-in-out', // Fade out and move down
-        fadeInUp: 'fadeInUp 0.5s ease-in-out', // Custom fade in and move up
+        fadeUp: 'fadeUp 0.5s ease-in-out',
+        fadeOutDown: 'fadeOutDown 0.5s ease-in-out',
+        fadeInUp: 'fadeInUp 0.5s ease-in-out',
+        highlight: 'highlight 1.2s ease-out forwards',
+      },
+      animationDelay: {
+        500: '500ms',
       },
       keyframes: {
         fadeUp: {
           from: {
             opacity: 0,
-            transform: 'translateY(30px)', // Start 30px below
+            transform: 'translateY(30px)',
           },
           to: {
             opacity: 1,
-            transform: 'translateY(0)', // End at original position
+            transform: 'translateY(0)',
           },
         },
         fadeOutDown: {
           from: {
             opacity: 1,
-            transform: 'translateY(0)', // Start at original position
+            transform: 'translateY(0)',
           },
           to: {
             opacity: 0,
-            transform: 'translateY(30px)', // Move 30px down
+            transform: 'translateY(30px)',
           },
         },
         fadeInUp: {
           from: {
             opacity: 0,
-            transform: 'translateY(30px)', // Start 30px below
+            transform: 'translateY(30px)',
           },
           to: {
             opacity: 1,
-            transform: 'translateY(0)', // End at original position
+            transform: 'translateY(0)',
+          },
+        },
+        highlight: {
+          '0%': {
+            width: '0%',
+            opacity: '1',
+          },
+          '100%': {
+            width: '100%',
+            opacity: '1',
           },
         },
       },
