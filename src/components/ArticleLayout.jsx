@@ -1,4 +1,6 @@
 
+'use client'
+
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { Container } from '@/components/Container'
@@ -6,6 +8,8 @@ import { Prose } from '@/components/Prose'
 import { formatDate } from '@/lib/formatDate'
 
 export function ArticleLayout({ article, children }) {
+  const router = useRouter()
+
   return (
     <Container className="mt-16 lg:mt-32">
       <div className="xl:relative">
