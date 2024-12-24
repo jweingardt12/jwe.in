@@ -8,6 +8,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['substackcdn.com'],
   },
+  trailingSlash: true,
+  staticPageGenerationTimeout: 120,
   pageExtensions: ['js', 'jsx', 'mdx'],
   webpack: (config, { isServer }) => {
     if (!isServer) {

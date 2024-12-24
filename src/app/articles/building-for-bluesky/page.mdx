@@ -1,25 +1,15 @@
 
-
-
-
-
 import { ArticleLayout } from '@/components/ArticleLayout'
-import Image from 'next/image'
-import eggs from './eggs.png'
 
 export const article = {
-  author: 'Adam Wathan',
+  author: 'Your Name',
   date: '2023-12-24',
   title: 'Building for Bluesky',
-  description: 'When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn\'t anticipated.'
+  description: 'Your article description here',
 }
 
 export default (props) => <ArticleLayout article={article} {...props} />
 
-When we released the first version of our app, it was a simple tool for scheduling social media posts. But soon we started hearing from customers who were using it in ways we hadn't anticipated.
+# Building for Bluesky
 
-<Image 
-  src={eggs} 
-  alt="Screenshot of app" 
-  className="rounded-md"
-/>
+Your article content here...
