@@ -9,10 +9,10 @@ export const article = {
     'Apparently the American electorate only cares about egg prices. Luckily, there"s a new social network to track their prices with.',
 }
 
-export const metadata = {
+export const generateMetadata = () => ({
   title: article.title,
   description: article.description,
-}
+})
 
 export default (props) => <ArticleLayout article={article} {...props} />
 
