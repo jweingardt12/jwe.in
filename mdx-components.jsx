@@ -1,8 +1,18 @@
+
+'use client'
+
 import Image from 'next/image'
 
 export function useMDXComponents(components) {
   return {
     ...components,
-    Image: (props) => <Image {...props} />,
+    img: (props) => (
+      <Image
+        {...props}
+        alt={props.alt || ''}
+        sizes="100vw"
+        style={{ width: '100%', height: 'auto' }}
+      />
+    ),
   }
 }
