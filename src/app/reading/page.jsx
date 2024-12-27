@@ -9,8 +9,18 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
-export default function ReadingPage() {
+export default async function ReadingPage() {
   let feedData = { items: [] }
+  const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
+  
+  try {
+    const res = await fetch(feedUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      },
+      next: { revalidate: 0 }
+    })
     
     if (!res.ok) {
       throw new Error(`Failed to fetch feed: ${res.status} ${res.statusText}`)
@@ -34,7 +44,6 @@ export default function ReadingPage() {
     )
   }
 
-  // Rest of your existing code remains the same
   const articles = []
   for (const item of feedData.items || []) {
     const dateLiked = item.date_published || item.pubDate || null
