@@ -1,7 +1,6 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'tsx', 'mdx'],
   output: 'export',
   images: {
     unoptimized: true,
@@ -12,10 +11,6 @@ const nextConfig = {
         hostname: '**',
       },
     ],
-  },
-  experimental: {
-    // This enables static export for dynamic routes
-    staticPageGenerationTimeout: 300
   }
 }
 
