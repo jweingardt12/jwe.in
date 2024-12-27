@@ -8,19 +8,37 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
-export default function ReadingPage() {
-  const articles = [
-    {
-      id: '1',
-      title: 'Example Article',
-      href: '#',
-      description: 'This is a placeholder article since we cannot fetch dynamically in static exports.',
-      publicationName: 'Example Publication',
-      dateDisplay: 'Jan 1, 2024',
-      dateISO: '2024-01-01',
-      imageUrl: 'https://via.placeholder.com/256?text=No+Image'
+// This ensures the page is generated at build time
+export const generateStaticParams = async () => {
+  return []
+}
+
+async function getFeedData() {
+  const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
+  try {
+    const res = await fetch(feedUrl, { next: { revalidate: false } })
+    if (!res.ok) {
+      throw new Error(`Failed to fetch feed`)
     }
-  ]
+    return await res.json()
+  } catch (error) {
+    console.error('Error fetching JSON feed:', error)
+    return { items: [] }
+  }
+}
+
+export default async function ReadingPage() {
+  const feedData = await getFeedData()
+  const articles = feedData.items?.map(item => ({
+    id: item.id || item.url,
+    title: item.title,
+    href: item.url,
+    description: item.content_text || item.description,
+    publicationName: item.author?.name || '',
+    dateDisplay: new Date(item.date_published || item.pubDate).toLocaleDateString(),
+    dateISO: item.date_published || item.pubDate,
+    imageUrl: item.image || 'https://via.placeholder.com/256?text=No+Image'
+  })) || []
 
   return (
     <div className="bg-white py-24 sm:py-32 dark:bg-zinc-900">
