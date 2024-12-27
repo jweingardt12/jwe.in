@@ -9,8 +9,8 @@ channel = "stable-23_05"
 
 [deployment]
 build = "npm run build"
-deploymentTarget = "static"
-publicDir = "out"
+deploymentTarget = "cloudrun"
+run = ["sh", "-c", "npm run dev"]
 
 [languages]
 [languages.javascript]
