@@ -1,14 +1,10 @@
 
 import createMDX from '@next/mdx'
-import remarkGfm from 'remark-gfm'
-import rehypePrism from '@mapbox/rehype-prism'
 
 const withMDX = createMDX({
-  extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [rehypePrism],
-    providerImportSource: "@mdx-js/react",
+    remarkPlugins: [],
+    rehypePlugins: [],
   },
 })
 
@@ -16,15 +12,9 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    unoptimized: true,
-    domains: ['substackcdn.com', 'via.placeholder.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  }
+    loader: 'custom',
+    loaderFile: './image-loader.js',
+  },
 }
 
 export default withMDX(nextConfig)

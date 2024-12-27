@@ -1,6 +1,8 @@
 
 'use client'
 
+'use client'
+
 import { Container } from '@/components/Container'
 import { useContext, createContext } from 'react'
 import { Prose } from '@/components/Prose'
