@@ -9,8 +9,7 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 60
 
 export default async function ReadingPage() {
   const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
