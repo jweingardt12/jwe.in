@@ -13,9 +13,9 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx'],
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    unoptimized: false,
+    unoptimized: true,
     domains: ['substackcdn.com', 'via.placeholder.com'],
     remotePatterns: [
       {
