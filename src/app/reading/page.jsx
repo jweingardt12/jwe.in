@@ -120,7 +120,7 @@ export default async function ReadingPage() {
                         {post.publicationName && (
                           <>
                             <span
-                              className="mx-2 text-zinc-300 dark:text-zinc-600"-600"
+                              className="mx-2 text-zinc-300 dark:text-zinc-600"
                               aria-hidden="true"
                             >
                               ·
