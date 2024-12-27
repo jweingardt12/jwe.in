@@ -15,7 +15,7 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
-    unoptimized: true,
+    unoptimized: false,
     domains: ['substackcdn.com', 'via.placeholder.com'],
     remotePatterns: [
       {
