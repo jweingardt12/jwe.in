@@ -10,12 +10,14 @@ export const article = {
   description: 'Your article description here',
 }
 
-export default function BuildingForBluesky() {
+export default function BuildingForBluesky({ children }) {
   return (
     <ArticleLayout article={article}>
-      # Building for Bluesky
-
-      Your article content here...
+      {children}
     </ArticleLayout>
   )
 }
+
+# Building for Bluesky
+
+Your article content here...
