@@ -1,4 +1,6 @@
 
+'use client'
+
 import { ArticleLayout } from '@/components/ArticleLayout'
 
 export const article = {
@@ -8,10 +10,17 @@ export const article = {
   description: 'Your article description here',
 }
 
-<ArticleLayout article={article}>
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
 
-# Building for Bluesky
+export default function BuildingForBluesky() {
+  return (
+    <ArticleLayout article={article}>
+      # Building for Bluesky
 
-Your article content here...
-
-</ArticleLayout>
+      Your article content here...
+    </ArticleLayout>
+  )
+}
