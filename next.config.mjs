@@ -8,6 +8,7 @@ const withMDX = createMDX({
   options: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [rehypePrism],
+    providerImportSource: "@mdx-js/react",
   },
 })
 
