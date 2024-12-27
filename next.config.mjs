@@ -5,7 +5,6 @@ const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
-    unoptimized: true,
     domains: ['substackcdn.com', 'via.placeholder.com'],
     remotePatterns: [
       {

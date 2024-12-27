@@ -16,10 +16,7 @@ export const generateStaticParams = async () => {
 async function getFeedData() {
   const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
   try {
-    const res = await fetch(feedUrl, {
-      next: { revalidate: false },
-      cache: 'force-cache'
-    })
+    const res = await fetch(feedUrl, { next: { revalidate: false } })
     if (!res.ok) {
       throw new Error(`Failed to fetch feed`)
     }
@@ -32,7 +29,7 @@ async function getFeedData() {
 
 export default async function ReadingPage() {
   const feedData = await getFeedData()
-  const articles = (feedData.items || []).map(item => ({
+  const articles = feedData.items?.map(item => ({
     id: item.id || item.url,
     title: item.title,
     href: item.url,
