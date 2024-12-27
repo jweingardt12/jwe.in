@@ -12,6 +12,7 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'tsx', 'mdx'],
   output: 'export',
+  distDir: 'out',
   images: {
     unoptimized: true,
     domains: ['substackcdn.com', 'via.placeholder.com'],

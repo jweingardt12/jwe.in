@@ -14,14 +14,10 @@ publicDir = "out"
 
 [languages]
 [languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.mdx}"
 [languages.javascript.languageServer]
 start = "typescript-language-server --stdio"
 
 [[ports]]
 localPort = 3000
 externalPort = 80
-
-[[ports]]
-localPort = 3001
-externalPort = 3001
