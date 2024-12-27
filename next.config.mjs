@@ -1,3 +1,4 @@
+
 import createMDX from '@next/mdx'
 import remarkGfm from 'remark-gfm'
 import rehypePrism from '@mapbox/rehype-prism'
@@ -12,7 +13,6 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
     unoptimized: true,
