@@ -9,20 +9,8 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
-export const revalidate = 60
-
-export default async function ReadingPage() {
-  const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
-
+export default function ReadingPage() {
   let feedData = { items: [] }
-  try {
-    const res = await fetch(feedUrl, { 
-      cache: 'no-store',
-      headers: {
-        'Accept': 'application/json',
-      },
-      next: { revalidate: 0 }
-    })
     
     if (!res.ok) {
       throw new Error(`Failed to fetch feed: ${res.status} ${res.statusText}`)

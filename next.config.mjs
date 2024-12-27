@@ -2,6 +2,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'tsx', 'mdx'],
+  output: 'export',
   images: {
     unoptimized: true,
     domains: ['substackcdn.com', 'via.placeholder.com'],
@@ -12,7 +13,6 @@ const nextConfig = {
       },
     ],
   },
-  output: 'standalone'
 }
 
 export default nextConfig
