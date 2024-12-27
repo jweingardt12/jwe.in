@@ -2,7 +2,12 @@
 import glob from 'fast-glob'
 
 async function importArticle(articleFilename) {
-  let { article } = await import(`../app/articles/${articleFilename}`)
+  let module = await import(`../app/articles/${articleFilename}`)
+  let article = module.article || {}
+
+  if (!article.title) {
+    throw new Error(`Missing title in ${articleFilename}`)
+  }
 
   return {
     slug: articleFilename.replace(/(\/page)?\.mdx$/, ''),
