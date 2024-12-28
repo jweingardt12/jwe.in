@@ -12,7 +12,7 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 0 // Revalidate on every request
 
 export default async function ReadingPage() {
   const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
@@ -20,7 +20,7 @@ export default async function ReadingPage() {
 
   try {
     const res = await fetch(feedUrl, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      cache: 'no-store', // Don't cache the response
       headers: {
         'Accept': 'application/json',
       },
