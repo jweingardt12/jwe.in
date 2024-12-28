@@ -1,22 +1,14 @@
 
-import createMDX from '@next/mdx'
+import imageLoader from './image-loader.js'
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-  },
-})
-
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
-    domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
     loader: 'custom',
     loaderFile: './image-loader.js',
-    unoptimized: false,
-  },
+    domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
+    unoptimized: process.env.NODE_ENV === 'development'
+  }
 }
 
-export default withMDX(nextConfig)
+export default nextConfig
