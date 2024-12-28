@@ -12,9 +12,10 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
+    domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
     loader: 'custom',
     loaderFile: './image-loader.js',
-    unoptimized: true,
+    unoptimized: false,
   },
 }
 
