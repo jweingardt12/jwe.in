@@ -2,10 +2,10 @@ import glob from 'fast-glob'
 
 async function importArticle(articleFilename) {
   try {
-    const module = await import(`../app/articles/${articleFilename}`)
+    const articleModule = await import(`../app/articles/${articleFilename}`)
     return {
       slug: articleFilename.replace(/(\/page)?\.mdx$/, ''),
-      ...module.article,
+      ...articleModule.article,
     }
   } catch (error) {
     console.error(`Error importing article ${articleFilename}:`, error)
