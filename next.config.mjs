@@ -14,8 +14,7 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
-    loader: 'custom',
-    loaderFile: './image-loader.js',
+    domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
   },
   experimental: {
     mdxRs: true,
