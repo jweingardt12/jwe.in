@@ -1,4 +1,13 @@
 
+import createMDX from '@next/mdx'
+ 
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+})
+ 
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
@@ -9,4 +18,4 @@ const nextConfig = {
   }
 }
 
-export default nextConfig
+export default withMDX(nextConfig)
