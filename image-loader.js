@@ -1,5 +1,5 @@
 
-module.exports = function imageLoader({ src, width }) {
+export default function imageLoader({ src, width }) {
   if (src.startsWith('/_next')) {
     return src;
   }

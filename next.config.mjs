@@ -1,6 +1,4 @@
 
-import imageLoader from './image-loader.js'
-
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx'],
   images: {
