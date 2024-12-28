@@ -1,9 +1,10 @@
+
 /* File: /src/app/reading/page.jsx (Server Component) */
 
 import Link from 'next/link'
 import Image from 'next/image'
 import ogs from 'open-graph-scraper'
-import { Container } from '@/components/Container'  // Same container used in your About page
+import { Container } from '@/components/Container'
 import { Card } from '@/components/Card'
 
 export const metadata = {
@@ -11,12 +12,19 @@ export const metadata = {
   description: 'Recently liked articles, displayed in descending order.',
 }
 
+export const revalidate = 3600 // Revalidate every hour
+
 export default async function ReadingPage() {
   const feedUrl = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
   let feedData = { items: [] }
 
   try {
-    const res = await fetch(feedUrl, { cache: 'no-store' })
+    const res = await fetch(feedUrl, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+      headers: {
+        'Accept': 'application/json',
+      },
+    })
     if (!res.ok) {
       throw new Error(`Failed to fetch feed: ${res.status} ${res.statusText}`)
     }
@@ -41,7 +49,6 @@ export default async function ReadingPage() {
         if (result.ogDescription) articleDescription = result.ogDescription
         if (result.ogSiteName) publicationName = result.ogSiteName
 
-        // Handle ogImage array or object
         if (result.ogImage) {
           if (Array.isArray(result.ogImage) && result.ogImage.length > 0) {
             imageUrl = result.ogImage[0].url
@@ -54,7 +61,6 @@ export default async function ReadingPage() {
       }
     }
 
-    // Convert date for display & sorting
     let displayDate = ''
     let isoDate = ''
     if (dateLiked) {
@@ -79,7 +85,6 @@ export default async function ReadingPage() {
     })
   }
 
-  // Sort descending by date
   articles.sort((a, b) => {
     if (!a.dateISO) return 1
     if (!b.dateISO) return -1
@@ -88,7 +93,6 @@ export default async function ReadingPage() {
 
   return (
     <>
-      {/* Use same background color you have on other pages, respecting dark mode. */}
       <Container className="mt-16 sm:mt-32">
         <h2 className="text-4xl font-semibold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
           What I'm Reading
@@ -106,13 +110,7 @@ export default async function ReadingPage() {
             articles.map((post) => (
               <article key={post.id} className="max-w-xl">
                 <Card as="div">
-                  {/* 
-                    Always a two-column look: text left, image right. 
-                    On small screens, it might get tight, but it won’t 
-                    shift to stacked columns. 
-                  */}
                   <div className="flex w-full flex-row items-start justify-between gap-x-6">
-                    {/* Left side: Eyebrow (date + publication), title, desc */}
                     <div className="flex-1">
                       <Card.Eyebrow
                         as="p"
@@ -143,13 +141,13 @@ export default async function ReadingPage() {
                       </Card.Description>
                     </div>
 
-                    {/* Right side: OG image */}
                     <div className="flex-shrink-0">
                       <div className="relative h-32 w-32 sm:h-40 sm:w-40 lg:h-44 lg:w-44">
                         <Image
                           alt=""
                           src={post.imageUrl}
                           fill
+                          sizes="(min-width: 1024px) 176px, (min-width: 640px) 160px, 128px"
                           className="rounded-md object-cover bg-zinc-200 dark:bg-zinc-800"
                         />
                       </div>
