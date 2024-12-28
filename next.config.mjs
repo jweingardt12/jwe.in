@@ -12,13 +12,11 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx'],
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
-  },
-  experimental: {
-    mdxRs: true,
-  },
+    unoptimized: true
+  }
 }
 
 export default withMDX(nextConfig)
