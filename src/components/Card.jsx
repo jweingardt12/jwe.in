@@ -1,4 +1,5 @@
-npm install react-markdownimport Link from 'next/link'
+
+import Link from 'next/link'
 import clsx from 'clsx'
 
 function ChevronRightIcon(props) {
