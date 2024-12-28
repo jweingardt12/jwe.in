@@ -86,9 +86,9 @@ export default async function ReadingPage() {
   }
 
   articles.sort((a, b) => {
-    const dateA = a.dateISO ? new Date(a.dateISO) : new Date(0)
-    const dateB = b.dateISO ? new Date(b.dateISO) : new Date(0)
-    return dateB - dateA
+    if (!a.dateISO) return 1
+    if (!b.dateISO) return -1
+    return new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime()
   })
 
   return (
