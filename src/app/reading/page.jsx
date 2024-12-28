@@ -85,12 +85,7 @@ export default async function ReadingPage() {
     })
   }
 
-  articles.sort((a, b) => {
-    const dateA = a.dateISO ? new Date(a.dateISO).getTime() : 0
-    const dateB = b.dateISO ? new Date(b.dateISO).getTime() : 0
-    return dateB - dateA
-  })
-
+  // Use the feed's natural order since it's already sorted by date added
   return (
     <>
       <Container className="mt-16 sm:mt-32">
