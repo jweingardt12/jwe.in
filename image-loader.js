@@ -1,7 +1,7 @@
 
-export default function imageLoader({ src, width }) {
+module.exports = function imageLoader({ src, width, quality }) {
   if (src.startsWith('/_next')) {
     return src;
   }
-  return `${src}?w=${width}`;
+  return `${src}?w=${width}&q=${quality || 75}`;
 }
