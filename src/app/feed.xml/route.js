@@ -31,15 +31,23 @@ export async function GET() {
     .filter((key) => key.startsWith('./'))
     .map((key) => key.slice(2).replace(/\/page\.mdx$/, ''))
 
+  let articles = []
   for (let id of articleIds) {
     let publicUrl = `${siteUrl}/articles/${id}`
     let content = await import(`../articles/${id}/page.mdx`)
     let { article } = content
+    articles.push({ id, publicUrl, ...article })
+  }
 
+  // Sort articles by date in descending order
+  articles.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+  // Add sorted articles to feed
+  for (let article of articles) {
     feed.addItem({
       title: article.title,
-      id: publicUrl,
-      link: publicUrl,
+      id: article.publicUrl,
+      link: article.publicUrl,
       content: article.description,
       author: [author],
       contributor: [author],
