@@ -429,10 +429,9 @@ export function Header() {
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
-                <MobileNavigation className="pointer-events-auto md:hidden" />
                 <DesktopNavigation className="pointer-events-auto hidden md:block" />
               </div>
-              <div className="flex justify-end md:flex-1">
+              <div className="flex justify-end gap-4 md:flex-1">
                 <div className="pointer-events-auto">
                   <button
                     onClick={() => setIsContactOpen(true)}
@@ -443,6 +442,7 @@ export function Header() {
                   </button>
                   <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
                 </div>
+                <MobileNavigation className="pointer-events-auto md:hidden" />
               </div>
             </div>
           </Container>
