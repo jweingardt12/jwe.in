@@ -3,7 +3,7 @@
 
 import { Dialog, DialogTitle, DialogBody } from './Dialog'
 import { useState } from 'react'
-import { XIcon } from '@heroicons/react/outline'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export function ContactDialog({ isOpen, onClose }) {
   return (
@@ -14,7 +14,7 @@ export function ContactDialog({ isOpen, onClose }) {
           onClick={onClose}
           className="rounded-md text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
-          <XIcon className="h-6 w-6" />
+          <XMarkIcon className="h-6 w-6" />
         </button>
       </div>
       <DialogBody>
