@@ -29,6 +29,8 @@ const nextConfig = {
       poll: 1000,
       aggregateTimeout: 300,
     }
+    // Disable webpack caching in Replit environment
+    config.cache = false
     return config
   }
 }
