@@ -21,7 +21,7 @@ const nextConfig = {
   },
   output: 'standalone',
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     webpackBuildWorker: false
   },
   webpack: (config) => {
@@ -29,10 +29,12 @@ const nextConfig = {
       poll: 1000,
       aggregateTimeout: 300,
     }
-    // Disable webpack caching in Replit environment
     config.cache = false
     return config
-  }
+  },
+  // Add hostname binding
+  hostname: '0.0.0.0',
+  port: 3000
 }
 
 export default withMDX(nextConfig)
