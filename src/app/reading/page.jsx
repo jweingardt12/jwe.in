@@ -133,7 +133,12 @@ export default async function ReadingPage() {
                         )}
                       </Card.Eyebrow>
 
-                      <Card.Title href={post.href} className="text-zinc-800 dark:text-zinc-100">
+                      <Card.Title 
+                        href={post.href} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-zinc-800 dark:text-zinc-100"
+                      >
                         {post.title}
                       </Card.Title>
 
