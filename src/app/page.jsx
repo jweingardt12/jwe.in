@@ -31,14 +31,7 @@ export default async function Home() {
             <h1 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
               Jason Weingardt
             </h1>
-            <Image
-              src="/src/images/avatar.jpg"
-              alt="Jason Weingardt"
-              width={150}
-              height={150}
-              className="mt-6 rounded-full"
-              priority
-            />
+            
           </div>
 
           <div className="animate-fade-in delay-2s">
