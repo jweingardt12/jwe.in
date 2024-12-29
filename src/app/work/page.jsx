@@ -1,170 +1,193 @@
-'use client';
-import { SimpleLayout } from '@/components/SimpleLayout';
-import { Container } from '@/components/Container';
-import { useEffect, useState } from 'react';
-import Image from 'next/image'; // Import the Image component
+import Image from 'next/image'
+import { MailIcon } from '@heroicons/react/outline'
+import { Button } from '@/components/Button';
+import Link from 'next/link';
 
-const timeline = [
+import { Card } from '@/components/Card'
+import { SimpleLayout } from '@/components/SimpleLayout'
+import logoAnimaginary from '@/images/logos/animaginary.svg'
+import logoCosmos from '@/images/logos/cosmos.svg'
+import logoHelioStream from '@/images/logos/helio-stream.svg'
+import logoOpenShuttle from '@/images/logos/open-shuttle.svg'
+import logoPlanetaria from '@/images/logos/planetaria.svg'
+
+
+
+
+const projects = [
   {
-    name: 'Cloudkitchens: Product Manager',
+    name: 'Planetaria',
     description:
-      'Nihil aut nam. Dignissimos a pariatur et quos omnis. Aspernatur asperiores et dolorem dolorem optio voluptate repudiandae.',
-    date: '2021 - present',
-    dateTime: '2021-08',
+      'Creating technology to empower civilians to explore space on their own terms.',
+    link: { href: 'http://planetaria.tech', label: 'planetaria.tech' },
+    logo: logoPlanetaria,
   },
   {
-    name: 'Ritual: Regional GM',
+    name: 'Animaginary',
     description:
-      'Provident quia ut esse. Vero vel eos repudiandae aspernatur. Cumque minima impedit sapiente a architecto nihil.',
-    date: '2017 - 2020',
-    dateTime: '2021-12',
+      'High performance web animation library, hand-written in optimized WASM.',
+    link: { href: '#', label: 'github.com' },
+    logo: logoAnimaginary,
   },
   {
-    name: 'Released beta',
+    name: 'HelioStream',
     description:
-      'Sunt perspiciatis incidunt. Non necessitatibus aliquid. Consequatur ut officiis earum eum quia facilis. Hic deleniti dolorem quia et.',
-    date: 'Feb 2022',
-    dateTime: '2022-02',
+      'Real-time video streaming library, optimized for interstellar transmission.',
+    link: { href: '#', label: 'github.com' },
+    logo: logoHelioStream,
   },
   {
-    name: 'Global launch of product',
+    name: 'cosmOS',
     description:
-      'Ut ipsa sint distinctio quod itaque nam qui. Possimus aut unde id architecto voluptatem hic aut pariatur velit.',
-    date: 'Dec 2022',
-    dateTime: '2022-12',
+      'The operating system that powers our Planetaria space shuttles.',
+    link: { href: '#', label: 'github.com' },
+    logo: logoCosmos,
   },
-];
+  {
+    name: 'OpenShuttle',
+    description:
+      'The schematics for the first rocket I designed that successfully made it to orbit.',
+    link: { href: '#', label: 'github.com' },
+    logo: logoOpenShuttle,
+  },
+]
 
-function HeroSection() {
-  const [visibleParts, setVisibleParts] = useState([false, false, false]);
-
-  useEffect(() => {
-    const timers = [
-      setTimeout(() => setVisibleParts([true, false, false]), 200),
-      setTimeout(() => setVisibleParts([true, true, false]), 1000),
-      setTimeout(() => setVisibleParts([true, true, true]), 2500),
-    ];
-
-    return () => timers.forEach((timer) => clearTimeout(timer));
-  }, []);
-
+function LinkIcon(props) {
   return (
-    <Container className="mt-16 sm:mt-32">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
-          <span
-            className={`transition-opacity duration-300 ${
-              visibleParts[0] ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            What&nbsp;I&apos;ve&nbsp;done.
-          </span>{' '}
-          <span
-            className={`transition-opacity duration-300 ${
-              visibleParts[1] ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            Where&nbsp;I&apos;ve&nbsp;done&nbsp;it.
-          </span>
-          <span
-            className={`block mt-2 relative transition-opacity duration-300 ${
-              visibleParts[2] ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <span className="relative inline-block">
-              Why it mattered.
-              <span
-                className={`absolute bottom-0 left-0 h-[8px] bg-orange-300/50 dark:bg-yellow-500/50 ${
-                  visibleParts[2] ? 'animate-highlight delay-500' : 'opacity-0'
-                }`}
-              ></span>
-            </span>
-          </span>
-        </h1>
-        <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-          I&apos;ve been lucky enough to work at some of the fastest-growing tech
-          companies, where I&apos;ve built products that changed industries and
-          people&apos;s lives.
-        </p>
-      </div>
-
-      {/* Image Section */}
-      <div className="mt-12 mx-auto max-w-2xl">
-        <div className="rounded-xl bg-gray-900/5 p-2 ring-1 ring-gray-900/10 dark:ring-gray-700">
-          <Image
-            alt="App screenshot"
-            src="https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd97c08c-ff80-4bfb-9d76-5aad2413d17d_1600x890.png"
-            className="w-full rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-700"
-            width={1600}
-            height={890}
-          />
-        </div>
-      </div>
-    </Container>
-  );
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path
+        d="M15.712 11.823a.75.75 0 1 0 1.06 1.06l-1.06-1.06Zm-4.95 1.768a.75.75 0 0 0 1.06-1.06l-1.06 1.06Zm-2.475-1.414a.75.75 0 1 0-1.06-1.06l1.06 1.06Zm4.95-1.768a.75.75 0 1 0-1.06 1.06l1.06-1.06Zm3.359.53-.884.884 1.06 1.06.885-.883-1.061-1.06Zm-4.95-2.12 1.414-1.415L12 6.344l-1.415 1.413 1.061 1.061Zm0 3.535a2.5 2.5 0 0 1 0-3.536l-1.06-1.06a4 4 0 0 0 0 5.656l1.06-1.06Zm4.95-4.95a2.5 2.5 0 0 1 0 3.535L17.656 12a4 4 0 0 0 0-5.657l-1.06 1.06Zm1.06-1.06a4 4 0 0 0-5.656 0l1.06 1.06a2.5 2.5 0 0 1 3.536 0l1.06-1.06Zm-7.07 7.07.176.177 1.06-1.06-.176-.177-1.06 1.06Zm-3.183-.353.884-.884-1.06-1.06-.884.883 1.06 1.06Zm4.95 2.121-1.414 1.414 1.06 1.06 1.415-1.413-1.06-1.061Zm0-3.536a2.5 2.5 0 0 1 0 3.536l1.06 1.06a4 4 0 0 0 0-5.656l-1.06 1.06Zm-4.95 4.95a2.5 2.5 0 0 1 0-3.535L6.344 12a4 4 0 0 0 0 5.656l1.06-1.06Zm-1.06 1.06a4 4 0 0 0 5.657 0l-1.061-1.06a2.5 2.5 0 0 1-3.535 0l-1.061 1.06Zm7.07-7.07-.176-.177-1.06 1.06.176.178 1.06-1.061Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
 }
-function TimelineSection() {
-  const [selectedItem, setSelectedItem] = useState(null);
 
-  const handleItemClick = (index) => {
-    setSelectedItem(selectedItem === index ? null : index);
-  };
+export const metadata = {
+  title: 'Projects',
+  description: 'Things I made trying to put my dent in the universe.',
+}
 
+export default function Projects() {
   return (
-    <Container className="mt-16">
-      <div className="flex max-w-3xl flex-col space-y-6">
-        {timeline.map((item, index) => (
-          <div key={index} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 relative">
-            <div
-              className="cursor-pointer"
-              onClick={() => handleItemClick(index)}
-            >
-              <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-                {item.name}
-              </h3>
-              <time
-                className="block text-sm text-zinc-400 dark:text-zinc-500"
-                dateTime={item.dateTime}
-              >
-                {item.date}
-              </time>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {item.description}
-              </p>
+    <SimpleLayout
+      title="Things I’ve made trying to put my dent in the universe."
+      intro="I’ve worked on tons of little projects over the years but these are the ones that I’m most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved."
+    >
+      <ul
+        role="list"
+        className="grid grid-cols-1 gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {projects.map((project) => (
+          <Card as="li" key={project.name}>
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+              <Image
+                src={project.logo}
+                alt=""
+                className="h-8 w-8"
+                unoptimized
+              />
             </div>
-            <div
-              className={`absolute top-4 right-4 text-xl font-bold text-zinc-800 dark:text-zinc-100 cursor-pointer transition-transform duration-500 ease-in-out ${
-                selectedItem === index ? 'rotate-25' : 'rotate-0'
-              }`}
-              onClick={() => handleItemClick(index)}
-            >
-              {selectedItem === index ? '×' : '+'}
-            </div>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                selectedItem === index ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-              }`}
-              style={{ transitionProperty: 'max-height, opacity' }}
-            >
-              <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Detailed information about {item.name} goes here. You can include more content or even links.
-                </p>
-              </div>
-            </div>
-          </div>
+            <h2 className="mt-6 text-base font-semibold text-zinc-800 dark:text-zinc-100">
+              <Card.Link href={project.link.href}>{project.name}</Card.Link>
+            </h2>
+            <Card.Description>{project.description}</Card.Description>
+            <p className="relative z-10 mt-6 flex text-sm font-medium text-zinc-400 transition group-hover:text-teal-500 dark:text-zinc-200">
+              <LinkIcon className="h-6 w-6 flex-none" />
+              <span className="ml-2">{project.link.label}</span>
+            </p>
+          </Card>
         ))}
-      </div>
-    </Container>
-  );
-}
-
-
-export default function Work() {
-  return (
-    <SimpleLayout>
-      <HeroSection />
-      <TimelineSection />
+      </ul>
     </SimpleLayout>
+  )
+}
+function Resume() {
+  const resume = [
+    {
+      company: 'CloudKitchens',
+      title: 'Product Manager',
+      logo: logoPlanetaria,
+      start: '2020',
+      end: {
+        label: 'Present',
+        dateTime: new Date().getFullYear().toString(),
+      },
+    },
+    {
+      company: 'Ritual',
+      title: 'Regional GM',
+      logo: logoRitual,
+      start: '2017',
+      end: '2020',
+    },
+    {
+      company: 'Countable',
+      title: 'Growth Lead',
+      logo: logoCountable,
+      start: '2015',
+      end: '2017',
+    },
+    {
+      company: 'Uber',
+      title: 'Launcher',
+      logo: logoUber,
+      start: '2013',
+      end: '2015',
+    },
+  ];
+
+  return (
+    <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+      <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <MailIcon className="h-6 w-6 flex-none" />
+        <span className="ml-3">Where I've been</span>
+      </h2>
+      <ol className="mt-6 space-y-4">
+        {resume.map((role, index) => (
+          <li key={index} className="flex gap-4">
+            {/* Company Logo */}
+            <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+              <Image src={role.logo} alt="" className="h-7 w-7" unoptimized />
+            </div>
+            {/* Role Details */}
+            <dl className="flex flex-auto flex-wrap gap-x-2">
+              <dt className="sr-only">Company</dt>
+              <dd className="w-full text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                {role.company}
+              </dd>
+              <dt className="sr-only">Role</dt>
+              <dd className="text-xs text-zinc-500 dark:text-zinc-400">
+                {role.title}
+              </dd>
+              <dt className="sr-only">Date</dt>
+              <dd
+                className="ml-auto text-xs text-zinc-400 dark:text-zinc-500"
+                aria-label={`${role.start} to ${role.end.label || role.end}`}
+              >
+                <time dateTime={role.start}>{role.start}</time> —{' '}
+                <time dateTime={role.end.dateTime || role.end}>
+                  {role.end.label || role.end}
+                </time>
+              </dd>
+            </dl>
+          </li>
+        ))}
+      </ol>
+      <Button href="#" variant="secondary" className="group mt-6 w-full">
+        Download CV
+        <svg
+          className="h-4 w-4 ml-2 stroke-zinc-400 transition group-hover:stroke-zinc-600 dark:group-hover:stroke-zinc-50"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 5v14m-7-7h14"></path>
+        </svg>
+      </Button>
+    </div>
   );
 }
