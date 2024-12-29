@@ -132,7 +132,7 @@ function MobileNavigation(props) {
               <MobileNavItem href="/notes">Notes</MobileNavItem>
               <MobileNavItem href="/reading">Reading</MobileNavItem>
               <MobileNavItem onClick={() => setIsContactOpen(true)}>
-                <span className="bg-gradient-to-r from-white via-orange-400 via-purple-500 via-blue-500 to-teal-400 bg-[length:500%_100%] animate-gradient-slower bg-clip-text text-transparent dark:from-zinc-100">Contact</span>
+                <span className="font-bold">Contact</span>
               </MobileNavItem>
             </ul>
           </nav>
@@ -191,7 +191,7 @@ function DesktopNavigation(props) {
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
         <NavItem onClick={() => setIsContactOpen(true)}>
-            <span className="bg-gradient-to-r from-white via-orange-400 via-purple-500 via-blue-500 to-teal-400 bg-[length:500%_100%] animate-gradient-slower bg-clip-text text-transparent dark:from-zinc-100">Contact</span>
+            <span className="font-bold">Contact</span>
           </NavItem>
       </ul>
       <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
