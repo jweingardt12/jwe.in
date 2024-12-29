@@ -6,14 +6,15 @@ import Image from 'next/image'
 export function useMDXComponents(components = {}) {
   return {
     ...components,
-    img: (props) => (
+    img: ({ src, alt }) => (
       <div className="relative my-8 overflow-hidden rounded-xl">
         <Image
-          {...props}
-          alt={props.alt || ''}
-          className="w-full"
+          src={src}
+          alt={alt || ''}
           width={800}
           height={400}
+          className="w-full"
+          priority
           unoptimized
         />
       </div>
