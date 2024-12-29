@@ -233,7 +233,7 @@ function Avatar({ large = false, className, ...props }) {
         alt=""
         sizes={large ? '4rem' : '2.25rem'}
         className={clsx(
-          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800',
+          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 transition-transform duration-300 hover:-rotate-12',
           large ? 'h-16 w-16' : 'h-9 w-9',
         )}
         priority
