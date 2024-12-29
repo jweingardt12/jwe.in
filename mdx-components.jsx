@@ -7,12 +7,15 @@ export function useMDXComponents(components) {
   return {
     ...components,
     img: (props) => (
-      <Image
-        {...props}
-        alt={props.alt || ''}
-        sizes="100vw"
-        style={{ width: '100%', height: 'auto' }}
-      />
+      <div className="relative mt-8 overflow-hidden rounded-xl">
+        <Image
+          {...props}
+          alt={props.alt || ''}
+          className="w-full"
+          width={800}
+          height={400}
+        />
+      </div>
     ),
   }
 }

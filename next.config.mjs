@@ -15,7 +15,9 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
-    unoptimized: true
+    unoptimized: true,
+    loader: 'custom',
+    loaderFile: './image-loader.js'
   }
 }
 
