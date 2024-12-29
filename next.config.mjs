@@ -16,8 +16,12 @@ const nextConfig = {
   images: {
     domains: ['cdn.arstechnica.net', 'cdn.vox-cdn.com'],
     unoptimized: true,
-    loader: 'custom',
-    loaderFile: './image-loader.js'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   }
 }
 
