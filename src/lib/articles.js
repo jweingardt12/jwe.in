@@ -30,7 +30,7 @@ export async function getAllArticles() {
 }
 
 export async function getArticleBySlug(slug) {
-  const filePath = path.join(process.cwd(), 'src/content/notes', `${slug}.md`)
+  const filePath = path.join(process.cwd(), 'src/app/notes', `${slug}.md`)
   const content = await fs.readFile(filePath, 'utf8')
   const { data, content: markdown } = matter(content)
   
