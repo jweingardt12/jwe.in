@@ -36,8 +36,10 @@ export async function getArticleBySlug(slug) {
   const { data, content: markdown } = matter(content)
   
   return {
-    ...data,
-    slug,
-    content: marked.parse(markdown, { headerIds: false })
+    title: data.title,
+    description: data.description,
+    date: data.date,
+    content: marked.parse(markdown, { headerIds: false }),
+    slug
   }
 }
