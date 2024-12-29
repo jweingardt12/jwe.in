@@ -37,10 +37,7 @@ const nextConfig = {
       clean: true
     }
     return config
-  },
-  // Add hostname binding
-  hostname: '0.0.0.0',
-  port: 3000
+  }
 }
 
 export default withMDX(nextConfig)
