@@ -16,7 +16,7 @@ function NavLink({ href, children }) {
 }
 
 export function Footer() {
-  const [showDialog, setShowDialog] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   return (
     <footer className="mt-32 flex-none">
@@ -29,7 +29,7 @@ export function Footer() {
                 <NavLink href="/projects">Projects</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
                 <NavLink href="/uses">Uses</NavLink>
-                <button onClick={() => setShowDialog(true)} className="transition hover:text-teal-500 dark:hover:text-teal-400">Contact</button>
+                <button onClick={() => setIsContactOpen(true)} className="transition hover:text-teal-500 dark:hover:text-teal-400">Contact</button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt
@@ -38,7 +38,7 @@ export function Footer() {
           </ContainerInner>
         </div>
       </ContainerOuter>
-      <ContactDialog open={showDialog} onClose={() => setShowDialog(false)} />
+      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </footer>
   )
 }
