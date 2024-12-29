@@ -34,12 +34,17 @@ export async function getArticleBySlug(slug) {
   const filePath = path.join(process.cwd(), 'src/app/notes', `${slug}.md`)
   const content = await fs.readFile(filePath, 'utf8')
   const { data, content: markdown } = matter(content)
+  const parsedContent = marked.parse(markdown.trim(), { 
+    headerIds: false,
+    mangle: false,
+    gfm: true
+  })
   
   return {
-    title: data.title,
-    description: data.description,
-    date: data.date,
-    content: marked.parse(markdown, { headerIds: false }),
+    title: data.title || '',
+    description: data.description || '',
+    date: data.date || new Date().toISOString(),
+    content: parsedContent,
     slug
   }
 }
