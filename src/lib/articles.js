@@ -19,9 +19,10 @@ export async function getAllArticles() {
         
         return {
           slug: filename.replace(/\.md$/, ''),
-          title: data.title,
-          description: data.description,
-          date: data.date,
+          title: data.title || '',
+          description: data.description || '',
+          date: data.date || '',
+          image: data.image || '',
           content: htmlContent
         }
       })
