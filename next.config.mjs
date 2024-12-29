@@ -18,25 +18,6 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  output: 'standalone',
-  experimental: {
-    optimizeCss: true,
-    webpackBuildWorker: false,
-    typedRoutes: false
-  },
-  swcMinify: true,
-  webpack: (config) => {
-    config.watchOptions = {
-      poll: 1000,
-      aggregateTimeout: 300,
-    }
-    config.cache = false
-    config.output = {
-      ...config.output,
-      clean: true
-    }
-    return config
   }
 }
 
