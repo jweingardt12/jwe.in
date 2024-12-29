@@ -3,6 +3,26 @@
 @import './prism.css';
 @import 'tailwindcss/utilities';
 
+@keyframes colorize {
+  0% { color: rgb(39 39 42); }
+  50% { color: rgb(20 184 166); }
+  100% { color: rgb(39 39 42); }
+}
+
+.dark .animate-colorize {
+  animation: colorize-dark 3s ease-in-out;
+}
+
+@keyframes colorize-dark {
+  0% { color: rgb(244 244 245); }
+  50% { color: rgb(45 212 191); }
+  100% { color: rgb(244 244 245); }
+}
+
+.animate-colorize {
+  animation: colorize 3s ease-in-out;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

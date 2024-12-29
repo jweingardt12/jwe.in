@@ -29,7 +29,7 @@ export default async function Home() {
         <div className="max-w-2xl">
           <div>
             <h1 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
-              Jason Weingardt
+              <span className="animate-colorize">Jason Weingardt</span>
             </h1>
             
           </div>
