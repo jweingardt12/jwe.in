@@ -85,3 +85,20 @@
 .animate-fade-out-down {
   animation: fadeOutDown 0.5s ease-in-out;
 }
+
+@keyframes borderPulse {
+  0% {
+    border-color: rgba(161, 161, 170, 0.1);
+  }
+  50% {
+    border-color: rgba(161, 161, 170, 0.5);
+  }
+  100% {
+    border-color: rgba(161, 161, 170, 0.1);
+  }
+}
+
+.animate-border {
+  border: 1px solid;
+  animation: borderPulse 2s ease-in-out infinite;
+}
