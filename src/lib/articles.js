@@ -15,13 +15,14 @@ export async function getAllArticles() {
         const filePath = path.join(notesDirectory, filename)
         const content = await fs.readFile(filePath, 'utf8')
         const { data, content: markdown } = matter(content)
+        const htmlContent = marked.parse(markdown, { headerIds: false })
         
         return {
           slug: filename.replace(/\.md$/, ''),
           title: data.title,
           description: data.description,
           date: data.date,
-          content: marked(markdown)
+          content: htmlContent
         }
       })
   )
@@ -37,6 +38,6 @@ export async function getArticleBySlug(slug) {
   return {
     ...data,
     slug,
-    content: marked(markdown)
+    content: marked.parse(markdown, { headerIds: false })
   }
 }
