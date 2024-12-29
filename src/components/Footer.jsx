@@ -29,7 +29,7 @@ export function Footer() {
                 <NavLink href="/work">Work</NavLink>
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
-                <button onClick={() => setIsContactOpen(true)} className="bg-gradient-to-r from-teal-400 via-teal-500 to-teal-400 bg-[length:200%_100%] animate-gradient bg-clip-text text-transparent">Contact</button>
+                <button onClick={() => setIsContactOpen(true)} className="bg-gradient-to-r from-white via-orange-400 via-purple-500 via-blue-500 to-teal-400 bg-[length:500%_100%] animate-gradient bg-clip-text text-transparent dark:from-zinc-100">Contact</button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt

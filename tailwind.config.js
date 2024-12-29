@@ -19,8 +19,8 @@ module.exports = {
       },
       keyframes: {
         gradient: {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '500% 50%' }
         },
         fadeUp: {
           from: {
