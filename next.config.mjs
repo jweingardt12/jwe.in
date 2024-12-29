@@ -30,6 +30,10 @@ const nextConfig = {
       aggregateTimeout: 300,
     }
     config.cache = false
+    config.output = {
+      ...config.output,
+      clean: true
+    }
     return config
   },
   // Add hostname binding
