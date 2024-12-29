@@ -96,15 +96,15 @@ export default async function ReadingPage() {
           Recently liked articles, displayed in descending order.
         </p>
 
-        <div className="mt-10 divide-y divide-zinc-100 dark:divide-zinc-800 border-t border-zinc-100 pt-10 dark:border-zinc-700 sm:mt-16 sm:pt-16">
-          <div className="space-y-12">
+        <div className="mt-10 border-t border-zinc-100 pt-10 dark:border-zinc-700 sm:mt-16 sm:pt-16">
+          <div className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
           {articles.length === 0 ? (
             <p className="text-zinc-500 dark:text-zinc-400">
               No articles found or an error occurred.
             </p>
           ) : (
             articles.map((post) => (
-              <article key={post.id} className="max-w-3xl">
+              <article key={post.id} className="max-w-3xl py-12 first:pt-0 last:pb-0">
                 <Card as="div">
                   <div className="flex w-full flex-row items-start justify-between gap-x-6">
                     <div className="flex-1">
