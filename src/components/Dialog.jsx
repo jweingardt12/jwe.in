@@ -30,7 +30,7 @@ export function Dialog({ open = false, onClose, size = 'lg', children }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-zinc-400/25 backdrop-blur-sm dark:bg-black/40" />
+          <div className="fixed inset-0 bg-zinc-400/50 backdrop-blur-md transition-all duration-200 dark:bg-black/60" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
