@@ -15,6 +15,15 @@ export function ArticleLayout({ article, children }) {
               <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                 {article.title}
               </h1>
+              {article.date && (
+                <time dateTime={new Date(article.date).toISOString()} className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+                  {new Date(article.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              )}
             </header>
             <Prose className="mt-8" data-mdx-content>
               {children}
