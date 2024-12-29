@@ -17,7 +17,7 @@ const sizes = {
   '5xl': 'sm:max-w-5xl',
 }
 
-export function Dialog({ open, onClose, size = 'lg', children }) {
+export function Dialog({ open = false, onClose, size = 'lg', children }) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <HeadlessDialog as="div" className="relative z-50" onClose={onClose}>
@@ -65,7 +65,7 @@ export function DialogTitle({ children, className }) {
 
 export function DialogBody({ children, className }) {
   return (
-    <div className={clsx('px-6 py-4', className)}>
+    <div className={clsx('mt-2 text-sm text-zinc-600 dark:text-zinc-400', className)}>
       {children}
     </div>
   )

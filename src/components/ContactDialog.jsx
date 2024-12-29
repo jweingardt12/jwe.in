@@ -1,4 +1,3 @@
-
 'use client'
 
 import { Dialog, DialogTitle, DialogBody } from './Dialog'
