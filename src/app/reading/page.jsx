@@ -113,7 +113,7 @@ export default async function ReadingPage() {
                         className="text-zinc-400 dark:text-zinc-500"
                       >
                         {post.dateDisplay && (
-                          <time dateTime={post.dateISO}>{post.dateDisplay}</time>
+                          <time dateTime={post.dateISO}>Published {post.dateDisplay}</time>
                         )}
                         {post.publicationName && (
                           <>
