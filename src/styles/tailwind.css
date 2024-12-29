@@ -86,19 +86,29 @@
   animation: fadeOutDown 0.5s ease-in-out;
 }
 
-@keyframes borderPulse {
-  0% {
-    border-color: rgba(161, 161, 170, 0.1);
+@keyframes borderTravel {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
   }
   50% {
-    border-color: rgba(161, 161, 170, 0.5);
+    background-position: 100% 100%;
   }
-  100% {
-    border-color: rgba(161, 161, 170, 0.1);
+  75% {
+    background-position: 0% 100%;
   }
 }
 
 .animate-border {
-  border: 1px solid;
-  animation: borderPulse 2s ease-in-out infinite;
+  background: linear-gradient(90deg, rgba(161, 161, 170, 0.5) 50%, transparent 50%),
+              linear-gradient(90deg, rgba(161, 161, 170, 0.5) 50%, transparent 50%),
+              linear-gradient(0deg, rgba(161, 161, 170, 0.5) 50%, transparent 50%),
+              linear-gradient(0deg, rgba(161, 161, 170, 0.5) 50%, transparent 50%);
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size: 15px 1px, 15px 1px, 1px 15px, 1px 15px;
+  background-position: 0% 0%, 100% 100%, 0% 100%, 100% 0%;
+  animation: borderTravel 4s infinite linear;
+  padding: 2px;
 }
