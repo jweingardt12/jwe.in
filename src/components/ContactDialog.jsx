@@ -6,7 +6,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 export function ContactDialog({ open, onClose }) {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} size="3xl">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <DialogTitle>Get in touch</DialogTitle>
