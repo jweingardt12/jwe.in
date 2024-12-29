@@ -22,6 +22,7 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    path: '/_next/image',
   }
 }
 
