@@ -21,9 +21,11 @@ const nextConfig = {
   },
   output: 'standalone',
   experimental: {
-    optimizeCss: false,
-    webpackBuildWorker: false
+    optimizeCss: true,
+    webpackBuildWorker: false,
+    typedRoutes: false
   },
+  swcMinify: true,
   webpack: (config) => {
     config.watchOptions = {
       poll: 1000,
