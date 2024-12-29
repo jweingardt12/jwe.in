@@ -5,7 +5,7 @@ import matter from 'gray-matter'
 import { marked } from 'marked'
 
 export async function getAllArticles() {
-  const notesDirectory = path.join(process.cwd(), 'src/content/notes')
+  const notesDirectory = path.join(process.cwd(), 'src/app/notes')
   const files = await fs.readdir(notesDirectory)
   
   const articles = await Promise.all(
