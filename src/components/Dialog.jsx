@@ -70,3 +70,30 @@ export function DialogBody({ children, className }) {
     </div>
   )
 }
+
+export function DialogTestimonial({ quote, author, role, image }) {
+  return (
+    <div className="mt-6 lg:mt-0">
+      <figure className="mt-10">
+        <blockquote className="text-lg/8 font-semibold text-zinc-900 dark:text-zinc-100">
+          <p>{quote}</p>
+        </blockquote>
+        <figcaption className="mt-10 flex gap-x-6">
+          <img
+            src={image}
+            alt={author}
+            className="size-12 flex-none rounded-full bg-zinc-100 dark:bg-zinc-800"
+          />
+          <div>
+            <div className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              {author}
+            </div>
+            <div className="text-sm/6 text-zinc-600 dark:text-zinc-400">
+              {role}
+            </div>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  )
+}
