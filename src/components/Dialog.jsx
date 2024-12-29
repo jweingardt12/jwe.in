@@ -73,7 +73,7 @@ export function DialogBody({ children, className }) {
 
 export function DialogTestimonial({ quote, author, role, image }) {
   return (
-    <div className="mt-6 lg:mt-0">
+    <div className="mt-6 lg:mt-0 lg:w-[30%]">
       <figure className="mt-10">
         <blockquote className="text-lg/8 font-semibold text-white">
           <p>{quote}</p>

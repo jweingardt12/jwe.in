@@ -19,7 +19,7 @@ export function ContactDialog({ open, onClose }) {
         </div>
         <DialogBody>
           <div className="mt-16 flex flex-col gap-16 sm:gap-y-20 lg:flex-row">
-            <form action="#" method="POST" className="lg:flex-auto">
+            <form action="#" method="POST" className="lg:w-[70%]">
               <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="block text-sm/6 font-medium text-white">
