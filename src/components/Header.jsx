@@ -132,7 +132,7 @@ function MobileNavigation(props) {
               <MobileNavItem href="/notes">Notes</MobileNavItem>
               <MobileNavItem href="/reading">Reading</MobileNavItem>
               <MobileNavItem onClick={() => setIsContactOpen(true)}>
-                <span className="font-bold">Contact</span>
+                <span>Contact</span>
               </MobileNavItem>
             </ul>
           </nav>
