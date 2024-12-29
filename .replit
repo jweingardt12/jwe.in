@@ -2,7 +2,7 @@
 run = "npm run dev"
 entrypoint = "src/app/page.jsx"
 hidden = [".config", "package-lock.json"]
-modules = ["nodejs-18:v18-20230807-bd784b9"]
+modules = ["nodejs-18:v18-20807-bd784b9"]
 
 [nix]
 channel = "stable-23_05"
