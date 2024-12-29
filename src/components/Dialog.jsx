@@ -1,7 +1,9 @@
-import * as Headless from '@headlessui/react'
-import clsx from 'clsx'
 
-import { Text } from './Text'
+'use client'
+
+import { Fragment } from 'react'
+import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
+import clsx from 'clsx'
 
 const sizes = {
   xs: 'sm:max-w-xs',
@@ -15,58 +17,56 @@ const sizes = {
   '5xl': 'sm:max-w-5xl',
 }
 
-export function Dialog({ size = 'lg', className, children, ...props }) {
+export function Dialog({ open, onClose, size = 'lg', children }) {
   return (
-    <Headless.Dialog {...props}>
-      <Headless.DialogBackdrop
-        transition
-        className="fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/25 px-2 py-2 transition duration-100 focus:outline-0 data-[closed]:opacity-0 data-[enter]:ease-out data-[leave]:ease-in sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50"
-      />
+    <Transition.Root show={open} as={Fragment}>
+      <HeadlessDialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-zinc-400/25 backdrop-blur-sm dark:bg-black/40" />
+        </Transition.Child>
 
-      <div className="fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0">
-        <div className="grid min-h-full grid-rows-[1fr_auto] justify-items-center sm:grid-rows-[1fr_auto_3fr] sm:p-4">
-          <Headless.DialogPanel
-            transition
-            className={clsx(
-              className,
-              sizes[size],
-              'row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-[--gutter] shadow-lg ring-1 ring-zinc-950/10 [--gutter:theme(spacing.8)] sm:mb-auto sm:rounded-2xl dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline',
-              'transition duration-100 will-change-transform data-[closed]:translate-y-12 data-[closed]:opacity-0 data-[enter]:ease-out data-[leave]:ease-in sm:data-[closed]:translate-y-0 sm:data-[closed]:data-[enter]:scale-95'
-            )}
-          >
-            {children}
-          </Headless.DialogPanel>
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <HeadlessDialog.Panel className={clsx('relative w-full transform rounded-lg bg-white text-left shadow-xl transition-all dark:bg-zinc-900 sm:my-8', sizes[size])}>
+                {children}
+              </HeadlessDialog.Panel>
+            </Transition.Child>
+          </div>
         </div>
-      </div>
-    </Headless.Dialog>
+      </HeadlessDialog>
+    </Transition.Root>
   )
 }
 
-export function DialogTitle({ className, ...props }) {
+export function DialogTitle({ children, className }) {
   return (
-    <Headless.DialogTitle
-      {...props}
-      className={clsx(className, 'text-balance text-lg/6 font-semibold text-zinc-950 sm:text-base/6 dark:text-white')}
-    />
+    <HeadlessDialog.Title className={clsx('text-lg font-semibold leading-6 text-zinc-900 dark:text-white', className)}>
+      {children}
+    </HeadlessDialog.Title>
   )
 }
 
-export function DialogDescription({ className, ...props }) {
-  return <Headless.Description as={Text} {...props} className={clsx(className, 'mt-2 text-pretty')} />
-}
-
-export function DialogBody({ className, ...props }) {
-  return <div {...props} className={clsx(className, 'mt-6')} />
-}
-
-export function DialogActions({ className, ...props }) {
+export function DialogBody({ children, className }) {
   return (
-    <div
-      {...props}
-      className={clsx(
-        className,
-        'mt-8 flex flex-col-reverse items-center justify-end gap-3 *:w-full sm:flex-row sm:*:w-auto'
-      )}
-    />
+    <div className={clsx('px-6 py-4', className)}>
+      {children}
+    </div>
   )
 }
