@@ -9,7 +9,7 @@ image: /src/images/photos/image-1.jpg
 
 Most companies try to stay ahead of the curve when it comes to visual design. This is an example paragraph that introduces your main topic, similar to the example post.
 
-![Featured Image](/src/images/photos/image-1.jpg)
+![Featured Image](/image-1.jpg)
 
 ## First Section
 
