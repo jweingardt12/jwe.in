@@ -207,7 +207,7 @@ function Avatar({ large = false, className, ...props }) {
     <Link
       href="/"
       aria-label="Home"
-      className={clsx(className, 'pointer-events-auto')}
+      className={clsx(className, 'pointer-events-auto cursor-[url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><text y=\'20\'>🏠</text></svg>") 16 16, auto]')}
       {...props}
     >
       <Image
