@@ -28,8 +28,8 @@ export default async function Home() {
       <Container className="mt-9">
         <div className="max-w-2xl">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              <span className="animate-gradient-text">Jason Weingardt</span>
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+              <span>Jason Weingardt</span>
             </h1>
             
           </div>
