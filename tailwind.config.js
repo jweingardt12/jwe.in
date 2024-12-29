@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
+        gradient: 'gradient 3s ease infinite',
         fadeUp: 'fadeUp 0.5s ease-in-out',
         fadeOutDown: 'fadeOutDown 0.5s ease-in-out',
         fadeInUp: 'fadeInUp 0.5s ease-in-out',
@@ -17,6 +18,10 @@ module.exports = {
         500: '500ms',
       },
       keyframes: {
+        gradient: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
         fadeUp: {
           from: {
             opacity: 0,

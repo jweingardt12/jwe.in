@@ -29,7 +29,7 @@ export function Footer() {
                 <NavLink href="/work">Work</NavLink>
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
-                <button onClick={() => setIsContactOpen(true)} className="transition hover:text-teal-500 dark:hover:text-teal-400">Contact</button>
+                <button onClick={() => setIsContactOpen(true)} className="bg-gradient-to-r from-teal-400 via-teal-500 to-teal-400 bg-[length:200%_100%] animate-gradient bg-clip-text text-transparent">Contact</button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt
