@@ -176,8 +176,8 @@ function DesktopNavigation(props) {
         <NavItem href="/reading">Reading</NavItem>
         <NavItem href="/uses">Uses</NavItem>
         <NavItem onClick={() => setIsContactOpen(true)}>Contact</NavItem>
-        <ContactDialog isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       </ul>
+      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </nav>
   )
 }
