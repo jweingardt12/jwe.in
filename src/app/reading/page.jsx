@@ -96,14 +96,15 @@ export default async function ReadingPage() {
           Recently liked articles, displayed in descending order.
         </p>
 
-        <div className="mt-10 space-y-8 border-t border-zinc-100 pt-10 dark:border-zinc-700 sm:mt-16 sm:pt-16">
+        <div className="mt-10 divide-y divide-zinc-100 dark:divide-zinc-800 border-t border-zinc-100 pt-10 dark:border-zinc-700 sm:mt-16 sm:pt-16">
+          <div className="space-y-12">
           {articles.length === 0 ? (
             <p className="text-zinc-500 dark:text-zinc-400">
               No articles found or an error occurred.
             </p>
           ) : (
             articles.map((post) => (
-              <article key={post.id} className="max-w-xl">
+              <article key={post.id} className="max-w-3xl">
                 <Card as="div">
                   <div className="flex w-full flex-row items-start justify-between gap-x-6">
                     <div className="flex-1">
@@ -152,6 +153,7 @@ export default async function ReadingPage() {
               </article>
             ))
           )}
+          </div>
         </div>
       </Container>
     </>
