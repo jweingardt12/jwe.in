@@ -131,9 +131,6 @@ function MobileNavigation(props) {
               <MobileNavItem href="/work">Work</MobileNavItem>
               <MobileNavItem href="/notes">Notes</MobileNavItem>
               <MobileNavItem href="/reading">Reading</MobileNavItem>
-              <MobileNavItem onClick={() => setIsContactOpen(true)}>
-                <span>Contact</span>
-              </MobileNavItem>
             </ul>
           </nav>
         </PopoverPanel>
@@ -190,11 +187,7 @@ function DesktopNavigation(props) {
         <NavItem href="/work">Work</NavItem>
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
-        <NavItem onClick={() => setIsContactOpen(true)}>
-            <span>Contact</span>
-          </NavItem>
       </ul>
-      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </nav>
   )
 }
