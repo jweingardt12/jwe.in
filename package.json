@@ -23,6 +23,8 @@
     "clsx": "^2.1.0",
     "fast-glob": "^3.2.11",
     "feed": "^4.2.2",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.4",
     "next": "^14.2.21",
     "next-themes": "^0.2.1",
     "open-graph-scraper": "^6.8.3",
