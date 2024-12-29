@@ -174,7 +174,7 @@ function DesktopNavigation(props) {
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
         <NavItem onClick={() => setIsContactOpen(true)}>
-            <span className="bg-gradient-to-r from-white via-orange-400 via-purple-500 via-blue-500 to-teal-400 bg-[length:500%_100%] animate-gradient-slow bg-clip-text text-transparent dark:from-zinc-100">Contact</span>
+            <span className="bg-gradient-to-r from-white via-orange-400 via-purple-500 via-blue-500 to-teal-400 bg-[length:500%_100%] animate-gradient-slower bg-clip-text text-transparent dark:from-zinc-100">Contact</span>
           </NavItem>
       </ul>
       <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />

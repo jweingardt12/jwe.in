@@ -10,6 +10,7 @@ module.exports = {
       animation: {
         gradient: 'gradient 3s ease infinite',
         'gradient-slow': 'gradient 8s ease infinite',
+        'gradient-slower': 'gradient 15s ease infinite',
         fadeUp: 'fadeUp 0.5s ease-in-out',
         fadeOutDown: 'fadeOutDown 0.5s ease-in-out',
         fadeInUp: 'fadeInUp 0.5s ease-in-out',
