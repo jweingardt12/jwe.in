@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Standard } from "@typebot.io/nextjs"
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { Field, Label, Switch } from '@headlessui/react'
 import { SimpleLayout } from '@/components/SimpleLayout'
@@ -83,6 +84,9 @@ export default function Contact() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="mt-12">
+        <Standard typebot="contact" style={{ width: "100%", height: "600px" }} />
       </div>
     </SimpleLayout>
   )
