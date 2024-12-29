@@ -5,9 +5,9 @@ import { Dialog, DialogTitle, DialogBody } from './Dialog'
 import { useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-export function ContactDialog({ isOpen, onClose }) {
+export function ContactDialog({ open, onClose }) {
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={open} onClose={onClose}>
       <div className="flex items-center justify-between">
         <DialogTitle>Get in touch</DialogTitle>
         <button
