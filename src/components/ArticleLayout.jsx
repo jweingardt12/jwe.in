@@ -1,8 +1,6 @@
 
 'use client'
 
-'use client'
-
 import { Container } from '@/components/Container'
 import { useContext, createContext } from 'react'
 import { Prose } from '@/components/Prose'
@@ -18,7 +16,7 @@ export function ArticleLayout({ article, children }) {
               <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                 {article.title}
               </h1>
-              {article.date && (
+              {article.date && article.date !== 'Invalid Date' && (
                 <time
                   dateTime={article.date}
                   className="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500"
