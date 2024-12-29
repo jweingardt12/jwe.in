@@ -36,25 +36,23 @@ export default async function Home() {
 
           <div className="animate-fade-in delay-2s">
             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-              I'm Jason, a product manager based in Washington. I'm the founder and CEO of Planetaria, where we develop
-              technologies that empower regular people to explore space on their
-              own terms.
+              I'm Jason, a product manager based in Washington, D.C. I've worked to build world-class products, teams, and experiences remotely.
             </p>
 
             <div className="mt-6 flex gap-6">
-              <SocialLink href="#" aria-label="Follow on X" icon={ThreadsIcon} />
+              <SocialLink href="https://www.threads.net/@jweingardt" aria-label="Follow on Threads" icon={ThreadsIcon} />
               <SocialLink
-                href="#"
+                href="https://www.instagram.com/jweingardt/"
                 aria-label="Follow on Instagram"
                 icon={InstagramIcon}
               />
               <SocialLink
-                href="#"
+                href="https://github.com/jweingardt12"
                 aria-label="Follow on GitHub"
                 icon={GitHubIcon}
               />
               <SocialLink
-                href="#"
+                href= "https://www.linkedin.com/in/jason-weingardt"
                 aria-label="Follow on LinkedIn"
                 icon={LinkedInIcon}
               />
