@@ -128,9 +128,15 @@ function MobileNavigation({ setIsContactOpen, ...props }) {
             <MobileNavItem href="/work">Work</MobileNavItem>
             <MobileNavItem href="/notes">Notes</MobileNavItem>
             <MobileNavItem href="/reading">Reading</MobileNavItem>
-            <MobileNavItem onClick={() => setIsContactOpen(true)}>
-              Contact <span className="ml-1">👋</span>
-            </MobileNavItem>
+            <li className="py-2">
+              <button
+                onClick={() => setIsContactOpen(true)}
+                className="inline-flex items-center gap-x-1.5 rounded-md bg-white/90 px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:bg-zinc-50/90 dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20"
+              >
+                Contact
+                <span className="text-base" aria-hidden="true">👋</span>
+              </button>
+            </li>
           </ul>
         </nav>
       </PopoverPanel>
