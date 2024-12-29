@@ -1,6 +1,8 @@
+'use client'
+import { useState } from 'react'
 import Link from 'next/link'
-
 import { ContainerInner, ContainerOuter } from '@/components/Container'
+import { ContactDialog } from './ContactDialog'
 
 function NavLink({ href, children }) {
   return (
@@ -14,6 +16,8 @@ function NavLink({ href, children }) {
 }
 
 export function Footer() {
+  const [showDialog, setShowDialog] = useState(false);
+
   return (
     <footer className="mt-32 flex-none">
       <ContainerOuter>
@@ -25,7 +29,7 @@ export function Footer() {
                 <NavLink href="/projects">Projects</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
                 <NavLink href="/uses">Uses</NavLink>
-                <NavLink href="/contact">Contact</NavLink>
+                <button onClick={() => setShowDialog(true)} className="transition hover:text-teal-500 dark:hover:text-teal-400">Contact</button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt
@@ -34,6 +38,7 @@ export function Footer() {
           </ContainerInner>
         </div>
       </ContainerOuter>
+      <ContactDialog open={showDialog} onClose={() => setShowDialog(false)} />
     </footer>
   )
 }

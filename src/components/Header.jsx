@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { ContactDialog } from './ContactDialog'
 import { useTheme } from 'next-themes'
 import {
   Popover,
@@ -126,8 +127,23 @@ function MobileNavigation(props) {
   )
 }
 
-function NavItem({ href, children }) {
+function NavItem({ href, children, onClick }) {
   let isActive = usePathname() === href
+
+  if (onClick) {
+    return (
+      <li>
+        <button
+          onClick={onClick}
+          className={clsx(
+            'relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400'
+          )}
+        >
+          {children}
+        </button>
+      </li>
+    )
+  }
 
   return (
     <li>
@@ -158,7 +174,8 @@ function DesktopNavigation(props) {
         <NavItem href="/projects">Projects</NavItem>
         <NavItem href="/reading">Reading</NavItem>
         <NavItem href="/uses">Uses</NavItem>
-        <NavItem href="/contact">Contact</NavItem>
+        <NavItem onClick={() => setIsContactOpen(true)}>Contact</NavItem>
+        <ContactDialog isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       </ul>
     </nav>
   )
@@ -228,6 +245,7 @@ function Avatar({ large = false, className, ...props }) {
 
 export function Header() {
   let isHomePage = usePathname() === '/'
+  const [isContactOpen, setIsContactOpen] = useState(false)
 
   let headerRef = useRef(null)
   let avatarRef = useRef(null)
