@@ -1,10 +1,11 @@
+
 ---
 title: Testing, 123
 date: 12/30/2024
 description: This is an example post description
-image: /src/images/photos/image-1.jpg
+image: /images/photos/image-1.jpg
 ---
-![Image 1](/src/images/photos/image-1.jpg)
+![Kauai](/images/photos/image-1.jpg)
 ## My First Markdown Post
 
 This is a paragraph written in pure markdown. You can use **bold** and *italic* text.
