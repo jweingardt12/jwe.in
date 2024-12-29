@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState } from 'react'
@@ -86,7 +85,11 @@ export default function Contact() {
         </form>
       </div>
       <div className="mt-12">
-        <Standard typebot="contact" style={{ width: "100%", height: "600px" }} />
+        <Standard 
+          typebot="contact"
+          apiHost="https://bot.jwein.me"
+          style={{ width: "100%", height: "600px" }} 
+        />
       </div>
     </SimpleLayout>
   )
