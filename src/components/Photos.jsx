@@ -73,7 +73,7 @@ export function Photos() {
     <div className="mt-16 sm:mt-20">
       <div
         ref={scrollRef}
-        className="scrollbar-hide relative -my-4 flex gap-5 overflow-x-auto scroll-smooth py-4 sm:gap-8"
+        className="scrollbar-hide relative -my-4 flex gap-5 overflow-x-auto scroll-smooth py-4 sm:gap-8 will-change-transform"
       >
         {[...photos, ...photos.slice(0, 3)].map(
           ({ image, hoverText, link }, index) => (
@@ -86,7 +86,8 @@ export function Photos() {
                 rotations[index % rotations.length],
               )}
               style={{ 
-                transition: 'all 0.3s ease-in-out',
+                transition: 'transform 0.3s ease-in-out',
+                willChange: 'transform'
               }}
             >
               <div className="relative h-full w-full">
