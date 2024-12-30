@@ -412,7 +412,7 @@ export function Header() {
           }}
         >
           <Container
-            className="top-[var(--header-top,theme(spacing.6))] w-full bg-white dark:bg-zinc-800 shadow-sm"
+            className="top-[var(--header-top,theme(spacing.6))] w-full bg-white dark:bg-zinc-900 shadow-sm border-b border-zinc-200 dark:border-zinc-800"
             style={{
               position: 'var(--header-inner-position)',
             }}
