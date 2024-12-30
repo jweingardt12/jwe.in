@@ -1,22 +1,15 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ContactDialog } from './ContactDialog'
-import { useTheme } from 'next-themes'
-import {
-  Popover,
-  PopoverButton,
-  PopoverBackdrop,
-  PopoverPanel,
-} from '@headlessui/react'
+import { Popover, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 
 import { Container } from '@/components/Container'
+import { ContactDialog } from '@/components/ContactDialog'
 import avatarImage from '@/images/avatar.jpg'
-import { Button } from '@/components/Button'
 
 function CloseIcon(props) {
   return (
@@ -79,81 +72,102 @@ function MoonIcon(props) {
   )
 }
 
+function MailIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+      />
+    </svg>
+  )
+}
+
 function MobileNavItem({ href, children, onClick }) {
   if (onClick) {
     return (
       <li>
-        <button onClick={onClick} className="block w-full py-2 text-left">
+        <button onClick={onClick} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
           {children}
         </button>
       </li>
     )
   }
-  
+
   return (
     <li>
-      <PopoverButton as={Link} href={href} className="block py-2">
+      <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
         {children}
-      </PopoverButton>
+      </Popover.Button>
     </li>
   )
 }
 
-function MobileNavigation({ isContactOpen, setIsContactOpen, ...props }) {
+function MobileNavigation({ setIsContactOpen, ...props }) {
   return (
     <Popover {...props}>
-      <PopoverButton className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20">
+      <Popover.Button className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20">
         Menu
         <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
-      </PopoverButton>
-      <PopoverBackdrop className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm" />
-      <PopoverPanel className="fixed inset-x-4 top-8 z-[9999] origin-top rounded-3xl bg-white/95 dark:bg-zinc-900/95 p-8 ring-1 ring-zinc-900/5 dark:ring-zinc-800 shadow-lg backdrop-blur-md">
-        <div className="flex flex-row-reverse items-center justify-between">
-          <PopoverButton aria-label="Close menu" className="-m-1 p-1">
-            <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-          </PopoverButton>
-          <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Navigation
-          </h2>
-        </div>
-        <nav className="mt-6">
-          <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
-            <MobileNavItem href="/about">About</MobileNavItem>
-            <MobileNavItem href="/work">Work</MobileNavItem>
-            <MobileNavItem href="/notes">Notes</MobileNavItem>
-            <MobileNavItem href="/reading">Reading</MobileNavItem>
-            <li className="py-2">
-              <Button
-                onClick={() => setIsContactOpen(true)}
-                className="w-full"
-              >
-                Contact
-              </Button>
-            </li>
-          </ul>
-        </nav>
-      </PopoverPanel>
+      </Popover.Button>
+      <Transition.Root>
+        <Transition.Child
+          as={Fragment}
+          enter="duration-150 ease-out"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="duration-150 ease-in"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <Popover.Overlay className="fixed inset-0 z-[999999] bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
+        </Transition.Child>
+        <Transition.Child
+          as={Fragment}
+          enter="duration-150 ease-out"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="duration-150 ease-in"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
+          <Popover.Panel className="fixed inset-x-4 top-8 z-[999999] origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800">
+            <div className="flex flex-col">
+              <div className="flex justify-end">
+                <Popover.Button aria-label="Close menu" className="-m-1 p-1">
+                  <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
+                </Popover.Button>
+              </div>
+              <nav className="mt-6">
+                <ul className="space-y-4">
+                  <MobileNavItem href="/about">About</MobileNavItem>
+                  <MobileNavItem href="/work">Work</MobileNavItem>
+                  <MobileNavItem href="/notes">Notes</MobileNavItem>
+                  <MobileNavItem href="/reading">Reading</MobileNavItem>
+                </ul>
+              </nav>
+              <div className="mt-8 border-t border-zinc-200 dark:border-zinc-100/10 pt-8">
+                <button
+                  onClick={() => {
+                    setIsContactOpen(true)
+                  }}
+                  className="w-full rounded-md bg-sky-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-sky-500 dark:hover:bg-sky-400"
+                >
+                  Contact
+                </button>
+              </div>
+            </div>
+          </Popover.Panel>
+        </Transition.Child>
+      </Transition.Root>
     </Popover>
   )
 }
 
-function NavItem({ href, children, onClick }) {
+function NavItem({ href, children }) {
   let isActive = usePathname() === href
-
-  if (onClick) {
-    return (
-      <li>
-        <button
-          onClick={onClick}
-          className={clsx(
-            'relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400'
-          )}
-        >
-          {children}
-        </button>
-      </li>
-    )
-  }
 
   return (
     <li>
@@ -162,13 +176,13 @@ function NavItem({ href, children, onClick }) {
         className={clsx(
           'relative block px-3 py-2 transition',
           isActive
-            ? 'text-teal-500 dark:text-teal-400'
-            : 'hover:text-teal-500 dark:hover:text-teal-400',
+            ? 'text-sky-500 dark:text-sky-400'
+            : 'hover:text-sky-500 dark:hover:text-sky-400'
         )}
       >
         {children}
         {isActive && (
-          <span className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0" />
+          <span className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-sky-500/0 via-sky-500/40 to-sky-500/0 dark:from-sky-400/0 dark:via-sky-400/40 dark:to-sky-400/0" />
         )}
       </Link>
     </li>
@@ -176,7 +190,6 @@ function NavItem({ href, children, onClick }) {
 }
 
 function DesktopNavigation(props) {
-  const [isContactOpen, setIsContactOpen] = useState(false)
   return (
     <nav {...props}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
@@ -186,28 +199,6 @@ function DesktopNavigation(props) {
         <NavItem href="/reading">Reading</NavItem>
       </ul>
     </nav>
-  )
-}
-
-function ThemeToggle() {
-  let { resolvedTheme, setTheme } = useTheme()
-  let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
-  let [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  return (
-    <button
-      type="button"
-      aria-label={mounted ? `Switch to ${otherTheme} theme` : 'Toggle theme'}
-      className="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:bg-zinc-800/90 dark:ring-white/10 dark:hover:ring-white/20"
-      onClick={() => setTheme(otherTheme)}
-    >
-      <SunIcon className="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden [@media(prefers-color-scheme:dark)]:fill-teal-50 [@media(prefers-color-scheme:dark)]:stroke-teal-500 [@media(prefers-color-scheme:dark)]:group-hover:fill-teal-50 [@media(prefers-color-scheme:dark)]:group-hover:stroke-teal-600" />
-      <MoonIcon className="hidden h-6 w-6 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400 [@media_not_(prefers-color-scheme:dark)]:fill-teal-400/10 [@media_not_(prefers-color-scheme:dark)]:stroke-teal-500" />
-    </button>
   )
 }
 
@@ -222,7 +213,7 @@ function AvatarContainer({ className, ...props }) {
     <div
       className={clsx(
         className,
-        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10',
+        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10'
       )}
       {...props}
     />
@@ -234,7 +225,7 @@ function Avatar({ large = false, className, ...props }) {
     <Link
       href="/"
       aria-label="Home"
-      className={clsx(className, 'pointer-events-auto cursor-[url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><text y=\'20\'>🏠</text></svg>") 16 16, auto]')}
+      className={clsx(className, 'pointer-events-auto')}
       {...props}
     >
       <Image
@@ -242,8 +233,8 @@ function Avatar({ large = false, className, ...props }) {
         alt=""
         sizes={large ? '4rem' : '2.25rem'}
         className={clsx(
-          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 transition-transform duration-300 hover:-rotate-12',
-          large ? 'h-16 w-16' : 'h-9 w-9',
+          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800',
+          large ? 'h-16 w-16' : 'h-9 w-9'
         )}
         priority
       />
@@ -252,9 +243,8 @@ function Avatar({ large = false, className, ...props }) {
 }
 
 export function Header() {
-  let isHomePage = usePathname() === '/'
   const [isContactOpen, setIsContactOpen] = useState(false)
-
+  let isHomePage = usePathname() === '/'
   let headerRef = useRef(null)
   let avatarRef = useRef(null)
   let isInitial = useRef(true)
@@ -272,15 +262,11 @@ export function Header() {
     }
 
     function updateHeaderStyles() {
-      if (!headerRef.current) {
-        return
-      }
-
       let { top, height } = headerRef.current.getBoundingClientRect()
       let scrollY = clamp(
         window.scrollY,
         0,
-        document.body.scrollHeight - window.innerHeight,
+        document.body.scrollHeight - window.innerHeight
       )
 
       if (isInitial.current) {
@@ -332,7 +318,7 @@ export function Header() {
 
       setProperty(
         '--avatar-image-transform',
-        `translate3d(${x}rem, 0, 0) scale(${scale})`,
+        `translate3d(${x}rem, 0, 0) scale(${scale})`
       )
 
       let borderScale = 1 / (toScale / scale)
@@ -362,7 +348,7 @@ export function Header() {
   return (
     <>
       <header
-        className="pointer-events-none relative z-[9000] flex flex-none flex-col"
+        className="pointer-events-none relative z-50 flex flex-none flex-col"
         style={{
           height: 'var(--header-height)',
           marginBottom: 'var(--header-mb)',
@@ -376,15 +362,11 @@ export function Header() {
             />
             <Container
               className="top-0 order-last -mb-3 pt-3"
-              style={{
-                position: 'var(--header-position)',
-              }}
+              style={{ position: 'var(--header-position)' }}
             >
               <div
                 className="top-[var(--avatar-top,theme(spacing.3))] w-full"
-                style={{
-                  position: 'var(--header-inner-position)',
-                }}
+                style={{ position: 'var(--header-inner-position)' }}
               >
                 <div className="relative">
                   <AvatarContainer
@@ -407,15 +389,11 @@ export function Header() {
         <div
           ref={headerRef}
           className="top-0 z-10 h-16 pt-6"
-          style={{
-            position: 'var(--header-position)',
-          }}
+          style={{ position: 'var(--header-position)' }}
         >
           <Container
-            className="top-[var(--header-top,theme(spacing.6))] w-full bg-white dark:bg-zinc-900 shadow-sm border-b border-zinc-200 dark:border-zinc-800"
-            style={{
-              position: 'var(--header-inner-position)',
-            }}
+            className="top-[var(--header-top,theme(spacing.6))] w-full"
+            style={{ position: 'var(--header-inner-position)' }}
           >
             <div className="relative flex gap-4">
               <div className="flex flex-1">
@@ -426,33 +404,28 @@ export function Header() {
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
+                <MobileNavigation className="pointer-events-auto md:hidden" setIsContactOpen={setIsContactOpen} />
                 <DesktopNavigation className="pointer-events-auto hidden md:block" />
               </div>
-              <div className="flex justify-end gap-4 md:flex-1">
-                <div className="hidden pointer-events-auto md:block">
-                  <Button
+              <div className="hidden md:flex md:justify-end md:flex-1">
+                <div className="pointer-events-auto">
+                  <button
                     onClick={() => setIsContactOpen(true)}
+                    className="group inline-flex items-center gap-2 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-zinc-100 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:bg-sky-500 dark:bg-sky-700 dark:text-zinc-100 dark:ring-white/10 dark:hover:bg-sky-600"
                   >
                     Contact
-                  </Button>
+                    <MailIcon className="h-4 w-4 transition group-hover:scale-110" />
+                  </button>
                 </div>
-                <MobileNavigation 
-                  isContactOpen={isContactOpen}
-                  setIsContactOpen={setIsContactOpen}
-                  className="pointer-events-auto md:hidden" 
-                />
-                <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
               </div>
             </div>
           </Container>
         </div>
       </header>
       {isHomePage && (
-        <div
-          className="flex-none"
-          style={{ height: 'var(--content-offset)' }}
-        />
+        <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
+      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </>
   )
 }

@@ -1,3 +1,23 @@
+'use client'
+
+import Link from 'next/link'
+
+function SocialLink({ icon: Icon, ...props }) {
+  return (
+    <a 
+      className="group -m-1 p-1" 
+      {...props}
+      onClick={() => {
+        // Track social link click
+        const platform = props.href.match(/(?:https?:\/\/)?(?:www\.)?([^\/]+)/)[1]
+        window.umami?.track('social_click', { platform })
+      }}
+    >
+      <Icon className="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300" />
+    </a>
+  )
+}
+
 export function ThreadsIcon(props) {
   return (
     <svg viewBox="0 0 192 192" aria-hidden="true" {...props}>

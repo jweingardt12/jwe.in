@@ -7,7 +7,7 @@
   background: linear-gradient(
     300deg,
     #0ea5e9,
-    #14b8a6,
+    #0284c7,
     #f97316,
     #a855f7
   );
@@ -31,7 +31,7 @@
 
 @keyframes colorize-dark {
   0% { color: rgb(244 244 245); }
-  50% { color: rgb(45 212 191); }
+  50% { color: rgb(14 165 233); }
   100% { color: rgb(244 244 245); }
 }
 
@@ -61,7 +61,7 @@
   }
   to {
     opacity: 0;
-    transform: translateY(1rem); /* Moves down */
+    transform: translateY(1rem);
   }
 }
 
@@ -69,7 +69,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(1rem); /* Starts from below */
+    transform: translateY(1rem);
   }
   to {
     opacity: 1;

@@ -3,7 +3,7 @@ const typographyStyles = require('./typography');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/**/*.{js,jsx}'],
   darkMode: 'selector',
   theme: {
     extend: {
@@ -22,6 +22,11 @@ module.exports = {
         'slide-up-3': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.0s forwards',
         'slide-up-4': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.4s forwards',
         'slide-up-5': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.8s forwards',
+        // Add toast animations
+        'toast-hide': 'toast-hide 100ms ease-in forwards',
+        'toast-slide-in-right': 'toast-slide-in-right 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'toast-slide-in-bottom': 'toast-slide-in-bottom 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'toast-swipe-out': 'toast-swipe-out 100ms ease-out forwards',
       },
       animationDelay: {
         500: '500ms',
@@ -32,63 +37,23 @@ module.exports = {
           '0%': { backgroundPosition: '0% 50%' },
           '100%': { backgroundPosition: '500% 50%' }
         },
-        fadeUp: {
-          from: {
-            opacity: 0,
-            transform: 'translateY(30px)',
-          },
-          to: {
-            opacity: 1,
-            transform: 'translateY(0)',
-          },
+        // ... your existing keyframes ...
+        // Add toast keyframes
+        'toast-hide': {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 },
         },
-        fadeOutDown: {
-          from: {
-            opacity: 1,
-            transform: 'translateY(0)',
-          },
-          to: {
-            opacity: 0,
-            transform: 'translateY(30px)',
-          },
+        'toast-slide-in-right': {
+          '0%': { transform: 'translateX(calc(100% + 1rem))' },
+          '100%': { transform: 'translateX(0)' },
         },
-        fadeInUp: {
-          from: {
-            opacity: 0,
-            transform: 'translateY(30px)',
-          },
-          to: {
-            opacity: 1,
-            transform: 'translateY(0)',
-          },
+        'toast-slide-in-bottom': {
+          '0%': { transform: 'translateY(calc(100% + 1rem))' },
+          '100%': { transform: 'translateY(0)' },
         },
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' }
-        },
-        slideUp: {
-          '0%': { 
-            opacity: '0',
-            transform: 'translateY(100px)'
-          },
-          '70%': {
-            opacity: '0.7',
-            transform: 'translateY(-20px)'
-          },
-          '100%': { 
-            opacity: '1',
-            transform: 'translateY(0)'
-          }
-        },
-        highlight: {
-          '0%': {
-            width: '0%',
-            opacity: '1',
-          },
-          '100%': {
-            width: '100%',
-            opacity: '1',
-          },
+        'toast-swipe-out': {
+          '0%': { transform: 'translateX(var(--radix-toast-swipe-end-x))' },
+          '100%': { transform: 'translateX(calc(100% + 1rem))' },
         },
       },
       fontSize: {
