@@ -1,11 +1,3 @@
-
-@layer components {
-  .card-stack {
-    perspective: 1500px;
-    transform-style: preserve-3d;
-  }
-}
-
 /* Card Stack Styles */
 .card-stack {
   perspective: 1000px;
