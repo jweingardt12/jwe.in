@@ -107,7 +107,7 @@ function MobileNavigation({ isContactOpen, setIsContactOpen, ...props }) {
         <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
       </PopoverButton>
       <PopoverBackdrop className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm" />
-      <PopoverPanel className="fixed inset-x-4 top-8 z-[9999] origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800 shadow-lg">
+      <PopoverPanel className="fixed inset-x-4 top-8 z-[9999] origin-top rounded-3xl bg-white/95 dark:bg-zinc-900/95 p-8 ring-1 ring-zinc-900/5 dark:ring-zinc-800 shadow-lg backdrop-blur-md">
         <div className="flex flex-row-reverse items-center justify-between">
           <PopoverButton aria-label="Close menu" className="-m-1 p-1">
             <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
@@ -412,7 +412,7 @@ export function Header() {
           }}
         >
           <Container
-            className="top-[var(--header-top,theme(spacing.6))] w-full bg-white/90 dark:bg-zinc-800/90 backdrop-blur"
+            className="top-[var(--header-top,theme(spacing.6))] w-full bg-white/95 dark:bg-zinc-800/95 backdrop-blur-md shadow-sm"
             style={{
               position: 'var(--header-inner-position)',
             }}
