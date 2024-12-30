@@ -37,7 +37,7 @@ export function CardStack({ images }) {
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setIsPaused(false)}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         {cards.map((image, index) => (
           <motion.div
             key={image.src}
