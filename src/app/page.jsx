@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -27,14 +26,13 @@ export default async function Home() {
     <>
       <Container className="mt-9">
         <div className="max-w-2xl">
-          <div>
+          <div className="opacity-0 animate-fade-in">
             <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
               <span>Jason Weingardt</span>
             </h1>
-            
           </div>
 
-          <div className="animate-fade-in delay-2s">
+          <div className="opacity-0 animate-fade-in-delayed">
             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
               I'm Jason, a product manager based in Washington, D.C. I've worked to build world-class products, teams, and experiences remotely.
             </p>
@@ -61,7 +59,7 @@ export default async function Home() {
         </div>
       </Container>
 
-      <div className="animate-fade-in delay-2s">
+      <div className="opacity-0 animate-fade-in-delayed">
         <Photos />
       </div>
     </>

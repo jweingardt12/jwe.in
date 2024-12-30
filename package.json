@@ -23,6 +23,7 @@
     "clsx": "^2.1.0",
     "fast-glob": "^3.2.11",
     "feed": "^4.2.2",
+    "framer-motion": "^11.15.0",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.4",
     "next": "^14.2.21",

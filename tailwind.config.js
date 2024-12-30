@@ -15,9 +15,17 @@ module.exports = {
         fadeOutDown: 'fadeOutDown 0.5s ease-in-out',
         fadeInUp: 'fadeInUp 0.5s ease-in-out',
         highlight: 'highlight 1.2s ease-out forwards',
+        'fade-in': 'fadeIn 1s ease-out forwards',
+        'fade-in-delayed': 'fadeIn 1s ease-out 3s forwards',
+        'slide-up-1': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3.2s forwards',
+        'slide-up-2': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3.6s forwards',
+        'slide-up-3': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.0s forwards',
+        'slide-up-4': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.4s forwards',
+        'slide-up-5': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 4.8s forwards',
       },
       animationDelay: {
         500: '500ms',
+        3000: '3000ms',
       },
       keyframes: {
         gradient: {
@@ -53,6 +61,24 @@ module.exports = {
             opacity: 1,
             transform: 'translateY(0)',
           },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        },
+        slideUp: {
+          '0%': { 
+            opacity: '0',
+            transform: 'translateY(100px)'
+          },
+          '70%': {
+            opacity: '0.7',
+            transform: 'translateY(-20px)'
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
         },
         highlight: {
           '0%': {

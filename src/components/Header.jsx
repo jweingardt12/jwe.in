@@ -16,6 +16,7 @@ import clsx from 'clsx'
 
 import { Container } from '@/components/Container'
 import avatarImage from '@/images/avatar.jpg'
+import { Button } from '@/components/Button'
 
 function CloseIcon(props) {
   return (
@@ -98,7 +99,7 @@ function MobileNavItem({ href, children, onClick }) {
   )
 }
 
-function MobileNavigation({ setIsContactOpen, ...props }) {
+function MobileNavigation({ isContactOpen, setIsContactOpen, ...props }) {
   return (
     <Popover {...props}>
       <PopoverButton className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20">
@@ -129,13 +130,12 @@ function MobileNavigation({ setIsContactOpen, ...props }) {
             <MobileNavItem href="/notes">Notes</MobileNavItem>
             <MobileNavItem href="/reading">Reading</MobileNavItem>
             <li className="py-2">
-              <button
+              <Button
                 onClick={() => setIsContactOpen(true)}
-                className="w-full inline-flex items-center justify-center gap-x-1.5 rounded-md bg-white/90 px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:bg-zinc-50/90 dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20"
+                className="w-full"
               >
                 Contact
-                <span className="text-base" aria-hidden="true">👋</span>
-              </button>
+              </Button>
             </li>
           </ul>
         </nav>
@@ -437,16 +437,18 @@ export function Header() {
               </div>
               <div className="flex justify-end gap-4 md:flex-1">
                 <div className="hidden pointer-events-auto md:block">
-                  <button
+                  <Button
                     onClick={() => setIsContactOpen(true)}
-                    className="inline-flex items-center gap-x-1.5 rounded-md bg-white/90 px-2.5 py-1.5 text-sm font-semibold text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:bg-zinc-50/90 dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20"
                   >
                     Contact
-                    <span className="text-base" aria-hidden="true">👋</span>
-                  </button>
-                  <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
+                  </Button>
                 </div>
-                <MobileNavigation setIsContactOpen={setIsContactOpen} className="pointer-events-auto md:hidden" />
+                <MobileNavigation 
+                  isContactOpen={isContactOpen}
+                  setIsContactOpen={setIsContactOpen}
+                  className="pointer-events-auto md:hidden" 
+                />
+                <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
               </div>
             </div>
           </Container>

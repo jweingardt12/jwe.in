@@ -15,16 +15,19 @@ export function Layout({ children }) {
         </div>
       </div>
       <div className="relative flex w-full flex-col min-h-screen">
-        <Header />
+        <div className="opacity-0 animate-fade-in-delayed">
+          <Header />
+        </div>
         <main className="flex-auto">
           <div
             key={pathname}
-            className="animate-fadeInUp"
           >
             {children}
           </div>
         </main>
-        <Footer />
+        <div className="opacity-0 animate-fade-in-delayed">
+          <Footer />
+        </div>
       </div>
     </>
   )

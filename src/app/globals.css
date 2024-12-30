@@ -1,0 +1,22 @@
+/* Card Stack Styles */
+.card-stack {
+  perspective: 1000px;
+}
+
+.card {
+  backface-visibility: hidden;
+}
+
+.card.dragging {
+  transition: none !important;
+  cursor: grabbing;
+  z-index: 10;
+}
+
+.card:not(.dragging) {
+  cursor: grab;
+}
+
+.card.moving-back {
+  transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1) !important;
+} 
