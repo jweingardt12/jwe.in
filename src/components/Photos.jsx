@@ -78,13 +78,16 @@ export function Photos() {
         {[...photos, ...photos.slice(0, 3)].map(
           ({ image, hoverText, link }, index) => (
             <div
-              key={`${index}-${hoverText}`}
+              key={`photo-${index}-${hoverText}`}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className={clsx(
                 'group relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-[10px] bg-zinc-100 sm:w-72 dark:bg-zinc-800',
                 rotations[index % rotations.length],
               )}
+              style={{ 
+                transition: 'all 0.3s ease-in-out',
+              }}
             >
               <div className="relative h-full w-full">
                 <Image
