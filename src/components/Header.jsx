@@ -106,8 +106,8 @@ function MobileNavigation({ isContactOpen, setIsContactOpen, ...props }) {
         Menu
         <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
       </PopoverButton>
-      <PopoverBackdrop className="fixed inset-0 z-[150] bg-black/80" />
-      <PopoverPanel className="fixed inset-x-4 top-8 z-[200] origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800">
+      <PopoverBackdrop className="fixed inset-0 z-[150] bg-black/90 backdrop-blur-sm" />
+      <PopoverPanel className="fixed inset-x-4 top-8 z-[200] origin-top rounded-3xl bg-white/100 p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900/100 dark:ring-zinc-800 shadow-lg">
         <div className="flex flex-row-reverse items-center justify-between">
           <PopoverButton aria-label="Close menu" className="-m-1 p-1">
             <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
