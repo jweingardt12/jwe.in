@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
         />
         <Providers>
           <OpenPanelComponent
-            clientId="your-client-id"
+            clientId="e217e794-f391-4e78-b617-0e093b03ec9d"
             trackScreenViews={true}
           />
           <div className="flex w-full">
