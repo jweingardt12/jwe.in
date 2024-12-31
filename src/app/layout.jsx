@@ -2,6 +2,7 @@ import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
 import { Toaster } from "@/components/ui/toaster"
 import Script from 'next/script'
+import { OpenPanelComponent } from '@openpanel/nextjs'
 
 import '@/styles/tailwind.css'
 
@@ -29,6 +30,10 @@ export default function RootLayout({ children }) {
           defer
         />
         <Providers>
+          <OpenPanelComponent
+            clientId="your-client-id"
+            trackScreenViews={true}
+          />
           <div className="flex w-full">
             <Layout>{children}</Layout>
             <Toaster />
