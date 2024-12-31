@@ -15,7 +15,7 @@ module.exports = {
         fadeOutDown: 'fadeOutDown 0.5s ease-in-out',
         fadeInUp: 'fadeInUp 0.5s ease-in-out',
         highlight: 'highlight 1.2s ease-out forwards',
-        'fade-in': 'fadeIn 1s ease-out forwards',
+        'fade-in': 'fadeIn 0.5s ease-out',
         'fade-in-delayed': 'fadeIn 1s ease-out 3s forwards',
         'slide-up-1': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3.2s forwards',
         'slide-up-2': 'slideUp 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3.6s forwards',
@@ -36,6 +36,20 @@ module.exports = {
         gradient: {
           '0%': { backgroundPosition: '0% 50%' },
           '100%': { backgroundPosition: '500% 50%' }
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' }
+        },
+        fadeUp: {
+          from: { 
+            opacity: '0',
+            transform: 'translateY(10px)'
+          },
+          to: { 
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
         },
         // ... your existing keyframes ...
         // Add toast keyframes

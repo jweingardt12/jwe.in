@@ -17,7 +17,7 @@ export function Layout({ children }) {
       <div className="relative flex w-full flex-col min-h-screen">
         <Header />
         <main className="flex-auto">
-          <div key={pathname}>
+          <div key={pathname} className="animate-fadeUp">
             {children}
           </div>
         </main>

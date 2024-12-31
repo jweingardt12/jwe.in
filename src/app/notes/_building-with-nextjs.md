@@ -1,8 +1,9 @@
 ---
 title: "Building with Next.js and React Server Components"
-date: 2023-12-30
+date: 2024-12-30
 description: "Exploring the benefits of React Server Components in Next.js 13 and how they can improve your application's performance and developer experience."
 image: /images/photos/image-2.jpg
+slug: building-with-nextjs
 ---
 
 ![Next.js and React Server Components](/images/photos/image-2.jpg)

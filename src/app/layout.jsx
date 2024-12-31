@@ -24,8 +24,9 @@ export default function RootLayout({ children }) {
       <body className="flex h-full bg-zinc-50 dark:bg-black">
         <Script
           src="https://cloud.umami.is/script.js"
-          data-website-id="9c975017-43cd-4414-86d6-2bc26e55ecbd"
-          strategy="afterInteractive"
+          data-website-id="95aab95b-6de3-45b3-b4d2-2cc704bbd533"
+          strategy="beforeInteractive"
+          defer
         />
         <Providers>
           <div className="flex w-full">

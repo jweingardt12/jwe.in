@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -6,6 +7,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Photos } from '@/components/Photos';
+import { LoadingSkeleton } from '@/components/ArticleSkeleton';
 import {
   GitHubIcon,
   InstagramIcon,
@@ -24,7 +26,7 @@ function SocialLink({ icon: Icon, className, ...props }) {
   );
 }
 
-export default async function Home() {
+async function HomeContent() {
   return (
     <>
       <Container className="mt-9">
@@ -48,7 +50,7 @@ export default async function Home() {
               icon={GitHubIcon}
             />
             <SocialLink
-              href= "https://www.linkedin.com/in/jason-weingardt"
+              href="https://www.linkedin.com/in/jason-weingardt"
               aria-label="Follow on LinkedIn"
               icon={LinkedInIcon}
             />
@@ -57,5 +59,13 @@ export default async function Home() {
       </Container>
       <Photos />
     </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <HomeContent />
+    </Suspense>
   );
 }
