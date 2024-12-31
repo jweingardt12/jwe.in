@@ -26,6 +26,9 @@ importers:
       '@next/mdx':
         specifier: ^14.2.22
         version: 14.2.22(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.2)(react@18.3.1))
+      '@openpanel/nextjs':
+        specifier: ^1.0.7
+        version: 1.0.7(next@14.2.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-toast':
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.0.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -35,6 +38,9 @@ importers:
       '@typebot.io/nextjs':
         specifier: ^0.3.37
         version: 0.3.37(@typebot.io/js@0.3.22(zod@3.24.1))(next@14.2.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      '@typebot.io/react':
+        specifier: ^0.3.37
+        version: 0.3.37(@typebot.io/js@0.3.22(zod@3.24.1))(react@18.3.1)
       autoprefixer:
         specifier: ^10.4.12
         version: 10.4.20(postcss@8.4.49)
@@ -468,6 +474,19 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
+  '@openpanel/nextjs@1.0.7':
+    resolution: {integrity: sha512-XygTPiVlxUkcnZ3DYYwnWiogDgCL1hFK5G8nxokdrFKKuM0XQ+9mFElW/+dKgnVfmV2QiP1aAscudHAlRSUQhg==}
+    peerDependencies:
+      next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@openpanel/sdk@1.0.0':
+    resolution: {integrity: sha512-FNmmfjdXoC/VHEjA+WkrQ4lyM5lxEmV7xDd57uj4E+lIS0sU3DLG2mV/dpS8AscnZbUvuMn3kPhiLCqYzuv/gg==}
+
+  '@openpanel/web@1.0.1':
+    resolution: {integrity: sha512-cVZ7Kr9SicczJ/RDIfEtZs8+1iGDzwkabVA/j3NqSl8VSucsC8m1+LVbjmCDzCJNnK4yVn6tEcc9PJRi2rtllw==}
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -700,6 +719,12 @@ packages:
     peerDependencies:
       '@typebot.io/js': 0.3.22
       next: 12.x || 13.x || 14.x
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+
+  '@typebot.io/react@0.3.37':
+    resolution: {integrity: sha512-BTQn8T1zqDYxXoE+IlKchbMSpliMCCLhuCIGG0jnXcJyllH7VKGb/3H/+O3JdITjC9fG1ZYxuJ4KkZuXXjtNEQ==}
+    peerDependencies:
+      '@typebot.io/js': 0.3.22
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
 
   '@types/acorn@4.0.6':
@@ -3504,6 +3529,19 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@openpanel/nextjs@1.0.7(next@14.2.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@openpanel/web': 1.0.1
+      next: 14.2.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@openpanel/sdk@1.0.0': {}
+
+  '@openpanel/web@1.0.1':
+    dependencies:
+      '@openpanel/sdk': 1.0.0
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -3723,6 +3761,11 @@ snapshots:
     dependencies:
       '@typebot.io/js': 0.3.22(zod@3.24.1)
       next: 14.2.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+
+  '@typebot.io/react@0.3.37(@typebot.io/js@0.3.22(zod@3.24.1))(react@18.3.1)':
+    dependencies:
+      '@typebot.io/js': 0.3.22(zod@3.24.1)
       react: 18.3.1
 
   '@types/acorn@4.0.6':
