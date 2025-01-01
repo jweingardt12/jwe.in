@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p ${PORT-3000} -H 0.0.0.0",
-    "lint": "next lint",
-    "dev:network": "next dev --hostname 0.0.0.0"
+    "start": "next start",
+    "lint": "next lint"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
