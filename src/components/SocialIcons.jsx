@@ -54,11 +54,3 @@ export function LinkedInIcon(props) {
     </svg>
   )
 }
-
-export function UnsplashIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      <path d="M15 4.5H9v4h6v-4zm-6 6h-3V21h12V10.5h-3v4H9v-4z" />
-    </svg>
-  )
-}
