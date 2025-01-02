@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           <>
             <Script
               src="https://openpanel.dev/op1.js"
-              strategy="afterInteractive"
+              strategy="beforeInteractive"
             />
             <Script
               id="openpanel-init"
@@ -44,8 +44,8 @@ export default function RootLayout({ children }) {
                     trackScreenViews: true,
                     trackOutgoingLinks: true,
                     trackAttributes: true,
+                    domain: 'jwe.in',
                   });
-                  console.log('OpenPanel initialized with ID:', 'e217e794-f391-4e78-b617-0e093b03ec9d');
                 `
               }}
             />
