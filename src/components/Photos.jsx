@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { useOpenPanel } from '@openpanel/nextjs'
 import { Container } from '@/components/Container'
 
 // Import images statically
@@ -195,6 +196,8 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
   const [isLoaded, setIsLoaded] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const photoRef = useRef(null)
+  const hoverStartTime = useRef(null)
+  const op = useOpenPanel()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -226,8 +229,21 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
   }
 
   const handleMouseEnter = () => {
+    hoverStartTime.current = Date.now()
     onHover(index)
     onFetchStats(photo)
+  }
+
+  const handleMouseLeave = () => {
+    if (hoverStartTime.current) {
+      const hoverDuration = Date.now() - hoverStartTime.current
+      op.track('photo_hover', {
+        title: photo.hoverText,
+        hover_duration_ms: hoverDuration
+      })
+      hoverStartTime.current = null
+    }
+    onHover(null)
   }
 
   return (
@@ -246,7 +262,7 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
         className
       )}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => onHover(null)}
+      onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
