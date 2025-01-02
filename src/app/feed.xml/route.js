@@ -1,19 +1,20 @@
-
 import assert from 'assert'
 import * as cheerio from 'cheerio'
 import { Feed } from 'feed'
+import Parser from 'rss-parser'
 
 export async function GET() {
-  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jwe.in'
+  const FEED_URL = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
 
   let author = {
-    name: 'Spencer Sharp',
-    email: 'spencer@planetaria.tech',
+    name: 'Jason Weingardt',
+    email: 'jason@jwe.in',
   }
 
   let feed = new Feed({
     title: author.name,
-    description: 'Your blog description',
+    description: 'What I\'m reading',
     author,
     id: siteUrl,
     link: siteUrl,
@@ -22,37 +23,29 @@ export async function GET() {
     copyright: `All rights reserved ${new Date().getFullYear()}`,
     feedLinks: {
       rss2: `${siteUrl}/feed.xml`,
+      json: FEED_URL,
     },
   })
 
-  let articleIds = require
-    .context('../articles', true, /\/page\.mdx$/)
-    .keys()
-    .filter((key) => key.startsWith('./'))
-    .map((key) => key.slice(2).replace(/\/page\.mdx$/, ''))
-
-  let articles = []
-  for (let id of articleIds) {
-    let publicUrl = `${siteUrl}/articles/${id}`
-    let content = await import(`../articles/${id}/page.mdx`)
-    let { article } = content
-    articles.push({ id, publicUrl, ...article })
-  }
-
-  // Sort articles by date in descending order
-  articles.sort((a, b) => new Date(b.date) - new Date(a.date))
-
-  // Add sorted articles to feed
-  for (let article of articles) {
-    feed.addItem({
-      title: article.title,
-      id: article.publicUrl,
-      link: article.publicUrl,
-      content: article.description,
-      author: [author],
-      contributor: [author],
-      date: new Date(article.date),
-    })
+  try {
+    const res = await fetch(FEED_URL)
+    if (!res.ok) throw new Error('Failed to fetch feed')
+    const feedData = await res.json()
+    
+    // Add items to feed
+    for (let item of (feedData.items || [])) {
+      feed.addItem({
+        title: item.title || '',
+        id: item.url || '',
+        link: item.url || '',
+        content: item.content_text || item.content_html || item.description || item.summary || '',
+        author: [author],
+        contributor: [author],
+        date: new Date(item.date_published || item.pubDate || Date.now()),
+      })
+    }
+  } catch (error) {
+    console.error('Error fetching feed:', error)
   }
 
   return new Response(feed.rss2(), {
