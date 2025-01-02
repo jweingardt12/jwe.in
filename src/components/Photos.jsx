@@ -5,6 +5,8 @@ import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useOpenPanel } from '@openpanel/nextjs'
 import { Container } from '@/components/Container'
+import Link from 'next/link'
+import { UnsplashIcon } from '@/components/SocialIcons'
 
 // Import images statically
 import image1 from '@/images/photos/image-1.jpg'
@@ -120,191 +122,65 @@ async function fetchPhotoStats(photoId) {
   }
 }
 
-function PhotoMetadata({ metadata, visible, title, link }) {
-  if (!visible) return null
-  
+function PhotoMetadata({ photo }) {
   const op = useOpenPanel()
-  
-  const handleLinkClick = (e) => {
-    e.stopPropagation() // Prevent triggering the parent's click handler
-    if (op && typeof op.track === 'function') {
-      op.track('unsplash_link_click', {
-        title: title,
-        link: link
-      })
-    }
-    window.open(link, '_blank', 'noopener,noreferrer')
+
+  const handleLinkClick = () => {
+    op.track('unsplash_link_click', {
+      title: photo.hoverText,
+      link: photo.link
+    })
   }
-  
-  return (
-    <div className="absolute inset-0 p-4 text-white animate-[fadeIn_0.2s_ease-out_0.3s] opacity-0 [animation-fill-mode:forwards]">
-      <div className="flex flex-col w-full">
-        <div className="flex items-start justify-between mb-2">
-          <div className="text-xl font-medium">{title}</div>
-          <button
-            onClick={handleLinkClick}
-            className="ml-2 p-1 rounded-full hover:bg-white/10 transition-colors"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-4 w-4"
-              fill="currentColor"
-            >
-              <path d="M5 5v14h14v-7h2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7v2H5z M14 3h7v7h-2V6.41l-7.29 7.3-1.42-1.42L17.59 5H14z" />
-            </svg>
-          </button>
-        </div>
 
-        <div className="flex flex-col space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span>Views</span>
-            <span>{metadata?.views?.toLocaleString() || '—'}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Downloads</span>
-            <span>{metadata?.downloads?.toLocaleString() || '—'}</span>
-          </div>
-          
-          <div className="space-y-2 mt-2 pt-2 border-t border-white/20">
-            <div className="flex justify-between">
-              <span>Camera</span>
-              <span className="truncate ml-2">{metadata?.camera || '—'}</span>
-            </div>
-            {metadata?.aperture && (
-              <div className="flex justify-between">
-                <span>Aperture</span>
-                <span>ƒ/{metadata.aperture}</span>
-              </div>
-            )}
-            {metadata?.iso && (
-              <div className="flex justify-between">
-                <span>ISO</span>
-                <span>{metadata.iso}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+  return (
+    <Link
+      href={photo.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={handleLinkClick}
+      className="absolute bottom-2 left-2 hidden rounded-lg bg-white/10 px-2 py-1 text-xs font-medium text-white backdrop-blur sm:flex items-center gap-1 hover:bg-white/20 transition-colors"
+    >
+      <UnsplashIcon className="h-3 w-3" />
+      <span>Unsplash</span>
+    </Link>
   )
 }
 
-function TouchIndicator() {
-  return (
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 animate-[fadeIn_0.5s_ease-out]">
-      <div className="relative">
-        <div className="absolute h-6 w-6 rounded-full bg-zinc-800/20 animate-[ripple_2s_ease-out_infinite]" />
-        <div className="h-6 w-6 rounded-full bg-zinc-800/50 animate-[press_1.5s_ease-in-out_infinite]" />
-      </div>
-    </div>
-  )
-}
-
-function Photo({ photo, className, index, onHover, isHovered, isSelected, onSelect, photoStats, onFetchStats, showTouchIndicator }) {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const photoRef = useRef(null)
+function Photo({ photo, index, onHover }) {
+  const op = useOpenPanel()
   const hoverStartTime = useRef(null)
-  const op = useOpenPanel()
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting)
-      },
-      { threshold: 0.1 }
-    )
-
-    const currentPhotoRef = photoRef.current
-    if (currentPhotoRef) {
-      observer.observe(currentPhotoRef)
-    }
-
-    return () => {
-      if (currentPhotoRef) {
-        observer.unobserve(currentPhotoRef)
-      }
-    }
-  }, [])
-
-  const handleClick = (e) => {
-    e.preventDefault()
-    
-    if (!isSelected) {
-      onSelect(index)
-      onFetchStats(photo)
-    }
-  }
 
   const handleMouseEnter = () => {
     hoverStartTime.current = Date.now()
     onHover(index)
-    onFetchStats(photo)
   }
 
   const handleMouseLeave = () => {
     if (hoverStartTime.current) {
       const hoverDuration = Date.now() - hoverStartTime.current
-      if (op && typeof op.track === 'function') {
-        op.track('photo_hover', {
-          title: photo.hoverText,
-          hover_duration_ms: hoverDuration
-        })
-      }
+      op.track('photo_hover', {
+        title: photo.hoverText,
+        hover_duration_ms: hoverDuration
+      })
       hoverStartTime.current = null
     }
-    onHover(null)
   }
 
   return (
     <div 
-      ref={photoRef}
-      role="button"
-      tabIndex={0}
-      className={clsx(
-        'relative aspect-[9/10] w-60 flex-none overflow-visible rounded-2xl bg-zinc-100 dark:bg-zinc-800',
-        'shadow-[0_8px_28px_-6px_rgba(0,0,0,0.3)] dark:shadow-[0_8px_28px_-6px_rgba(0,0,0,0.5)]',
-        'ring-1 ring-zinc-400/20 dark:ring-zinc-300/20',
-        rotations[index % rotations.length],
-        'transition-opacity duration-1000',
-        isVisible && isLoaded ? 'opacity-100' : 'opacity-0',
-        'cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500',
-        className
-      )}
+      className="relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 sm:w-72 sm:rounded-2xl"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleClick(e)
-        }
-      }}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-2xl">
-        {index === 0 && showTouchIndicator && <TouchIndicator />}
-        <Image
-          src={photo.image}
-          alt={photo.hoverText}
-          sizes="15rem"
-          className={clsx(
-            'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
-            (isHovered || isSelected) && 'blur-[3px] brightness-[0.85]'
-          )}
-          priority={index <= 2}
-          onLoad={() => setIsLoaded(true)}
-        />
-        <div 
-          className={clsx(
-            'absolute inset-0 bg-black/25 transition-opacity duration-300',
-            (isHovered || isSelected) ? 'opacity-100' : 'opacity-0'
-          )}
-        />
-        <PhotoMetadata 
-          metadata={photoStats[photo.photoId]} 
-          visible={isHovered || isSelected} 
-          title={photo.hoverText} 
-          link={photo.link} 
-        />
+      <Image
+        src={photo.image}
+        alt=""
+        sizes="(min-width: 640px) 18rem, 11rem"
+        className="absolute inset-0 h-full w-full object-cover"
+        priority
+      />
+      <div className="absolute inset-0 z-10">
+        <PhotoMetadata photo={photo} />
       </div>
     </div>
   )
