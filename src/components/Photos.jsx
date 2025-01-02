@@ -120,21 +120,19 @@ async function fetchPhotoStats(photoId) {
   }
 }
 
-function PhotoMetadata({ metadata, visible, title, link }) {
-  if (!visible) return null
-  
+function PhotoMetadataWithTracking({ metadata, visible, title, link }) {
   const op = useOpenPanel()
   
   const handleLinkClick = (e) => {
-    e.stopPropagation() // Prevent triggering the parent's click handler
-    if (op && typeof op.track === 'function') {
-      op.track('unsplash_link_click', {
-        title: title,
-        link: link
-      })
-    }
+    e.stopPropagation()
+    op.track('unsplash_link_click', {
+      title: title,
+      link: link
+    })
     window.open(link, '_blank', 'noopener,noreferrer')
   }
+
+  if (!visible) return null
   
   return (
     <div className="absolute inset-0 p-4 text-white animate-[fadeIn_0.2s_ease-out_0.3s] opacity-0 [animation-fill-mode:forwards]">
@@ -200,12 +198,53 @@ function TouchIndicator() {
   )
 }
 
-function Photo({ photo, className, index, onHover, isHovered, isSelected, onSelect, photoStats, onFetchStats, showTouchIndicator }) {
+function PhotoWithTracking(props) {
+  const op = useOpenPanel()
+  const hoverStartTime = useRef(null)
+
+  const handleMouseEnter = () => {
+    hoverStartTime.current = Date.now()
+    props.onHover(props.index)
+    props.onFetchStats(props.photo)
+  }
+
+  const handleMouseLeave = () => {
+    if (hoverStartTime.current) {
+      const hoverDuration = Date.now() - hoverStartTime.current
+      op.track('photo_hover', {
+        title: props.photo.hoverText,
+        hover_duration_ms: hoverDuration
+      })
+      hoverStartTime.current = null
+    }
+    props.onHover(null)
+  }
+
+  return (
+    <Photo 
+      {...props} 
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    />
+  )
+}
+
+function Photo({ 
+  photo, 
+  className, 
+  index, 
+  isHovered, 
+  isSelected, 
+  onSelect, 
+  photoStats, 
+  onFetchStats, 
+  showTouchIndicator,
+  onMouseEnter,
+  onMouseLeave 
+}) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const photoRef = useRef(null)
-  const hoverStartTime = useRef(null)
-  const op = useOpenPanel()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -236,24 +275,6 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
     }
   }
 
-  const handleMouseEnter = () => {
-    hoverStartTime.current = Date.now()
-    onHover(index)
-    onFetchStats(photo)
-  }
-
-  const handleMouseLeave = () => {
-    if (hoverStartTime.current) {
-      const hoverDuration = Date.now() - hoverStartTime.current
-      op.track('photo_hover', {
-        title: photo.hoverText,
-        hover_duration_ms: hoverDuration
-      })
-      hoverStartTime.current = null
-    }
-    onHover(null)
-  }
-
   return (
     <div 
       ref={photoRef}
@@ -269,8 +290,8 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
         'cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500',
         className
       )}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -297,7 +318,7 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
             (isHovered || isSelected) ? 'opacity-100' : 'opacity-0'
           )}
         />
-        <PhotoMetadata 
+        <PhotoMetadataWithTracking 
           metadata={photoStats[photo.photoId]} 
           visible={isHovered || isSelected} 
           title={photo.hoverText} 
@@ -402,7 +423,7 @@ export function Photos() {
     <div className="mt-16 sm:mt-20">
       <div className="-my-4 flex gap-5 overflow-x-auto py-12 px-4 sm:gap-8 no-scrollbar">
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
-          <Photo
+          <PhotoWithTracking
             key={`photo-${index}-${photo.hoverText}`}
             photo={photo}
             index={index}
@@ -439,4 +460,6 @@ export function Photos() {
       `}</style>
     </div>
   )
-} 
+}
+
+export { PhotoWithTracking as Photo, fetchPhotoStats } 
