@@ -79,7 +79,7 @@ export default function HomePage() {
               icon={GitHubIcon}
             />
             <SocialLink
-              href="https://www.linkedin.com/in/jason-weingardt"
+              href="https://www.linkedin.com/in/jasonweingardt"
               aria-label="Follow on LinkedIn"
               icon={LinkedInIcon}
             />
