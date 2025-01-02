@@ -6,7 +6,7 @@ export function ArticleSkeleton() {
   return (
     <article className="max-w-3xl py-12 first:pt-0 last:pb-0 animate-pulse">
       <Card as="div">
-        <div className="flex w-full flex-row items-start justify-between gap-x-6">
+        <div className="flex w-full flex-row items-start justify-between gap-x-4 sm:gap-x-6">
           <div className="flex-1">
             <div className="flex items-center space-x-2">
               <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
@@ -20,7 +20,7 @@ export function ArticleSkeleton() {
             </div>
           </div>
           <div className="flex-shrink-0">
-            <div className="h-32 w-32 sm:h-40 sm:w-40 lg:h-44 lg:w-44 bg-zinc-200 dark:bg-zinc-700 rounded-md"></div>
+            <div className="h-24 w-24 sm:h-32 sm:w-32 lg:h-44 lg:w-44 bg-zinc-200 dark:bg-zinc-700 rounded-md"></div>
           </div>
         </div>
       </Card>

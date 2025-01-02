@@ -280,8 +280,8 @@ function ThemeToggle() {
       className="group py-2"
       onClick={() => setTheme(otherTheme)}
     >
-      <SunIcon className="h-5 w-5 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
-      <MoonIcon className="hidden h-5 w-5 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />
+      <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
+      <MoonIcon className="hidden h-4 w-4 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />
     </button>
   )
 }
@@ -512,13 +512,13 @@ export function Header() {
                 <DesktopNavigation className="pointer-events-auto hidden md:block" />
               </div>
               <div className="hidden md:flex md:justify-end md:flex-1">
-                <div className="pointer-events-auto flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                <div className="pointer-events-auto flex h-9 rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
                     <ThemeToggle />
                   </div>
                   <button
                     onClick={() => setIsContactOpen(true)}
-                    className="px-3 py-2 hover:text-sky-500 dark:hover:text-sky-400"
+                    className="px-4 py-2 hover:text-sky-500 dark:hover:text-sky-400"
                   >
                     Contact
                   </button>

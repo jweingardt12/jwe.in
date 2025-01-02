@@ -84,35 +84,59 @@ export default function About() {
           <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
             I'm Jason. 
             <br />
-            I live in the D.C. area where I design, build, and ship world-class products.
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, and I've been building things you've seen on the internet and in real life for the past 10+ years.
+            I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
             <p>
-              Today, I'm a Product Manager at CloudKitchens, where I lead a team responsible for building the Ghost kitchen of the future.
+              Today, I'm a Product Manager at CloudKitchens, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
             </p>
           </div>
         </div>
         <div className="lg:pl-20">
           <ul role="list">
-            <SocialLink href="https://threads.net/@jasonweingardt" icon={ThreadsIcon}>
+            <SocialLink 
+              href="https://www.threads.net/@jweingardt" 
+              icon={ThreadsIcon} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               Follow on Threads
             </SocialLink>
-            <SocialLink href="https://instagram.com/jasonweingardt" icon={InstagramIcon} className="mt-4">
+            <SocialLink 
+              href="https://instagram.com/jweingardt" 
+              icon={InstagramIcon} 
+              className="mt-4" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               Follow on Instagram
             </SocialLink>
-            <SocialLink href="https://github.com/jasonweingardt" icon={GitHubIcon} className="mt-4">
+            <SocialLink 
+              href="https://github.com/jweingardt12" 
+              icon={GitHubIcon} 
+              className="mt-4" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               Follow on GitHub
             </SocialLink>
-            <SocialLink href="https://linkedin.com/in/jasonweingardt" icon={LinkedInIcon} className="mt-4">
+            <SocialLink 
+              href="https://linkedin.com/in/jasonweingardt" 
+              icon={LinkedInIcon} 
+              className="mt-4" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               Follow on LinkedIn
             </SocialLink>
             <SocialLink
               href="mailto:hi@jwe.in"
               icon={MailIcon}
               className="mt-8 border-t border-zinc-100 pt-8 dark:border-zinc-700/40"
+              target="_blank" 
+              rel="noopener noreferrer"
             >
               hi@jwe.in
             </SocialLink>

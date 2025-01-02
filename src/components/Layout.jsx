@@ -3,6 +3,7 @@
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 export function Layout({ children }) {
   const pathname = usePathname()
@@ -17,9 +18,14 @@ export function Layout({ children }) {
       <div className="relative flex w-full flex-col min-h-screen">
         <Header />
         <main className="flex-auto">
-          <div key={pathname} className="animate-fadeUp">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
             {children}
-          </div>
+          </motion.div>
         </main>
         <Footer />
       </div>

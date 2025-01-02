@@ -65,7 +65,7 @@ function getImage(item) {
     if (image?.url) return image.url
   }
 
-  return 'https://via.placeholder.com/256?text=No+Image'
+  return null
 }
 
 export function FeedContent() {
@@ -73,8 +73,11 @@ export function FeedContent() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    let timeoutId
+    
     async function fetchFeed() {
       try {
+        const startTime = Date.now()
         const res = await fetch('/api/feed')
         if (!res.ok) throw new Error('Failed to fetch feed')
         const feed = await res.json()
@@ -119,15 +122,31 @@ export function FeedContent() {
           }
         })
 
-        setArticles(processedArticles)
+        // Calculate remaining time to show skeleton
+        const elapsedTime = Date.now() - startTime
+        const remainingTime = Math.max(2000 - elapsedTime, 0)
+
+        // Set a timeout to ensure skeleton shows for at least 2 seconds
+        timeoutId = setTimeout(() => {
+          setArticles(processedArticles)
+          setIsLoading(false)
+        }, remainingTime)
+
       } catch (error) {
         console.error('Error fetching feed:', error)
-      } finally {
-        setIsLoading(false)
+        // Even on error, wait 2 seconds before showing error state
+        timeoutId = setTimeout(() => {
+          setIsLoading(false)
+        }, 2000)
       }
     }
 
     fetchFeed()
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+    }
   }, [])
 
   if (isLoading) {
