@@ -204,13 +204,14 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
       { threshold: 0.1 }
     )
 
-    if (photoRef.current) {
-      observer.observe(photoRef.current)
+    const currentPhotoRef = photoRef.current
+    if (currentPhotoRef) {
+      observer.observe(currentPhotoRef)
     }
 
     return () => {
-      if (photoRef.current) {
-        observer.unobserve(photoRef.current)
+      if (currentPhotoRef) {
+        observer.unobserve(currentPhotoRef)
       }
     }
   }, [])

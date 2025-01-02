@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogTitle, DialogBody } from './Dialog'
+import { Dialog, DialogTitle, DialogBody } from '@/components/Dialog'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { useState, useEffect } from 'react'
 import { useToast } from '@/components/ui/use-toast'
@@ -128,7 +128,7 @@ export function ContactDialog({ open, onClose }) {
                             onChange={handleChange}
                             required
                             autoComplete="given-name"
-                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6 text-base"
                           />
                         </div>
                       </div>
@@ -144,7 +144,7 @@ export function ContactDialog({ open, onClose }) {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6 text-base"
                           />
                         </div>
                       </div>
@@ -160,7 +160,7 @@ export function ContactDialog({ open, onClose }) {
                             value={formData.message}
                             onChange={handleChange}
                             required
-                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 bg-gray-50 dark:bg-zinc-800 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-[0.5px] ring-inset ring-gray-200 dark:ring-zinc-700 placeholder:text-gray-500 dark:placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6 text-base"
                           />
                         </div>
                       </div>
