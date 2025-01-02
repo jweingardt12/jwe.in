@@ -59,15 +59,9 @@ export function ContactDialog({ open, onClose }) {
       })
 
       if (response.ok) {
-        // Track successful form submission
-        window.umami?.track('contact_form_submit', { success: true })
-        
         setIsSuccess(true)
         setFormData({ name: '', email: '', message: '' })
       } else {
-        // Track failed form submission
-        window.umami?.track('contact_form_submit', { success: false })
-        
         toast({
           title: "Error sending message",
           description: "Please try again later.",
@@ -75,9 +69,6 @@ export function ContactDialog({ open, onClose }) {
         })
       }
     } catch (error) {
-      // Track form error
-      window.umami?.track('contact_form_error', { error: error.message })
-      
       toast({
         title: "Error sending message",
         description: "Please try again later.",
