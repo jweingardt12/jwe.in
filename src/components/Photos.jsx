@@ -304,7 +304,8 @@ function Photo({
         <Image
           src={photo.image}
           alt={photo.hoverText}
-          sizes="15rem"
+          sizes="(min-width: 640px) 240px, 240px"
+          quality={95}
           className={clsx(
             'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
             (isHovered || isSelected) && 'blur-[3px] brightness-[0.85]'
