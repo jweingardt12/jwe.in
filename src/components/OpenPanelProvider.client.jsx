@@ -9,7 +9,8 @@ export function OpenPanelProvider() {
     config: {
       trackScreenViews: true,
       trackOutgoingLinks: true,
-      trackAttributes: true
+      trackAttributes: true,
+      domain: 'https://jwe.in'
     }
   })
 
