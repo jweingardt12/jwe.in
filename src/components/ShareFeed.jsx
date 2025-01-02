@@ -1,50 +1,54 @@
 'use client'
 
-import { useState } from 'react'
-import { ClipboardIcon } from '@heroicons/react/24/outline'
-import { useToast } from "@/components/ui/use-toast"
+import { useState, useRef } from 'react'
+import { useOpenPanel } from '@openpanel/nextjs'
 
 export function ShareFeed({ url }) {
-  const { toast } = useToast()
+  const [copied, setCopied] = useState(false)
+  const urlRef = useRef(null)
+  const op = useOpenPanel()
 
-  const copyToClipboard = async () => {
+  const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url)
-      toast({
-        title: "Copied!",
-        description: "RSS feed URL copied to clipboard",
-        duration: 2000,
-        className: "dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50",
+      setCopied(true)
+      op.track('rss_feed_copied', {
+        feed_url: url
       })
-      console.log('Toast triggered')
+      setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to copy URL to clipboard",
-        duration: 2000,
-      })
+    }
+  }
+
+  const handleUrlClick = () => {
+    if (urlRef.current) {
+      const range = document.createRange()
+      range.selectNodeContents(urlRef.current)
+      const selection = window.getSelection()
+      selection?.removeAllRanges()
+      selection?.addRange(range)
     }
   }
 
   return (
-    <div className="mt-6 flex items-center gap-4 text-sm">
-      <div className="min-w-0 sm:min-w-fit">
-        <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800/50 px-4 py-2 font-mono text-zinc-600 dark:text-zinc-400 overflow-x-auto">
+    <div className="mt-6 flex gap-4 sm:w-fit">
+      <div className="relative overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+        <div 
+          ref={urlRef}
+          onClick={handleUrlClick}
+          className="px-4 py-3 text-sm text-zinc-500 dark:text-zinc-400 truncate font-mono cursor-pointer"
+        >
           {url}
         </div>
       </div>
-      <div className="flex-none">
-        <button
-          type="button"
-          onClick={copyToClipboard}
-          className="flex items-center gap-1 rounded-lg bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800"
-        >
-          <ClipboardIcon className="h-4 w-4" />
-          <span>Copy</span>
-        </button>
-      </div>
+      <button
+        type="button"
+        className="flex-none inline-flex items-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+        onClick={handleCopy}
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
     </div>
   )
 } 

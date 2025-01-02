@@ -43,9 +43,9 @@ function SocialLink({ className, href, children, icon: Icon }) {
       <Link
         href={href}
         onClick={handleClick}
-        className="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+        className="group flex text-sm font-medium text-zinc-800 transition hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-500"
       >
-        <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500" />
+        <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-sky-500" />
         <span className="ml-4">{children}</span>
       </Link>
     </li>
@@ -90,7 +90,7 @@ export default function About() {
               I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
             <p>
-              Today, I'm a Product Manager at <span className="text-sky-500"><a href="https://cloudkitchens.com" target="_blank" rel="noopener noreferrer">CloudKitchens</a></span>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
+              Today, I'm a Product Manager at <a href="https://cloudkitchens.com" target="_blank" rel="noopener noreferrer">CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
             </p>
           </div>
         </div>

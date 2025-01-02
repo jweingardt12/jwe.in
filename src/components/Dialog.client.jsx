@@ -54,49 +54,44 @@ function MobileDialog({ open, onClose, children }) {
 }
 
 function DesktopDialog({ open, onClose, size, children }) {
-  if (!open) return null
-
   return (
-    <Transition show={open} as={Fragment}>
-      <HeadlessDialog onClose={onClose} className="relative z-50">
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
-        </Transition.Child>
+    <HeadlessDialog as="div" className="relative z-50" onClose={onClose} open={open}>
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="ease-in duration-300"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
+      </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 translate-y-4"
+            enterTo="opacity-100 translate-y-0"
+            leave="ease-in duration-300"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-4"
+          >
+            <HeadlessDialog.Panel
+              className={clsx(
+                'relative w-full transform overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 p-0 text-left shadow-xl transition-all',
+                'ring-1 ring-gray-200 dark:ring-zinc-800',
+                sizes[size]
+              )}
             >
-              <HeadlessDialog.Panel
-                className={clsx(
-                  'relative w-full bg-white dark:bg-zinc-900 shadow-xl',
-                  'rounded-2xl',
-                  'ring-1 ring-gray-200 dark:ring-zinc-800',
-                  sizes[size]
-                )}
-              >
-                {children}
-              </HeadlessDialog.Panel>
-            </Transition.Child>
-          </div>
+              {children}
+            </HeadlessDialog.Panel>
+          </Transition.Child>
         </div>
-      </HeadlessDialog>
-    </Transition>
+      </div>
+    </HeadlessDialog>
   )
 }
 
@@ -117,11 +112,13 @@ function CustomDialog({ open = false, onClose, size = 'lg', children }) {
     }
   }, [])
 
-  if (isMobile) {
-    return <MobileDialog open={open} onClose={onClose}>{children}</MobileDialog>
-  }
+  if (!open) return null
 
-  return <DesktopDialog open={open} onClose={onClose} size={size}>{children}</DesktopDialog>
+  return isMobile ? (
+    <MobileDialog open={open} onClose={onClose}>{children}</MobileDialog>
+  ) : (
+    <DesktopDialog open={open} onClose={onClose} size={size}>{children}</DesktopDialog>
+  )
 }
 
 function DialogTitle({ children, className }) {

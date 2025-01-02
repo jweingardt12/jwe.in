@@ -2,9 +2,12 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useOpenPanel } from '@openpanel/nextjs'
 import { Card } from '@/components/Card'
 
 export function Articles({ articles = [] }) {
+  const op = useOpenPanel()
+
   return (
     <div className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
       {articles.length === 0 ? (
@@ -18,8 +21,8 @@ export function Articles({ articles = [] }) {
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => {
-                window.umami?.track('article_click', {
+              onClick={() => {
+                op.track('article_click', {
                   title: post.title,
                   source: post.publicationName
                 })

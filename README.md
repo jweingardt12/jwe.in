@@ -1,42 +1,43 @@
-# Spotlight
+# jwe.in
 
-Spotlight is a [Tailwind UI](https://tailwindui.com) site template built using [Tailwind CSS](https://tailwindcss.com) and [Next.js](https://nextjs.org).
+My personal site, built with Next.js, Tailwind CSS, and OpenPanel analytics.
 
 ## Getting started
 
-To get started with this template, first install the npm dependencies:
+To run this site locally, first install the npm dependencies:
 
 ```bash
 npm install
 ```
 
-Next, create a `.env.local` file in the root of your project and set the `NEXT_PUBLIC_SITE_URL` variable to your site's public URL:
+Next, create a `.env.local` file in the root of your project and set the required environment variables:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://example.com
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_OPENPANEL_CLIENT_ID=your_client_id
+NEXT_PUBLIC_OPENPANEL_CLIENT_SECRET=your_client_secret
 ```
 
-Next, run the development server:
+Then run the development server:
 
 ```bash
 npm run dev
 ```
 
-Finally, open [http://localhost:3000](http://localhost:3000) in your browser to view the website.
+## Features
 
-## Customizing
+- 📝 Notes/blog with markdown support
+- 📚 RSS feed integration for sharing what I'm reading
+- 🌓 Dark mode support
+- 📊 Analytics with OpenPanel
+- 📱 Responsive design
+- 🖼️ Photo gallery with hover states
+- 🔗 Social links with click tracking
 
-You can start editing this template by modifying the files in the `/src` folder. The site will auto-update as you edit these files.
+## Tech Stack
 
-## License
-
-This site template is a commercial product and is licensed under the [Tailwind UI license](https://tailwindui.com/license).
-
-## Learn more
-
-To learn more about the technologies used in this site template, see the following resources:
-
-- [Tailwind CSS](https://tailwindcss.com/docs) - the official Tailwind CSS documentation
-- [Next.js](https://nextjs.org/docs) - the official Next.js documentation
-- [Headless UI](https://headlessui.dev) - the official Headless UI documentation
-- [MDX](https://mdxjs.com) - the MDX documentation
+- [Next.js](https://nextjs.org) - React framework
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [OpenPanel](https://openpanel.dev) - Analytics
+- [Headless UI](https://headlessui.dev) - UI components
+- [MDX](https://mdxjs.com) - Markdown/JSX

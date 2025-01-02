@@ -19,6 +19,29 @@ export async function generateMetadata({ params }) {
   return {
     title: article.title,
     description: article.description,
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      type: 'article',
+      publishedTime: article.date,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/notes/${article.slug}`,
+      ...(article.image && {
+        images: [{
+          url: article.image,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        }],
+      }),
+    },
+    twitter: {
+      card: article.image ? 'summary_large_image' : 'summary',
+      title: article.title,
+      description: article.description,
+      ...(article.image && {
+        images: [article.image],
+      }),
+    },
   }
 }
 

@@ -27,6 +27,17 @@
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes fade-up {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-overlay-in {
   animation: overlay-in 0.2s ease-out forwards;
 }
@@ -45,6 +56,10 @@
 
 .animate-success-in {
   animation: success-in 0.2s ease-out forwards;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.3s ease-out forwards;
 }
 
 @layer base {
@@ -92,4 +107,13 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
+} 
+
+/* Link styling within paragraphs */
+p a {
+  @apply text-sky-500 no-underline transition-colors;
+}
+
+p a:hover {
+  @apply text-sky-600;
 } 

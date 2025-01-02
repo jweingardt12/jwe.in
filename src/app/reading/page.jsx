@@ -12,8 +12,10 @@ export default function ReadingPage() {
       <h2 className="text-4xl font-semibold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
         What I'm Reading
       </h2>
-      <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-        What I've been reading, straight from my RSS feed. Want to follow along? Copy the URL below into the RSS reader of your choice.
+      <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+        What I've been reading, straight from my RSS feed. <br />
+        <br />
+        Want to follow along? Copy the URL below into the RSS reader of your choice.
       </p>
       
       <ShareFeed url={FEED_URL} />

@@ -237,10 +237,12 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
   const handleMouseLeave = () => {
     if (hoverStartTime.current) {
       const hoverDuration = Date.now() - hoverStartTime.current
-      op.track('photo_hover', {
-        title: photo.hoverText,
-        hover_duration_ms: hoverDuration
-      })
+      if (op && typeof op.track === 'function') {
+        op.track('photo_hover', {
+          title: photo.hoverText,
+          hover_duration_ms: hoverDuration
+        })
+      }
       hoverStartTime.current = null
     }
     onHover(null)
@@ -280,7 +282,7 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
             'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
             (isHovered || isSelected) && 'blur-[3px] brightness-[0.85]'
           )}
-          priority={index < 3}
+          priority={index <= 2}
           onLoad={() => setIsLoaded(true)}
         />
         <div 
