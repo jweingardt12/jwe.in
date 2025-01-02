@@ -4,12 +4,15 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Popover, Transition, Disclosure } from '@headlessui/react'
+import { Popover, Transition } from '@headlessui/react'
+import { useTheme } from 'next-themes'
 import clsx from 'clsx'
+import { Mail } from "lucide-react"
 
 import { Container } from '@/components/Container'
 import { ContactDialog } from '@/components/ContactDialog'
 import avatarImage from '@/images/avatar.jpg'
+import { Button } from '@/components/ui/button'
 
 function CloseIcon(props) {
   return (
@@ -104,8 +107,11 @@ function MobileNavItem({ href, children, onClick }) {
 
   if (onClick) {
     return (
-      <li>
-        <button onClick={onClick} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
+      <li className="pt-2">
+        <button 
+          onClick={onClick} 
+          className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg"
+        >
           {children}
         </button>
       </li>
@@ -121,63 +127,34 @@ function MobileNavItem({ href, children, onClick }) {
   )
 }
 
-function MobileNavigation({ setIsContactOpen, ...props }) {
+function MobileNavigation({ className, setIsContactOpen }) {
   return (
-    <Popover {...props}>
-      <Popover.Button className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20">
-        Menu
-        <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
-      </Popover.Button>
-      <Transition.Root>
-        <Transition.Child
-          as={Fragment}
-          enter="duration-150 ease-out"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="duration-150 ease-in"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <Popover.Overlay className="fixed inset-0 z-[999999] bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
-        </Transition.Child>
-        <Transition.Child
-          as={Fragment}
-          enter="duration-150 ease-out"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="duration-150 ease-in"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          <Popover.Panel className="fixed inset-x-4 top-8 z-[999999] origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800">
-            <div className="flex flex-col">
-              <div className="flex justify-end">
-                <Popover.Button aria-label="Close menu" className="-m-1 p-1">
-                  <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-                </Popover.Button>
-              </div>
-              <nav className="mt-6">
-                <ul className="space-y-4">
-                  <MobileNavItem href="/about">About</MobileNavItem>
-                  <MobileNavItem href="/work">Work</MobileNavItem>
-                  <MobileNavItem href="/notes">Notes</MobileNavItem>
-                  <MobileNavItem href="/reading">Reading</MobileNavItem>
-                </ul>
-              </nav>
-              <div className="mt-8 border-t border-zinc-200 dark:border-zinc-100/10 pt-8">
-                <button
-                  onClick={() => {
-                    setIsContactOpen(true)
-                  }}
-                  className="w-full rounded-md bg-sky-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-sky-500 dark:hover:bg-sky-400"
-                >
-                  Contact
-                </button>
-              </div>
-            </div>
-          </Popover.Panel>
-        </Transition.Child>
-      </Transition.Root>
+    <Popover>
+      <Popover.Panel
+        focus
+        className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800"
+      >
+        <div className="flex flex-row-reverse items-center justify-between">
+          <Popover.Button aria-label="Close menu" className="-m-1 p-1">
+            <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
+          </Popover.Button>
+          <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+            Navigation
+          </h2>
+        </div>
+        <nav className="mt-6">
+          <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
+            <MobileNavItem href="/">Home</MobileNavItem>
+            <MobileNavItem href="/about">About</MobileNavItem>
+            <MobileNavItem href="/work">Work</MobileNavItem>
+            <MobileNavItem href="/notes">Notes</MobileNavItem>
+            <MobileNavItem href="/reading">Reading</MobileNavItem>
+            <MobileNavItem onClick={() => setIsContactOpen(true)}>
+              Contact
+            </MobileNavItem>
+          </ul>
+        </nav>
+      </Popover.Panel>
     </Popover>
   )
 }
@@ -289,6 +266,23 @@ function Avatar({ large = false, className, ...props }) {
         priority
       />
     </Link>
+  )
+}
+
+function ThemeToggle() {
+  let { resolvedTheme, setTheme } = useTheme()
+  let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+
+  return (
+    <button
+      type="button"
+      aria-label={`Switch to ${otherTheme} theme`}
+      className="group py-2"
+      onClick={() => setTheme(otherTheme)}
+    >
+      <SunIcon className="h-5 w-5 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
+      <MoonIcon className="hidden h-5 w-5 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />
+    </button>
   )
 }
 
@@ -454,17 +448,79 @@ export function Header() {
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
-                <MobileNavigation className="pointer-events-auto md:hidden" setIsContactOpen={setIsContactOpen} />
+                <div className="pointer-events-auto md:hidden">
+                  <Popover>
+                    <div className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                      <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
+                        <ThemeToggle />
+                      </div>
+                      <Popover.Button className="group px-3 py-2">
+                        Menu
+                        <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
+                      </Popover.Button>
+                    </div>
+                    <Transition.Root>
+                      <Transition.Child
+                        as={Fragment}
+                        enter="duration-150 ease-out"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="duration-150 ease-in"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <Popover.Overlay className="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
+                      </Transition.Child>
+                      <Transition.Child
+                        as={Fragment}
+                        enter="duration-150 ease-out"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="duration-150 ease-in"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                      >
+                        <Popover.Panel
+                          focus
+                          className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800"
+                        >
+                          <div className="flex flex-row-reverse items-center justify-between">
+                            <Popover.Button aria-label="Close menu" className="-m-1 p-1">
+                              <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
+                            </Popover.Button>
+                            <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                              Navigation
+                            </h2>
+                          </div>
+                          <nav className="mt-6">
+                            <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
+                              <MobileNavItem href="/">Home</MobileNavItem>
+                              <MobileNavItem href="/about">About</MobileNavItem>
+                              <MobileNavItem href="/work">Work</MobileNavItem>
+                              <MobileNavItem href="/notes">Notes</MobileNavItem>
+                              <MobileNavItem href="/reading">Reading</MobileNavItem>
+                              <MobileNavItem onClick={() => setIsContactOpen(true)}>
+                                Contact
+                              </MobileNavItem>
+                            </ul>
+                          </nav>
+                        </Popover.Panel>
+                      </Transition.Child>
+                    </Transition.Root>
+                  </Popover>
+                </div>
                 <DesktopNavigation className="pointer-events-auto hidden md:block" />
               </div>
               <div className="hidden md:flex md:justify-end md:flex-1">
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                  <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
+                    <ThemeToggle />
+                  </div>
                   <button
                     onClick={() => setIsContactOpen(true)}
-                    className="group inline-flex items-center gap-2 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-zinc-100 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:bg-sky-500 dark:bg-sky-700 dark:text-zinc-100 dark:ring-white/10 dark:hover:bg-sky-600"
+                    className="px-3 py-2 hover:text-sky-500 dark:hover:text-sky-400"
                   >
                     Contact
-                    <MailIcon className="h-4 w-4 transition group-hover:scale-110" />
                   </button>
                 </div>
               </div>

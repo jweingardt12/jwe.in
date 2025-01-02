@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { useOpenPanel } from '@openpanel/nextjs'
 
 import { Container } from '@/components/Container'
 import {
@@ -14,10 +15,34 @@ import {
 import portraitImage from '@/images/portrait.jpg'
 
 function SocialLink({ className, href, children, icon: Icon }) {
+  const op = useOpenPanel()
+  
+  const getPlatform = (url) => {
+    if (url.startsWith('mailto:')) {
+      return 'email'
+    }
+    try {
+      const urlObj = new URL(url)
+      return urlObj.hostname.split('.')[0] === 'www' 
+        ? urlObj.hostname.split('.')[1] 
+        : urlObj.hostname.split('.')[0]
+    } catch {
+      return 'unknown'
+    }
+  }
+
+  const handleClick = () => {
+    op.track('social_link_click', { 
+      platform: getPlatform(href),
+      location: 'about'
+    })
+  }
+
   return (
     <li className={clsx(className, 'flex')}>
       <Link
         href={href}
+        onClick={handleClick}
         className="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
       >
         <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-teal-500" />
@@ -63,7 +88,7 @@ export default function About() {
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist.
+              I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, and I've been building things you've seen on the internet and in real life for the past 10+ years.
             </p>
             <p>
               Today, I'm a Product Manager at CloudKitchens, where I lead a team responsible for building the Ghost kitchen of the future.
@@ -85,11 +110,11 @@ export default function About() {
               Follow on LinkedIn
             </SocialLink>
             <SocialLink
-              href="mailto:jason@jwe.in"
+              href="mailto:hi@jwe.in"
               icon={MailIcon}
               className="mt-8 border-t border-zinc-100 pt-8 dark:border-zinc-700/40"
             >
-              jason@jwe.in
+              hi@jwe.in
             </SocialLink>
           </ul>
         </div>

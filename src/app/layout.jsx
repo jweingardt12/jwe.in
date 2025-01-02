@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import Script from 'next/script'
 import { OpenPanelComponent } from '@openpanel/nextjs'
 
-import '@/styles/tailwind.css'
+import '@/app/globals.css'
 
 export const metadata = {
   title: {
@@ -31,8 +31,15 @@ export default function RootLayout({ children }) {
         />
         <Providers>
           <OpenPanelComponent
-            clientId="e217e794-f391-4e78-b617-0e093b03ec9d"
+            apiSecret="e217e794-f391-4e78-b617-0e093b03ec9d"
             trackScreenViews={true}
+            trackOutgoingLinks={true}
+            trackAttributes={true}
+            globalProperties={{
+              environment: process.env.NODE_ENV,
+              site_version: '1.0.0',
+              theme: 'default'
+            }}
           />
           <div className="flex w-full">
             <Layout>{children}</Layout>

@@ -1,13 +1,14 @@
-import { Suspense } from 'react'
+'use client'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { useOpenPanel } from '@openpanel/nextjs'
 
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Photos } from '@/components/Photos';
-import { LoadingSkeleton } from '@/components/ArticleSkeleton';
 import {
   GitHubIcon,
   InstagramIcon,
@@ -15,9 +16,37 @@ import {
   ThreadsIcon,
 } from '@/components/SocialIcons';
 
-function SocialLink({ icon: Icon, className, ...props }) {
+function SocialLink({ icon: Icon, className, href, ...props }) {
+  const op = useOpenPanel()
+  
+  const getPlatform = (url) => {
+    if (url.startsWith('mailto:')) {
+      return 'email'
+    }
+    try {
+      const urlObj = new URL(url)
+      return urlObj.hostname.split('.')[0] === 'www' 
+        ? urlObj.hostname.split('.')[1] 
+        : urlObj.hostname.split('.')[0]
+    } catch {
+      return 'unknown'
+    }
+  }
+
+  const handleClick = () => {
+    op.track('social_link_click', { 
+      platform: getPlatform(href),
+      location: 'home'
+    })
+  }
+
   return (
-    <Link className="group -m-1 p-1" {...props}>
+    <Link 
+      className="group -m-1 p-1" 
+      href={href} 
+      onClick={handleClick}
+      {...props}
+    >
       <Icon className={clsx(
         "h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300",
         className
@@ -26,7 +55,7 @@ function SocialLink({ icon: Icon, className, ...props }) {
   );
 }
 
-async function HomeContent() {
+export default function HomePage() {
   return (
     <>
       <Container className="mt-9">
@@ -59,13 +88,5 @@ async function HomeContent() {
       </Container>
       <Photos />
     </>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <HomeContent />
-    </Suspense>
   );
 }

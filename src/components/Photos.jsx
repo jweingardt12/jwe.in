@@ -120,56 +120,56 @@ async function fetchPhotoStats(photoId) {
 }
 
 function PhotoMetadata({ metadata, visible, title, link }) {
-  if (!visible || !metadata) return null
+  if (!visible) return null
+  
+  const handleLinkClick = (e) => {
+    e.stopPropagation() // Prevent triggering the parent's click handler
+    window.open(link, '_blank', 'noopener,noreferrer')
+  }
   
   return (
-    <div className="absolute inset-0 p-4 text-white flex items-center justify-center">
+    <div className="absolute inset-0 p-4 text-white animate-[fadeIn_0.2s_ease-out_0.3s] opacity-0 [animation-fill-mode:forwards]">
       <div className="flex flex-col w-full">
-        <div className="flex items-start justify-between mb-3">
-          <div className="text-base md:text-lg font-medium">{title}</div>
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-1"
+        <div className="flex items-start justify-between mb-2">
+          <div className="text-xl font-medium">{title}</div>
+          <button
+            onClick={handleLinkClick}
+            className="ml-2 p-1 rounded-full hover:bg-white/10 transition-colors"
           >
             <svg
               viewBox="0 0 24 24"
-              className="h-3.5 w-3.5"
+              className="h-4 w-4"
               fill="currentColor"
             >
               <path d="M5 5v14h14v-7h2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7v2H5z M14 3h7v7h-2V6.41l-7.29 7.3-1.42-1.42L17.59 5H14z" />
             </svg>
-          </a>
+          </button>
         </div>
 
-        {/* Stats only shown on desktop */}
-        <div className="hidden md:flex flex-col space-y-1 text-xs md:text-sm">
-          <div className="grid grid-cols-[5rem_1fr] gap-x-1">
-            <span className="text-right">Views:</span>
-            <span>{metadata.views?.toLocaleString()}</span>
+        <div className="flex flex-col space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>Views</span>
+            <span>{metadata?.views?.toLocaleString() || '—'}</span>
           </div>
-          <div className="grid grid-cols-[5rem_1fr] gap-x-1">
-            <span className="text-right">Downloads:</span>
-            <span>{metadata.downloads?.toLocaleString()}</span>
+          <div className="flex justify-between">
+            <span>Downloads</span>
+            <span>{metadata?.downloads?.toLocaleString() || '—'}</span>
           </div>
           
-          <div className="space-y-1 mt-2 pt-2 border-t border-white/20">
-            {metadata.camera && (
-              <div className="grid grid-cols-[5rem_1fr] gap-x-1">
-                <span className="text-right">Camera:</span>
-                <span>{metadata.camera}</span>
-              </div>
-            )}
-            {metadata.aperture && (
-              <div className="grid grid-cols-[5rem_1fr] gap-x-1">
-                <span className="text-right">Aperture:</span>
+          <div className="space-y-2 mt-2 pt-2 border-t border-white/20">
+            <div className="flex justify-between">
+              <span>Camera</span>
+              <span className="truncate ml-2">{metadata?.camera || '—'}</span>
+            </div>
+            {metadata?.aperture && (
+              <div className="flex justify-between">
+                <span>Aperture</span>
                 <span>ƒ/{metadata.aperture}</span>
               </div>
             )}
-            {metadata.iso && (
-              <div className="grid grid-cols-[5rem_1fr] gap-x-1">
-                <span className="text-right">ISO:</span>
+            {metadata?.iso && (
+              <div className="flex justify-between">
+                <span>ISO</span>
                 <span>{metadata.iso}</span>
               </div>
             )}
@@ -180,51 +180,101 @@ function PhotoMetadata({ metadata, visible, title, link }) {
   )
 }
 
-function Photo({ photo, className }) {
-  const [isHovered, setIsHovered] = useState(false)
-  const [metadata, setMetadata] = useState(null)
+function TouchIndicator() {
+  return (
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 animate-[fadeIn_0.5s_ease-out]">
+      <div className="relative">
+        <div className="absolute h-6 w-6 rounded-full bg-zinc-800/20 animate-[ripple_2s_ease-out_infinite]" />
+        <div className="h-6 w-6 rounded-full bg-zinc-800/50 animate-[press_1.5s_ease-in-out_infinite]" />
+      </div>
+    </div>
+  )
+}
 
-  const fetchMetadata = useCallback(async () => {
-    if (!photoStats[photo.photoId]) {
-      const stats = await fetchPhotoStats(photo.photoId)
-      if (stats) {
-        setPhotoStats(prev => ({
-          ...prev,
-          [photo.photoId]: stats
-        }))
+function Photo({ photo, className, index, onHover, isHovered, isSelected, onSelect, photoStats, onFetchStats, showTouchIndicator }) {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const photoRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.1 }
+    )
+
+    if (photoRef.current) {
+      observer.observe(photoRef.current)
+    }
+
+    return () => {
+      if (photoRef.current) {
+        observer.unobserve(photoRef.current)
       }
     }
-  }, [photo.photoId])
+  }, [])
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    
+    if (!isSelected) {
+      onSelect(index)
+      onFetchStats(photo)
+    }
+  }
+
+  const handleMouseEnter = () => {
+    onHover(index)
+    onFetchStats(photo)
+  }
 
   return (
     <div 
-      className={`group relative ${className}`}
-      onMouseEnter={() => {
-        setIsHovered(true)
-        fetchMetadata()
+      ref={photoRef}
+      role="button"
+      tabIndex={0}
+      className={clsx(
+        'relative aspect-[9/10] w-60 flex-none overflow-visible rounded-2xl bg-zinc-100 dark:bg-zinc-800',
+        'shadow-[0_8px_28px_-6px_rgba(0,0,0,0.3)] dark:shadow-[0_8px_28px_-6px_rgba(0,0,0,0.5)]',
+        'ring-1 ring-zinc-400/20 dark:ring-zinc-300/20',
+        rotations[index % rotations.length],
+        'transition-opacity duration-1000',
+        isVisible && isLoaded ? 'opacity-100' : 'opacity-0',
+        'cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500',
+        className
+      )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => onHover(null)}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClick(e)
+        }
       }}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl">
+        {index === 0 && showTouchIndicator && <TouchIndicator />}
         <Image
           src={photo.image}
           alt={photo.hoverText}
-          sizes="(min-width: 640px) 18rem, 11rem"
+          sizes="15rem"
           className={clsx(
-            'absolute inset-0 h-full w-full object-cover transition duration-300',
-            isHovered && 'blur-[2px]'
+            'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
+            (isHovered || isSelected) && 'blur-[3px] brightness-[0.85]'
           )}
-          priority
+          priority={index < 3}
+          onLoad={() => setIsLoaded(true)}
         />
         <div 
           className={clsx(
-            'absolute inset-0 bg-black/75 transition-opacity duration-300',
-            isHovered ? 'opacity-100' : 'opacity-0'
+            'absolute inset-0 bg-black/25 transition-opacity duration-300',
+            (isHovered || isSelected) ? 'opacity-100' : 'opacity-0'
           )}
         />
         <PhotoMetadata 
           metadata={photoStats[photo.photoId]} 
-          visible={isHovered} 
+          visible={isHovered || isSelected} 
           title={photo.hoverText} 
           link={photo.link} 
         />
@@ -238,6 +288,22 @@ export function Photos() {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [photoStats, setPhotoStats] = useState({})
+  const [showTouchIndicator, setShowTouchIndicator] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
+
+  const handleHover = (index) => {
+    if (!hasInteracted) {
+      setHasInteracted(true)
+    }
+    setHoveredIndex(index)
+  }
+
+  const handleSelect = (index) => {
+    if (!hasInteracted) {
+      setHasInteracted(true)
+    }
+    setSelectedIndex(index)
+  }
 
   const getPhotoStats = useCallback(async (photo) => {
     if (!photoStats[photo.photoId]) {
@@ -283,18 +349,6 @@ export function Photos() {
     }
   }, [hoveredIndex, selectedIndex])
 
-  const handleImageClick = (e, index, link) => {
-    e.preventDefault()
-    if (selectedIndex === index) {
-      // If already selected, open the link
-      window.open(link, '_blank', 'noopener,noreferrer')
-      setSelectedIndex(null)
-    } else {
-      // First tap, just select the image
-      setSelectedIndex(index)
-    }
-  }
-
   // Clear selection when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -306,72 +360,56 @@ export function Photos() {
     }
   }, [])
 
+  // Add timer to show touch indicator after 3 seconds if no interaction
+  useEffect(() => {
+    if (!hasInteracted && hoveredIndex === null && selectedIndex === null) {
+      const timer = setTimeout(() => {
+        setShowTouchIndicator(true)
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    } else {
+      setShowTouchIndicator(false)
+    }
+  }, [hoveredIndex, selectedIndex, hasInteracted])
+
   return (
     <div className="mt-16 sm:mt-20">
-      <div
-        ref={scrollRef}
-        className="scrollbar-hide relative -my-4 flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth py-8 px-4 will-change-transform"
-      >
-        {[...photos, ...photos.slice(0, 3)].map(
-          ({ image, hoverText, link, photoId }, index) => (
-            <div
-              key={`photo-${index}-${hoverText}`}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={(e) => e.stopPropagation()}
-              className={clsx(
-                'group relative aspect-[9/10] w-36 sm:w-44 md:w-72 flex-none overflow-hidden rounded-[10px] bg-zinc-100 dark:bg-zinc-800',
-                'shadow-lg dark:shadow-zinc-900/50',
-                'ring-1 ring-zinc-400/20 dark:ring-zinc-300/20',
-                rotations[index % rotations.length],
-              )}
-              style={{ 
-                transition: 'transform 0.3s ease-in-out',
-                willChange: 'transform'
-              }}
-            >
-              <a
-                href={link}
-                onClick={(e) => handleImageClick(e, index, link)}
-                className="block h-full w-full"
-              >
-                <div className="relative h-full w-full">
-                  <Image
-                    src={image}
-                    alt={hoverText}
-                    sizes="(min-width: 768px) 18rem, (min-width: 640px) 11rem, 7rem"
-                    className={clsx(
-                      'absolute inset-0 h-full w-full object-cover transition-all duration-300',
-                      (hoveredIndex === index || selectedIndex === index) && 'blur-[1px] brightness-[0.25]'
-                    )}
-                    loading="lazy"
-                    quality={75}
-                  />
-                  <div
-                    className={clsx(
-                      'absolute inset-0 bg-black/20 transition-opacity duration-300',
-                      (hoveredIndex === index || selectedIndex === index) ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                  <PhotoMetadata 
-                    metadata={photoStats[photoId]} 
-                    visible={hoveredIndex === index || selectedIndex === index} 
-                    title={hoverText} 
-                    link={link} 
-                  />
-                </div>
-              </a>
-            </div>
-          ),
-        )}
+      <div className="-my-4 flex gap-5 overflow-x-auto py-12 px-4 sm:gap-8 no-scrollbar">
+        {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
+          <Photo
+            key={`photo-${index}-${photo.hoverText}`}
+            photo={photo}
+            index={index}
+            onHover={handleHover}
+            isHovered={hoveredIndex === index}
+            isSelected={selectedIndex === index}
+            onSelect={handleSelect}
+            photoStats={photoStats}
+            onFetchStats={getPhotoStats}
+            showTouchIndicator={showTouchIndicator}
+          />
+        ))}
       </div>
       <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
+        .no-scrollbar {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        @keyframes ripple {
+          0% { transform: scale(1); opacity: 0.2; }
+          100% { transform: scale(2); opacity: 0; }
+        }
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes press {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(0.85); }
         }
       `}</style>
     </div>
