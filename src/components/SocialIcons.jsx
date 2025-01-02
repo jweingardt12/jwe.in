@@ -6,6 +6,8 @@ function SocialLink({ icon: Icon, ...props }) {
   return (
     <a 
       className="group -m-1 p-1" 
+      target="_blank"
+      rel="noopener noreferrer"
       {...props}
       onClick={() => {
         // Track social link click
