@@ -123,8 +123,16 @@ async function fetchPhotoStats(photoId) {
 function PhotoMetadata({ metadata, visible, title, link }) {
   if (!visible) return null
   
+  const op = useOpenPanel()
+  
   const handleLinkClick = (e) => {
     e.stopPropagation() // Prevent triggering the parent's click handler
+    if (op && typeof op.track === 'function') {
+      op.track('unsplash_link_click', {
+        title: title,
+        link: link
+      })
+    }
     window.open(link, '_blank', 'noopener,noreferrer')
   }
   

@@ -55,43 +55,45 @@ function MobileDialog({ open, onClose, children }) {
 
 function DesktopDialog({ open, onClose, size, children }) {
   return (
-    <HeadlessDialog as="div" className="relative z-50" onClose={onClose} open={open}>
-      <Transition.Child
-        as={Fragment}
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
-      </Transition.Child>
+    <Transition appear show={open} as={Fragment}>
+      <HeadlessDialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="transition duration-200 ease-out"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition duration-150 ease-in"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/75 backdrop-blur-sm" />
+        </Transition.Child>
 
-      <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 translate-y-4"
-            enterTo="opacity-100 translate-y-0"
-            leave="ease-in duration-300"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 translate-y-4"
-          >
-            <HeadlessDialog.Panel
-              className={clsx(
-                'relative w-full transform overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 p-0 text-left shadow-xl transition-all',
-                'ring-1 ring-gray-200 dark:ring-zinc-800',
-                sizes[size]
-              )}
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <Transition.Child
+              as={Fragment}
+              enter="transition duration-200 ease-out"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="transition duration-150 ease-in"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
             >
-              {children}
-            </HeadlessDialog.Panel>
-          </Transition.Child>
+              <HeadlessDialog.Panel
+                className={clsx(
+                  'relative w-full transform overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 p-0 text-left shadow-xl will-change-transform',
+                  'ring-1 ring-gray-200 dark:ring-zinc-800',
+                  sizes[size]
+                )}
+              >
+                {children}
+              </HeadlessDialog.Panel>
+            </Transition.Child>
+          </div>
         </div>
-      </div>
-    </HeadlessDialog>
+      </HeadlessDialog>
+    </Transition>
   )
 }
 
