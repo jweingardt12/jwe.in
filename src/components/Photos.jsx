@@ -245,12 +245,10 @@ function Photo({ photo, className, index, onHover, isHovered, isSelected, onSele
   const handleMouseLeave = () => {
     if (hoverStartTime.current) {
       const hoverDuration = Date.now() - hoverStartTime.current
-      if (op && typeof op.track === 'function') {
-        op.track('photo_hover', {
-          title: photo.hoverText,
-          hover_duration_ms: hoverDuration
-        })
-      }
+      op.track('photo_hover', {
+        title: photo.hoverText,
+        hover_duration_ms: hoverDuration
+      })
       hoverStartTime.current = null
     }
     onHover(null)
