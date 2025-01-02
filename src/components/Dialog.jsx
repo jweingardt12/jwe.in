@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 
@@ -18,9 +18,47 @@ const sizes = {
 }
 
 export function Dialog({ open = false, onClose, size = 'lg', children }) {
+  // Mobile version
+  if (typeof window !== 'undefined' && window.innerWidth < 640) {
+    const [isClosing, setIsClosing] = useState(false)
+
+    if (!open) return null
+
+    const handleClose = () => {
+      setIsClosing(true)
+      setTimeout(() => {
+        setIsClosing(false)
+        onClose()
+      }, 200) // Match animation duration
+    }
+
+    return (
+      <div className="fixed inset-0 z-50">
+        <div 
+          className={clsx(
+            "fixed inset-0 bg-black/75 backdrop-blur-sm",
+            isClosing ? 'animate-overlay-out' : 'animate-overlay-in'
+          )} 
+          onClick={handleClose} 
+        />
+        <div className="fixed bottom-0 inset-x-0">
+          <div 
+            className={clsx(
+              "relative w-full bg-white dark:bg-zinc-900 rounded-t-2xl shadow-xl",
+              isClosing ? 'animate-sheet-out' : 'animate-sheet-in'
+            )}
+          >
+            {children}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Desktop version
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <HeadlessDialog as="div" className="relative z-50" onClose={onClose}>
+    <Transition show={open} as={Fragment}>
+      <HeadlessDialog onClose={onClose} className="relative z-50">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -30,70 +68,50 @@ export function Dialog({ open = false, onClose, size = 'lg', children }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" />
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
             >
-              <HeadlessDialog.Panel className={clsx('relative w-full transform rounded-2xl bg-zinc-900 p-6 text-left shadow-xl transition-all dark:ring-zinc-800', sizes[size])}>
+              <HeadlessDialog.Panel
+                className={clsx(
+                  'relative w-full bg-white dark:bg-zinc-900 shadow-xl',
+                  'rounded-2xl',
+                  'ring-1 ring-gray-200 dark:ring-zinc-800',
+                  sizes[size]
+                )}
+              >
                 {children}
               </HeadlessDialog.Panel>
             </Transition.Child>
           </div>
         </div>
       </HeadlessDialog>
-    </Transition.Root>
+    </Transition>
   )
 }
 
 export function DialogTitle({ children, className }) {
   return (
-    <HeadlessDialog.Title className={clsx('text-lg font-semibold leading-6 text-white', className)}>
-      {children}
-    </HeadlessDialog.Title>
-  )
-}
-
-export function DialogBody({ children, className }) {
-  return (
-    <div className={clsx('mt-2 text-sm text-zinc-300', className)}>
+    <div className={clsx('text-lg font-semibold leading-6 text-gray-900 dark:text-white', className)}>
       {children}
     </div>
   )
 }
 
-export function DialogTestimonial({ quote, author, role, image }) {
+export function DialogBody({ children, className }) {
   return (
-    <div className="mt-6 lg:mt-0 lg:w-[30%]">
-      <figure className="mt-10">
-        <blockquote className="text-lg/8 font-semibold text-white">
-          <p>{quote}</p>
-        </blockquote>
-        <figcaption className="mt-10 flex gap-x-6">
-          <img
-            src={image}
-            alt={author}
-            className="size-12 flex-none rounded-full bg-zinc-800"
-          />
-          <div>
-            <div className="text-base font-semibold text-white">
-              {author}
-            </div>
-            <div className="text-sm/6 text-zinc-400">
-              {role}
-            </div>
-          </div>
-        </figcaption>
-      </figure>
+    <div className={clsx('text-sm text-gray-600 dark:text-zinc-400', className)}>
+      {children}
     </div>
   )
 }

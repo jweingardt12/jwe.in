@@ -48,6 +48,40 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        'sheet-in': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' }
+        },
+        'sheet-out': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(100%)' }
+        },
+        'overlay-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        },
+        'overlay-out': {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' }
+        },
+        'spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' }
+        },
+        'success-in': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' }
+        }
+      },
+      animation: {
+        'sheet-in': 'sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+        'sheet-out': 'sheet-out 0.2s cubic-bezier(0.32, 0.72, 0, 1)',
+        'overlay-in': 'overlay-in 0.3s ease-out',
+        'overlay-out': 'overlay-out 0.2s ease-in',
+        'spin': 'spin 0.6s linear infinite',
+        'success-in': 'success-in 0.5s cubic-bezier(0.32, 0.72, 0, 1)'
+      }
     },
   },
   plugins: [

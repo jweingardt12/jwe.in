@@ -113,7 +113,7 @@ function MobileNavItem({ href, children, onClick }) {
   )
 }
 
-function MobileNavigation({ className, setIsContactOpen }) {
+function MobileNavigation({ className }) {
   return (
     <Popover className={className}>
       <Popover.Button
@@ -141,9 +141,9 @@ function MobileNavigation({ className, setIsContactOpen }) {
             <MobileNavItem href="/work">Work</MobileNavItem>
             <MobileNavItem href="/notes">Notes</MobileNavItem>
             <MobileNavItem href="/reading">Reading</MobileNavItem>
-            <MobileNavItem onClick={() => setIsContactOpen(true)}>
-              Contact
-            </MobileNavItem>
+            <li className="pt-2">
+              <ContactButton className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg" />
+            </li>
           </ul>
         </nav>
       </Popover.Panel>
@@ -278,8 +278,23 @@ function ThemeToggle() {
   )
 }
 
-export function Header() {
+function ContactButton({ className }) {
   const [isContactOpen, setIsContactOpen] = useState(false)
+  
+  return (
+    <>
+      <button
+        onClick={() => setIsContactOpen(true)}
+        className={clsx("px-4 py-2 hover:text-sky-500 dark:hover:text-sky-400", className)}
+      >
+        Contact
+      </button>
+      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
+    </>
+  )
+}
+
+export function Header() {
   let isHomePage = usePathname() === '/'
   let headerRef = useRef(null)
   let avatarRef = useRef(null)
@@ -490,9 +505,9 @@ export function Header() {
                               <MobileNavItem href="/work">Work</MobileNavItem>
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
-                              <MobileNavItem onClick={() => setIsContactOpen(true)}>
-                                Contact
-                              </MobileNavItem>
+                              <li className="pt-2">
+                                <ContactButton className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg" />
+                              </li>
                             </ul>
                           </nav>
                         </Popover.Panel>
@@ -507,12 +522,7 @@ export function Header() {
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
                     <ThemeToggle />
                   </div>
-                  <button
-                    onClick={() => setIsContactOpen(true)}
-                    className="px-4 py-2 hover:text-sky-500 dark:hover:text-sky-400"
-                  >
-                    Contact
-                  </button>
+                  <ContactButton />
                 </div>
               </div>
             </div>
@@ -522,7 +532,6 @@ export function Header() {
       {isHomePage && (
         <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
-      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </>
   )
 }
