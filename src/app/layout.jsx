@@ -2,6 +2,7 @@ import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
 import { Toaster } from "@/components/ui/toaster"
 import { OpenPanelProvider } from '@/components/OpenPanelProvider.client'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import '@/app/globals.css'
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
             <Toaster />
           </div>
         </Providers>
+        <SpeedInsights />
       </body>
     </html>
   )
