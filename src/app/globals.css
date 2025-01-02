@@ -38,7 +38,6 @@
   }
 }
 
-/* Dialog Transitions */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -58,6 +57,17 @@
   to {
     opacity: 0;
     transform: translateY(8px);
+  }
+}
+
+@keyframes delayedFadeIn {
+  0% { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -83,6 +93,11 @@
 
 .animate-fade-up {
   animation: fade-up 0.3s ease-out forwards;
+}
+
+.animate-delayed-fade-in {
+  opacity: 0;
+  animation: delayedFadeIn 1s ease-out 3s forwards;
 }
 
 .dialog-enter {
