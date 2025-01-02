@@ -63,12 +63,6 @@ export function Footer() {
                 <NavLink href="/work">Work</NavLink>
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
-                <button 
-                  onClick={() => setIsContactOpen(true)}
-                  className="transition hover:text-sky-500 dark:hover:text-sky-400"
-                >
-                  Contact
-                </button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt

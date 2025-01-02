@@ -87,10 +87,10 @@ export default function About() {
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-            I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
+              I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
             <p>
-              Today, I'm a Product Manager at CloudKitchens, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
+              Today, I'm a Product Manager at <span className="text-sky-500"><a href="https://cloudkitchens.com" target="_blank" rel="noopener noreferrer">CloudKitchens</a></span>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
             </p>
           </div>
         </div>

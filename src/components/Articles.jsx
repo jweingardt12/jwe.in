@@ -24,10 +24,11 @@ export function Articles({ articles = [] }) {
                   source: post.publicationName
                 })
               }}
-              className="block group"
+              className="group relative block"
             >
-              <Card as="div" className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                <div className="flex w-full flex-row items-start justify-between gap-x-4 sm:gap-x-6">
+              <div className="absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />
+              <Card as="div">
+                <div className="relative z-10 flex w-full flex-row items-start justify-between gap-x-4 sm:gap-x-6">
                   <div className="flex-1">
                     <Card.Eyebrow
                       as="div"
