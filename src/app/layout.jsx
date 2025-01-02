@@ -40,7 +40,8 @@ export default function RootLayout({ children }) {
                 __html: `
                   window.op = window.op||function(...args){(window.op.q=window.op.q||[]).push(args);};
                   window.op('init', {
-                    clientId: 'e217e794-f391-4e78-b617-0e093b03ec9d',
+                    clientId: '${process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}',
+                    secret: '${process.env.NEXT_PUBLIC_OPENPANEL_SECRET}',
                     trackScreenViews: true,
                     trackOutgoingLinks: true,
                     trackAttributes: true,
