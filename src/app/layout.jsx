@@ -1,7 +1,7 @@
 import { Providers } from './providers'
 import { Layout } from '../components/Layout'
 import { Toaster } from "../components/ui/toaster"
-import { OpenPanelProvider } from '../components/OpenPanelProvider.client'
+import { OpenPanelScript } from '../components/OpenPanelScript.client'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import './globals.css'
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
         <Providers>
-          <OpenPanelProvider />
+          <OpenPanelScript />
           <div className="flex w-full">
             <Layout>{children}</Layout>
             <Toaster />
