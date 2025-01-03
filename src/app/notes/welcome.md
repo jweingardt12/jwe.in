@@ -1,7 +1,7 @@
 ---
 title: "Welcome! Let me explain..."
 date: 2025-01-01
-description: "How this site was built, why it exists, and the things I've learned on the way."
+description: "How this site was built, why it exists, and what's next for it."
 image: 
 slug: welcome
 ---
