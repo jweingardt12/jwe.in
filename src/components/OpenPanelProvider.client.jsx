@@ -25,7 +25,7 @@ export function OpenPanelProvider() {
   return (
     <OpenPanelComponent
       clientId={process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}
-      apiUrl="/api/openpanel"
+      apiUrl={`${window.location.origin}/api/openpanel`}
       trackScreenViews={true}
       trackOutgoingLinks={true}
       trackAttributes={true}
