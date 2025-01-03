@@ -3,12 +3,13 @@ import { NextResponse } from 'next/server'
 export async function middleware(request) {
   const url = new URL(request.url)
   if (url.pathname.startsWith('/api/openpanel')) {
-    const openpanelUrl = new URL(url.pathname.replace('/api/openpanel', ''), process.env.NEXT_PUBLIC_OPENPANEL_API_URL)
+    const openpanelUrl = new URL('/track', process.env.NEXT_PUBLIC_OPENPANEL_API_URL)
     const response = await fetch(openpanelUrl, {
       method: request.method,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENPANEL_SECRET}`,
+        'X-OpenPanel-Client-Id': process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID
       },
       body: request.method !== 'GET' ? await request.text() : undefined,
     })
