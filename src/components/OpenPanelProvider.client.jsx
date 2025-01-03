@@ -8,12 +8,17 @@ export function OpenPanelProvider() {
     // Log OpenPanel initialization for debugging
     console.log('OpenPanel Config:', {
       clientId: process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID,
-      hasSecret: !!process.env.NEXT_PUBLIC_OPENPANEL_SECRET
+      apiUrl: process.env.NEXT_PUBLIC_OPENPANEL_API_URL,
+      hasClientId: !!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID,
+      hasApiUrl: !!process.env.NEXT_PUBLIC_OPENPANEL_API_URL
     })
   }, [])
 
-  if (!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID) {
-    console.warn('OpenPanel client ID is not configured')
+  if (!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID || !process.env.NEXT_PUBLIC_OPENPANEL_API_URL) {
+    console.warn('OpenPanel environment variables are not configured:', {
+      hasClientId: !!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID,
+      hasApiUrl: !!process.env.NEXT_PUBLIC_OPENPANEL_API_URL
+    })
     return null
   }
 
