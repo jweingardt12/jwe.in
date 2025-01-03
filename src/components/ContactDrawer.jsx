@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useToast } from './ui/use-toast'
 import {
   Drawer,
@@ -95,7 +95,7 @@ export function ContactDrawer() {
     })
   }
 
-  const handleDrawerClose = (reason = 'cancel') => {
+  const handleDrawerClose = useCallback((reason = 'cancel') => {
     if (openTime) {
       const duration = Date.now() - openTime
       window.op('contact_form_close', {
@@ -105,13 +105,13 @@ export function ContactDrawer() {
       })
       setOpenTime(null)
     }
-  }
+  }, [openTime])
 
   useEffect(() => {
     if (isSuccess) {
       handleDrawerClose('success')
     }
-  }, [isSuccess])
+  }, [isSuccess, handleDrawerClose])
 
   return (
     <Drawer onOpenChange={(open) => {
