@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Popover, Transition } from '@headlessui/react'
 import { useTheme } from 'next-themes'
-import { useOpenPanel } from '@openpanel/nextjs'
 import clsx from 'clsx'
 
 import { Container } from './Container'
@@ -202,23 +201,14 @@ function Avatar({ large = false, className, ...props }) {
 
 function ThemeToggle() {
   let { resolvedTheme, setTheme } = useTheme()
-  const op = useOpenPanel()
   let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
-
-  const handleThemeChange = () => {
-    op.track('theme_change', { 
-      from: resolvedTheme,
-      to: otherTheme
-    })
-    setTheme(otherTheme)
-  }
 
   return (
     <button
       type="button"
       aria-label={`Switch to ${otherTheme} theme`}
       className="group py-2"
-      onClick={handleThemeChange}
+      onClick={() => setTheme(otherTheme)}
     >
       <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
       <MoonIcon className="hidden h-4 w-4 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />

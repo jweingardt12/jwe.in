@@ -3,19 +3,18 @@
 import Image from 'next/image'
 import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useOpenPanel } from '@openpanel/nextjs'
-import { Container } from '@/components/Container'
+import { Container } from './Container'
 
 // Import images statically
-import image1 from '@/images/photos/image-1.jpg'
-import image2 from '@/images/photos/image-2.jpg'
-import image3 from '@/images/photos/image-3.jpg'
-import image4 from '@/images/photos/image-4.jpg'
-import image5 from '@/images/photos/image-5.jpg'
-import image6 from '@/images/photos/image-6.jpg'
-import image7 from '@/images/photos/image-7.jpg'
-import image8 from '@/images/photos/image-8.jpg'
-import image9 from '@/images/photos/image-9.jpg'
+import image1 from '../images/photos/image-1.jpg'
+import image2 from '../images/photos/image-2.jpg'
+import image3 from '../images/photos/image-3.jpg'
+import image4 from '../images/photos/image-4.jpg'
+import image5 from '../images/photos/image-5.jpg'
+import image6 from '../images/photos/image-6.jpg'
+import image7 from '../images/photos/image-7.jpg'
+import image8 from '../images/photos/image-8.jpg'
+import image9 from '../images/photos/image-9.jpg'
 
 const photos = [
   {
@@ -120,17 +119,9 @@ async function fetchPhotoStats(photoId) {
   }
 }
 
-function PhotoMetadataWithTracking({ metadata, visible, title, link }) {
-  const op = useOpenPanel()
-  
+function PhotoMetadata({ metadata, visible, title, link }) {
   const handleLinkClick = (e) => {
     e.stopPropagation()
-    window.op('photo_link_click', {
-      title: title,
-      destination: link,
-      type: 'unsplash',
-      timestamp: new Date().toISOString()
-    })
     window.open(link, '_blank', 'noopener,noreferrer')
   }
 
@@ -197,48 +188,6 @@ function TouchIndicator() {
         <div className="h-6 w-6 rounded-full bg-zinc-800/50 animate-[press_1.5s_ease-in-out_infinite]" />
       </div>
     </div>
-  )
-}
-
-function PhotoWithTracking(props) {
-  const op = useOpenPanel()
-  const hoverStartTime = useRef(null)
-
-  const handleMouseEnter = () => {
-    hoverStartTime.current = Date.now()
-    props.onHover(props.index)
-    props.onFetchStats(props.photo)
-    // Track hover start
-    window.op('photo_hover_start', {
-      title: props.photo.hoverText,
-      location: props.photo.hoverText,
-      photo_id: props.photo.photoId,
-      start_time: new Date().toISOString()
-    })
-  }
-
-  const handleMouseLeave = () => {
-    if (hoverStartTime.current) {
-      const hoverDuration = Date.now() - hoverStartTime.current
-      // Track hover end with duration
-      window.op('photo_hover_end', {
-        title: props.photo.hoverText,
-        location: props.photo.hoverText,
-        photo_id: props.photo.photoId,
-        hover_duration_ms: hoverDuration,
-        end_time: new Date().toISOString()
-      })
-      hoverStartTime.current = null
-    }
-    props.onHover(null)
-  }
-
-  return (
-    <Photo 
-      {...props} 
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    />
   )
 }
 
@@ -332,7 +281,7 @@ function Photo({
             (isHovered || isSelected) ? 'opacity-100' : 'opacity-0'
           )}
         />
-        <PhotoMetadataWithTracking 
+        <PhotoMetadata 
           metadata={photoStats[photo.photoId]} 
           visible={isHovered || isSelected} 
           title={photo.hoverText} 
@@ -437,7 +386,7 @@ export function Photos() {
     <div className="mt-16 sm:mt-20">
       <div className="-my-4 flex gap-5 overflow-x-auto py-12 px-4 sm:gap-8 no-scrollbar">
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
-          <PhotoWithTracking
+          <Photo
             key={`photo-${index}-${photo.hoverText}`}
             photo={photo}
             index={index}
@@ -448,6 +397,8 @@ export function Photos() {
             photoStats={photoStats}
             onFetchStats={getPhotoStats}
             showTouchIndicator={showTouchIndicator}
+            onMouseEnter={() => handleHover(index)}
+            onMouseLeave={() => handleHover(null)}
           />
         ))}
       </div>
@@ -476,4 +427,4 @@ export function Photos() {
   )
 }
 
-export { PhotoWithTracking as Photo, fetchPhotoStats }
+export { Photo, fetchPhotoStats }

@@ -2,20 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useOpenPanel } from '@openpanel/nextjs'
 import { Card } from './Card'
 
 export function Articles({ articles = [] }) {
-  const op = useOpenPanel()
-  
-  const safeTrack = (event, data) => {
-    try {
-      op?.track(event, data)
-    } catch (error) {
-      console.warn('OpenPanel tracking failed:', error)
-    }
-  }
-
   return (
     <div className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
       {articles.length === 0 ? (
@@ -29,16 +18,6 @@ export function Articles({ articles = [] }) {
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => {
-                safeTrack('article_click', {
-                  title: post.title,
-                  source: post.publicationName,
-                  url: post.href,
-                  date_published: post.dateISO,
-                  has_image: !!post.imageUrl,
-                  description_length: post.description?.length
-                })
-              }}
               className="group relative block"
             >
               <div className="absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />

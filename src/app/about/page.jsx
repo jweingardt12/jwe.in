@@ -3,46 +3,21 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { useOpenPanel } from '@openpanel/nextjs'
 
-import { Container } from '@/components/Container'
+import { Container } from '../../components/Container'
 import {
   GitHubIcon,
   InstagramIcon,
   LinkedInIcon,
   ThreadsIcon,
-} from '@/components/SocialIcons'
-import portraitImage from '@/images/portrait.jpg'
+} from '../../components/SocialIcons'
+import portraitImage from '../../images/portrait.jpg'
 
 function SocialLink({ className, href, children, icon: Icon }) {
-  const op = useOpenPanel()
-  
-  const getPlatform = (url) => {
-    if (url.startsWith('mailto:')) {
-      return 'email'
-    }
-    try {
-      const urlObj = new URL(url)
-      return urlObj.hostname.split('.')[0] === 'www' 
-        ? urlObj.hostname.split('.')[1] 
-        : urlObj.hostname.split('.')[0]
-    } catch {
-      return 'unknown'
-    }
-  }
-
-  const handleClick = () => {
-    op.track('social_link_click', { 
-      platform: getPlatform(href),
-      location: 'about'
-    })
-  }
-
   return (
     <li className={clsx(className, 'flex')}>
       <a
         href={href}
-        onClick={handleClick}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex text-sm font-medium text-zinc-800 transition hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-500"
@@ -147,4 +122,4 @@ export default function About() {
       </div>
     </Container>
   )
-} 
+}

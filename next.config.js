@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   images: {
     remotePatterns: [
       {
@@ -10,17 +10,8 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**',
-      },
+      }
     ],
-  },
-  // Vercel-specific optimizations
-  poweredByHeader: false,
-  compress: true,
-  generateEtags: true,
-  // Enable static optimization
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['@heroicons/react', '@radix-ui/react-accordion', 'lucide-react']
   },
 }
 

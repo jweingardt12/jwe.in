@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { useOpenPanel } from '@openpanel/nextjs'
 
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -17,34 +16,10 @@ import {
 } from '../components/SocialIcons'
 
 function SocialLink({ icon: Icon, className, href, ...props }) {
-  const op = useOpenPanel()
-  
-  const getPlatform = (url) => {
-    if (url.startsWith('mailto:')) {
-      return 'email'
-    }
-    try {
-      const urlObj = new URL(url)
-      return urlObj.hostname.split('.')[0] === 'www' 
-        ? urlObj.hostname.split('.')[1] 
-        : urlObj.hostname.split('.')[0]
-    } catch {
-      return 'unknown'
-    }
-  }
-
-  const handleClick = () => {
-    op.track('social_link_click', { 
-      platform: getPlatform(href),
-      location: 'home'
-    })
-  }
-
   return (
     <a 
       className="group -m-1 p-1" 
       href={href} 
-      onClick={handleClick}
       target="_blank"
       rel="noopener noreferrer"
       {...props}
