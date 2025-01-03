@@ -12,16 +12,15 @@ export function OpenPanelProvider() {
     })
   }, [])
 
-  if (!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID || !process.env.NEXT_PUBLIC_OPENPANEL_SECRET) {
-    console.warn('OpenPanel environment variables are not configured')
+  if (!process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID) {
+    console.warn('OpenPanel client ID is not configured')
     return null
   }
 
   return (
     <OpenPanelComponent
       clientId={process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}
-      secret={process.env.NEXT_PUBLIC_OPENPANEL_SECRET}
-      apiUrl={process.env.NEXT_PUBLIC_OPENPANEL_API_URL}
+      apiUrl="/api/openpanel"
       trackScreenViews={true}
       trackOutgoingLinks={true}
       trackAttributes={true}
