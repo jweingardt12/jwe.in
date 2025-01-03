@@ -2,6 +2,8 @@
 
 My personal site, built with Next.js, Tailwind CSS, and OpenPanel analytics.
 
+![Screenshot of the website](/src/images/photos/screenshot.png)
+
 ## Getting started
 
 To run this site locally, first install the npm dependencies:
