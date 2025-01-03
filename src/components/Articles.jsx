@@ -32,7 +32,11 @@ export function Articles({ articles = [] }) {
               onClick={() => {
                 safeTrack('article_click', {
                   title: post.title,
-                  source: post.publicationName
+                  source: post.publicationName,
+                  url: post.href,
+                  date_published: post.dateISO,
+                  has_image: !!post.imageUrl,
+                  description_length: post.description?.length
                 })
               }}
               className="group relative block"

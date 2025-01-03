@@ -125,9 +125,11 @@ function PhotoMetadataWithTracking({ metadata, visible, title, link }) {
   
   const handleLinkClick = (e) => {
     e.stopPropagation()
-    op.track('unsplash_link_click', {
+    window.op('photo_link_click', {
       title: title,
-      link: link
+      destination: link,
+      type: 'unsplash',
+      timestamp: new Date().toISOString()
     })
     window.open(link, '_blank', 'noopener,noreferrer')
   }
@@ -206,14 +208,25 @@ function PhotoWithTracking(props) {
     hoverStartTime.current = Date.now()
     props.onHover(props.index)
     props.onFetchStats(props.photo)
+    // Track hover start
+    window.op('photo_hover_start', {
+      title: props.photo.hoverText,
+      location: props.photo.hoverText,
+      photo_id: props.photo.photoId,
+      start_time: new Date().toISOString()
+    })
   }
 
   const handleMouseLeave = () => {
     if (hoverStartTime.current) {
       const hoverDuration = Date.now() - hoverStartTime.current
-      op.track('photo_hover', {
+      // Track hover end with duration
+      window.op('photo_hover_end', {
         title: props.photo.hoverText,
-        hover_duration_ms: hoverDuration
+        location: props.photo.hoverText,
+        photo_id: props.photo.photoId,
+        hover_duration_ms: hoverDuration,
+        end_time: new Date().toISOString()
       })
       hoverStartTime.current = null
     }
@@ -463,4 +476,4 @@ export function Photos() {
   )
 }
 
-export { PhotoWithTracking as Photo, fetchPhotoStats } 
+export { PhotoWithTracking as Photo, fetchPhotoStats }

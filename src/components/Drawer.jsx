@@ -15,8 +15,16 @@ export function Drawer() {
   return (
     <DrawerPrimitive>
       <DrawerTrigger asChild>
-        <button className="text-zinc-600 dark:text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100 text-xs">
-        How does this page work?
+        <button 
+          className="text-zinc-600 dark:text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100 text-xs"
+          onClick={() => {
+            window.op('drawer_open', {
+              component: 'reading_page_help',
+              action: 'view_help'
+            });
+          }}
+        >
+          How does this page work?
         </button>
       </DrawerTrigger>
       <DrawerContent>

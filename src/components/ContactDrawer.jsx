@@ -15,6 +15,7 @@ import { Button } from './ui/button'
 import clsx from 'clsx'
 
 export function ContactDrawer() {
+  const [openTime, setOpenTime] = useState(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -87,8 +88,39 @@ export function ContactDrawer() {
     }
   }
 
+  const handleDrawerOpen = () => {
+    setOpenTime(Date.now())
+    window.op('contact_form_open', {
+      timestamp: new Date().toISOString()
+    })
+  }
+
+  const handleDrawerClose = (reason = 'cancel') => {
+    if (openTime) {
+      const duration = Date.now() - openTime
+      window.op('contact_form_close', {
+        reason,
+        duration_ms: duration,
+        timestamp: new Date().toISOString()
+      })
+      setOpenTime(null)
+    }
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleDrawerClose('success')
+    }
+  }, [isSuccess])
+
   return (
-    <Drawer>
+    <Drawer onOpenChange={(open) => {
+      if (open) {
+        handleDrawerOpen()
+      } else {
+        handleDrawerClose()
+      }
+    }}>
       <DrawerTrigger asChild>
         <button className={clsx(
           'relative block px-3 py-2 transition',
