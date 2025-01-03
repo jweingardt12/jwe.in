@@ -23,6 +23,11 @@ export const metadata = {
       'application/rss+xml': `${process.env.NEXT_PUBLIC_SITE_URL}/feed.xml`,
     },
   },
+  openGraph: {
+    images: [
+      '/images/photos/image-1.jpg',
+    ],
+  },
 }
 
 export default function RootLayout({ children }) {
@@ -40,4 +45,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   )
-} 
+}

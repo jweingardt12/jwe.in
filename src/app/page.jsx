@@ -89,6 +89,9 @@ export default function HomePage() {
         </div>
       </Container>
       <Photos />
+      <Head>
+        <meta property="og:image" content="/images/photos/image-1.jpg" />
+      </Head>
     </>
   );
 }
