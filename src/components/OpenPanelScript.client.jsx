@@ -40,10 +40,28 @@ export function OpenPanelScript() {
                         ...eventData,
                         referrer: document.referrer,
                         user_agent: navigator.userAgent,
-                        screen_width: window.screen.width,
-                        screen_height: window.screen.height,
-                        viewport_width: window.innerWidth,
-                        viewport_height: window.innerHeight,
+                        browser: {
+                          name: navigator.userAgent.includes('Firefox') ? 'Firefox' :
+                                navigator.userAgent.includes('Chrome') ? 'Chrome' :
+                                navigator.userAgent.includes('Safari') ? 'Safari' :
+                                navigator.userAgent.includes('Edge') ? 'Edge' :
+                                'Other',
+                          language: navigator.language,
+                          platform: navigator.platform,
+                          vendor: navigator.vendor
+                        },
+                        os: {
+                          platform: navigator.platform,
+                          mobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                        },
+                        screen: {
+                          width: window.screen.width,
+                          height: window.screen.height,
+                          viewport_width: window.innerWidth,
+                          viewport_height: window.innerHeight,
+                          pixel_ratio: window.devicePixelRatio,
+                          color_depth: window.screen.colorDepth
+                        },
                         timestamp: new Date().toISOString()
                       }
                     })
