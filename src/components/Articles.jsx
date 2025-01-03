@@ -6,13 +6,13 @@ import { useOpenPanel } from '@openpanel/nextjs'
 import { Card } from './Card'
 
 export function Articles({ articles = [] }) {
-  let op
-  try {
-    op = useOpenPanel()
-  } catch (error) {
-    console.warn('OpenPanel not configured:', error)
-    op = {
-      track: () => {} // Noop function
+  const op = useOpenPanel()
+  
+  const safeTrack = (event, data) => {
+    try {
+      op?.track(event, data)
+    } catch (error) {
+      console.warn('OpenPanel tracking failed:', error)
     }
   }
 
@@ -30,7 +30,7 @@ export function Articles({ articles = [] }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
-                op.track('article_click', {
+                safeTrack('article_click', {
                   title: post.title,
                   source: post.publicationName
                 })

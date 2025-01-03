@@ -6,13 +6,13 @@ import { useOpenPanel } from '@openpanel/nextjs'
 export function ShareFeed({ url }) {
   const [copied, setCopied] = useState(false)
   const urlRef = useRef(null)
-  let op
-  try {
-    op = useOpenPanel()
-  } catch (error) {
-    console.warn('OpenPanel not configured:', error)
-    op = {
-      track: () => {} // Noop function
+  const op = useOpenPanel()
+  
+  const safeTrack = (event, data) => {
+    try {
+      op?.track(event, data)
+    } catch (error) {
+      console.warn('OpenPanel tracking failed:', error)
     }
   }
 
@@ -20,7 +20,7 @@ export function ShareFeed({ url }) {
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
-      op.track('rss_feed_copied', {
+      safeTrack('rss_feed_copied', {
         feed_url: url
       })
       setTimeout(() => setCopied(false), 2000)
