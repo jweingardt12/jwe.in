@@ -21,9 +21,10 @@ export function OpenPanelProvider() {
     <OpenPanelComponent
       clientId={process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}
       secret={process.env.NEXT_PUBLIC_OPENPANEL_SECRET}
+      apiUrl={process.env.NEXT_PUBLIC_OPENPANEL_API_URL}
       trackScreenViews={true}
       trackOutgoingLinks={true}
       trackAttributes={true}
     />
   )
-} 
+}
