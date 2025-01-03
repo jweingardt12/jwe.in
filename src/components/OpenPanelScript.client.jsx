@@ -13,11 +13,22 @@ export function OpenPanelScript() {
             console.log('Initializing OpenPanel...');
             console.log('Client ID:', '${process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}');
             
+            // Generate or retrieve profile ID
+            function getProfileId() {
+              let profileId = localStorage.getItem('op_profile_id');
+              if (!profileId) {
+                profileId = 'p_' + Math.random().toString(36).substring(2) + '_' + Date.now();
+                localStorage.setItem('op_profile_id', profileId);
+              }
+              return profileId;
+            }
+
             // Initialize tracking state
             const state = {
               initialized: false,
               endpoint: window.location.origin + '/api/openpanel/track',
               clientId: '${process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID}',
+              profileId: typeof window !== 'undefined' ? getProfileId() : null,
               queue: []
             };
 
@@ -39,30 +50,33 @@ export function OpenPanelScript() {
                       data: {
                         ...eventData,
                         referrer: document.referrer,
-                        user_agent: navigator.userAgent,
-                        browser: {
-                          name: navigator.userAgent.includes('Firefox') ? 'Firefox' :
-                                navigator.userAgent.includes('Chrome') ? 'Chrome' :
-                                navigator.userAgent.includes('Safari') ? 'Safari' :
-                                navigator.userAgent.includes('Edge') ? 'Edge' :
-                                'Other',
-                          language: navigator.language,
-                          platform: navigator.platform,
-                          vendor: navigator.vendor
-                        },
-                        os: {
-                          platform: navigator.platform,
-                          mobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-                        },
-                        screen: {
-                          width: window.screen.width,
-                          height: window.screen.height,
-                          viewport_width: window.innerWidth,
-                          viewport_height: window.innerHeight,
-                          pixel_ratio: window.devicePixelRatio,
-                          color_depth: window.screen.colorDepth
-                        },
-                        timestamp: new Date().toISOString()
+                        user_agent: typeof window !== 'undefined' ? navigator.userAgent : null,
+                        device: typeof window !== 'undefined' ? (/Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'mobile' : 'desktop') : null,
+                        browser: typeof window !== 'undefined' ? (
+                          navigator.userAgent.includes('Firefox') ? 'Firefox' :
+                          navigator.userAgent.includes('Chrome') ? 'Chrome' :
+                          navigator.userAgent.includes('Safari') ? 'Safari' :
+                          navigator.userAgent.includes('Edge') ? 'Edge' :
+                          'Other'
+                        ) : null,
+                        browser_language: typeof window !== 'undefined' ? navigator.language : null,
+                        browser_vendor: typeof window !== 'undefined' ? navigator.vendor : null,
+                        os: typeof window !== 'undefined' ? (
+                          /Mac/i.test(navigator.userAgent) ? 'Mac OS' :
+                          /Windows/i.test(navigator.userAgent) ? 'Windows' :
+                          /Linux/i.test(navigator.userAgent) ? 'Linux' :
+                          /Android/i.test(navigator.userAgent) ? 'Android' :
+                          /iOS/i.test(navigator.userAgent) ? 'iOS' : 'Other'
+                        ) : null,
+                        is_mobile: typeof window !== 'undefined' ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) : null,
+                        screen_width: typeof window !== 'undefined' ? window.screen.width : null,
+                        screen_height: typeof window !== 'undefined' ? window.screen.height : null,
+                        viewport_width: typeof window !== 'undefined' ? window.innerWidth : null,
+                        viewport_height: typeof window !== 'undefined' ? window.innerHeight : null,
+                        pixel_ratio: typeof window !== 'undefined' ? window.devicePixelRatio : null,
+                        color_depth: typeof window !== 'undefined' ? window.screen.colorDepth : null,
+                        timestamp: new Date().toISOString(),
+                        profile_id: state.profileId
                       }
                     })
                   });
@@ -96,13 +110,43 @@ export function OpenPanelScript() {
               }
             };
 
+            // Track session start
+            const sessionStartTime = new Date();
+            
             // Initialize tracking
             window.op('init');
+
+            // Track session start
+            window.op('session_start', {
+              url: window.location.href,
+              path: window.location.pathname,
+              start_time: sessionStartTime.toISOString()
+            });
 
             // Track page view
             window.op('page_view', {
               url: window.location.href,
               path: window.location.pathname
+            });
+
+            // Track session end on page unload
+            window.addEventListener('beforeunload', function() {
+              const sessionEndTime = new Date();
+              const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / 1000); // duration in seconds
+              
+              // Use sendBeacon for reliable delivery during page unload
+              const data = {
+                event: 'session_end',
+                data: {
+                  url: window.location.href,
+                  path: window.location.pathname,
+                  end_time: sessionEndTime.toISOString(),
+                  duration_seconds: sessionDuration,
+                  start_time: sessionStartTime.toISOString()
+                }
+              };
+              
+              navigator.sendBeacon(state.endpoint, JSON.stringify(data));
             });
 
             // Add click tracking with external link detection

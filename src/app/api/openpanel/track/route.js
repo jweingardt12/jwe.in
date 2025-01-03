@@ -42,10 +42,22 @@ export async function POST(request) {
           path: body.data?.path || '',
           referrer: body.data?.referrer || '',
           timestamp: new Date().toISOString(),
+          // Map browser and OS info to OpenPanel's expected fields
+          browser: body.data?.browser || null,
+          os: body.data?.os || null,
+          device: body.data?.device || null,
+          // Include other properties
           ...body.data
         }
       }
     };
+
+    // Log the mapped data for debugging
+    console.log('Mapped event data:', {
+      browser: body.data?.browser,
+      os: body.data?.os,
+      device: body.data?.device
+    });
 
     console.log('Request body:', JSON.stringify(requestBody, null, 2));
 

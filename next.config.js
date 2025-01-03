@@ -13,12 +13,14 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    config.watchOptions = {
-      poll: 1000,
-      aggregateTimeout: 300,
-    }
-    return config
+  // Vercel-specific optimizations
+  poweredByHeader: false,
+  compress: true,
+  generateEtags: true,
+  // Enable static optimization
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@heroicons/react', '@radix-ui/react-accordion', 'lucide-react']
   },
 }
 
