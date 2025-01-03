@@ -1,9 +1,9 @@
 'use client'
-import { Fragment, useState } from 'react'
+
+import { Fragment } from 'react'
 import Link from 'next/link'
 import { Popover, Transition } from '@headlessui/react'
-import { ContainerInner, ContainerOuter } from '@/components/Container'
-import { ContactDialog } from './ContactDialog'
+import { ContainerInner, ContainerOuter } from './Container'
 
 function NavLink({ href, children }) {
   if (href === '/work') {
@@ -50,8 +50,6 @@ function NavLink({ href, children }) {
 }
 
 export function Footer() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-
   return (
     <footer className="mt-32 flex-none">
       <ContainerOuter>
@@ -71,7 +69,6 @@ export function Footer() {
           </ContainerInner>
         </div>
       </ContainerOuter>
-      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </footer>
   )
 }

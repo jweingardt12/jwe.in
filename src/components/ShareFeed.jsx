@@ -6,7 +6,15 @@ import { useOpenPanel } from '@openpanel/nextjs'
 export function ShareFeed({ url }) {
   const [copied, setCopied] = useState(false)
   const urlRef = useRef(null)
-  const op = useOpenPanel()
+  let op
+  try {
+    op = useOpenPanel()
+  } catch (error) {
+    console.warn('OpenPanel not configured:', error)
+    op = {
+      track: () => {} // Noop function
+    }
+  }
 
   const handleCopy = async () => {
     try {
@@ -51,4 +59,4 @@ export function ShareFeed({ url }) {
       </button>
     </div>
   )
-} 
+}

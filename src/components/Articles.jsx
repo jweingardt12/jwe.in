@@ -3,10 +3,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useOpenPanel } from '@openpanel/nextjs'
-import { Card } from '@/components/Card'
+import { Card } from './Card'
 
 export function Articles({ articles = [] }) {
-  const op = useOpenPanel()
+  let op
+  try {
+    op = useOpenPanel()
+  } catch (error) {
+    console.warn('OpenPanel not configured:', error)
+    op = {
+      track: () => {} // Noop function
+    }
+  }
 
   return (
     <div className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
@@ -88,4 +96,4 @@ export function Articles({ articles = [] }) {
       )}
     </div>
   )
-} 
+}

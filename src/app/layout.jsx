@@ -1,10 +1,10 @@
-import { Providers } from '@/app/providers'
-import { Layout } from '@/components/Layout'
-import { Toaster } from "@/components/ui/toaster"
-import { OpenPanelProvider } from '@/components/OpenPanelProvider.client'
+import { Providers } from './providers'
+import { Layout } from '../components/Layout'
+import { Toaster } from "../components/ui/toaster"
+import { OpenPanelProvider } from '../components/OpenPanelProvider.client'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-import '@/app/globals.css'
+import './globals.css'
 
 export const viewport = {
   width: 'device-width',
@@ -40,4 +40,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   )
-} 
+}
