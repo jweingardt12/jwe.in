@@ -99,11 +99,11 @@ function ProjectCard({ project }) {
           />
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <div className="flex items-center">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex-1">
               {project.name}
             </h3>
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="text-sm text-zinc-500 dark:text-zinc-400 w-[120px] text-right">
               {project.duration}
             </span>
           </div>
