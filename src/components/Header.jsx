@@ -1,11 +1,11 @@
 'use client'
 
 import { Fragment, useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { Popover, Transition } from '@headlessui/react'
-import { useTheme } from 'next-themes'
+import Link from 'next/link'
+import Image from 'next/image'
 import clsx from 'clsx'
 
 import { Container } from './Container'
@@ -60,22 +60,6 @@ function MoonIcon(props) {
 }
 
 function MobileNavItem({ href, children }) {
-  if (href === '/work') {
-    return (
-      <li>
-        <button 
-          className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400 cursor-not-allowed"
-          onClick={(e) => e.preventDefault()}
-        >
-          <span className="flex items-center justify-between">
-            {children}
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">Under construction</span>
-          </span>
-        </button>
-      </li>
-    )
-  }
-
   return (
     <li>
       <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
@@ -87,40 +71,6 @@ function MobileNavItem({ href, children }) {
 
 function NavItem({ href, children }) {
   let isActive = usePathname() === href
-
-  if (href === '/work') {
-    return (
-      <li>
-        <Popover className="relative">
-          <Popover.Button className={clsx(
-            'relative block px-3 py-2 transition cursor-not-allowed',
-            'hover:text-sky-500 dark:hover:text-sky-400'
-          )}>
-            {children}
-          </Popover.Button>
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 translate-y-1"
-            enterTo="opacity-100 translate-y-0"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 translate-y-1"
-          >
-            <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-max -translate-x-1/2 transform px-4">
-              <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="bg-white dark:bg-zinc-800 p-4">
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    🚧 Under construction 🚧
-                  </p>
-                </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
-        </Popover>
-      </li>
-    )
-  }
 
   return (
     <li>
@@ -201,14 +151,26 @@ function Avatar({ large = false, className, ...props }) {
 
 function ThemeToggle() {
   let { resolvedTheme, setTheme } = useTheme()
-  let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+  let [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <button type="button" className="group py-2">
+        <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition" />
+      </button>
+    )
+  }
 
   return (
     <button
       type="button"
-      aria-label={`Switch to ${otherTheme} theme`}
+      aria-label="Toggle theme"
       className="group py-2"
-      onClick={() => setTheme(otherTheme)}
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
       <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
       <MoonIcon className="hidden h-4 w-4 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />

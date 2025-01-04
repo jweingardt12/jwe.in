@@ -1,16 +1,17 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-import logoAnimaginary from '@/images/logos/animaginary.svg'
-import logoCosmos from '@/images/logos/cosmos.svg'
-import logoHelioStream from '@/images/logos/helio-stream.svg'
-import logoOpenShuttle from '@/images/logos/open-shuttle.svg'
-import logoPlanetaria from '@/images/logos/planetaria.svg'
+const logoAnimaginary = '/images/logos/animaginary.svg'
+const logoCosmos = '/images/logos/cosmos.svg'
+const logoHelioStream = '/images/logos/helio-stream.svg'
+const logoOpenShuttle = '/images/logos/open-shuttle.svg'
+const logoPlanetaria = '/images/logos/planetaria.svg'
 
 const projects = [
   {
@@ -74,6 +75,16 @@ function TechnologyBadge({ children }) {
 }
 
 function ProjectCard({ project }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <Card as="article" className="p-6">
       <div className="flex items-start gap-4">
@@ -81,6 +92,8 @@ function ProjectCard({ project }) {
           <Image
             src={project.logo}
             alt=""
+            width={32}
+            height={32}
             className="h-8 w-8"
             unoptimized
           />
@@ -151,12 +164,37 @@ function ProjectCard({ project }) {
 }
 
 function AnimatedTitle() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0">
+          What I've done.
+        </h1>
+        <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0">
+          Where I've done it.
+        </h1>
+        <p className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0">
+          Why it mattered.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-2">
-      <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl whitespace-nowrap">
-        What I've done. Where I've done it.
+      <h1 className="animate-fade-in text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0 [animation-delay:1000ms] [animation-fill-mode:forwards]">
+        What I've done.
       </h1>
-      <p className="animate-delayed-fade-in text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+      <h1 className="animate-fade-in text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0 [animation-delay:2000ms] [animation-fill-mode:forwards]">
+        Where I've done it.
+      </h1>
+      <p className="animate-fade-in text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl opacity-0 [animation-delay:3000ms] [animation-fill-mode:forwards]">
         Why it mattered.
       </p>
     </div>
@@ -164,17 +202,38 @@ function AnimatedTitle() {
 }
 
 export default function Work() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <SimpleLayout
       customTitle={<AnimatedTitle />}
-      intro="I've had the privilege of working with some amazing teams on products that millions of people use every day. Here are a few that I'm particularly proud of."
+      intro={
+        <p className="animate-fade-in opacity-0 [animation-delay:3500ms] [animation-fill-mode:forwards]">
+          I've had the privilege of working with some amazing teams on products that millions of people use every day. Here are a few that I'm particularly proud of.
+        </p>
+      }
     >
-      <div className="mt-16 sm:mt-20">
-        <div className="space-y-8">
-          {projects.map((project) => (
-            <ProjectCard key={project.name} project={project} />
-          ))}
-        </div>
+      <div className="space-y-8" suppressHydrationWarning>
+        {projects.map((project, index) => (
+          <div
+            key={project.name}
+            className="animate-fade-in opacity-0"
+            style={{
+              animationDelay: `${4500 + index * 400}ms`,
+              animationFillMode: 'forwards'
+            }}
+          >
+            <ProjectCard project={project} />
+          </div>
+        ))}
       </div>
     </SimpleLayout>
   )

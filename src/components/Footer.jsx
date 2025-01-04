@@ -1,44 +1,9 @@
 'use client'
 
-import { Fragment } from 'react'
 import Link from 'next/link'
-import { Popover, Transition } from '@headlessui/react'
 import { ContainerInner, ContainerOuter } from './Container'
 
 function NavLink({ href, children }) {
-  if (href === '/work') {
-    return (
-      <Popover className="relative inline-block">
-        {({ open }) => (
-          <>
-            <Popover.Button className="transition cursor-not-allowed text-zinc-800 dark:text-zinc-200 hover:text-sky-500 dark:hover:text-sky-400">
-              {children}
-            </Popover.Button>
-            <Transition
-              show={open}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute bottom-full left-1/2 z-10 mb-3 w-screen max-w-max -translate-x-1/2 transform px-4">
-                <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                  <div className="bg-white dark:bg-zinc-800 p-4">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                      🚧 Under construction 🚧
-                    </p>
-                  </div>
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    )
-  }
-
   return (
     <Link
       href={href}

@@ -49,6 +49,16 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        'fade-in': {
+          '0%': { 
+            opacity: '0',
+            transform: 'translateY(20px)'
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        },
         'sheet-in': {
           '0%': { transform: 'translateY(100%)' },
           '100%': { transform: 'translateY(0)' }
@@ -83,6 +93,7 @@ module.exports = {
         },
       },
       animation: {
+        'fade-in': 'fade-in 0.7s cubic-bezier(0.33, 0.85, 0.4, 0.96)',
         'sheet-in': 'sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
         'sheet-out': 'sheet-out 0.2s cubic-bezier(0.32, 0.72, 0, 1)',
         'overlay-in': 'overlay-in 0.3s ease-out',
