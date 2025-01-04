@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "test": "echo \"No test script defined in package.json\"",
+    "build": "nvm install && nvm use && npm install && npm run build",
+    "launch": "nvm install && nvm use && npm install && echo \"NEXT_PUBLIC_SITE_URL=http://localhost:3000\\nNEXT_PUBLIC_OPENPANEL_CLIENT_ID=your_client_id\\nNEXT_PUBLIC_OPENPANEL_CLIENT_SECRET=your_client_secret\" > .env.local && npm run dev"
+  }
+}
