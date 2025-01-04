@@ -3,46 +3,21 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { useOpenPanel } from '@openpanel/nextjs'
 
-import { Container } from '@/components/Container'
+import { Container } from '../../components/Container'
 import {
   GitHubIcon,
   InstagramIcon,
   LinkedInIcon,
   ThreadsIcon,
-} from '@/components/SocialIcons'
-import portraitImage from '@/images/portrait.jpg'
+} from '../../components/SocialIcons'
+import portraitImage from '../../images/portrait.jpg'
 
 function SocialLink({ className, href, children, icon: Icon }) {
-  const op = useOpenPanel()
-  
-  const getPlatform = (url) => {
-    if (url.startsWith('mailto:')) {
-      return 'email'
-    }
-    try {
-      const urlObj = new URL(url)
-      return urlObj.hostname.split('.')[0] === 'www' 
-        ? urlObj.hostname.split('.')[1] 
-        : urlObj.hostname.split('.')[0]
-    } catch {
-      return 'unknown'
-    }
-  }
-
-  const handleClick = () => {
-    op.track('social_link_click', { 
-      platform: getPlatform(href),
-      location: 'about'
-    })
-  }
-
   return (
     <li className={clsx(className, 'flex')}>
       <a
         href={href}
-        onClick={handleClick}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex text-sm font-medium text-zinc-800 transition hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-500"
@@ -92,7 +67,15 @@ export default function About() {
               I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
             <p>
-              Today, I'm a Product Manager at <a href="https://cloudkitchens.com" target="_blank" rel="noopener noreferrer">CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
+              Today, I'm a Product Manager at <a 
+                href="https://cloudkitchens.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => window.umami?.track('external_link_click', {
+                  domain: 'cloudkitchens.com',
+                  type: 'company'
+                })}
+              >CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
             </p>
           </div>
         </div>
@@ -147,4 +130,4 @@ export default function About() {
       </div>
     </Container>
   )
-} 
+}

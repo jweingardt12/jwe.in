@@ -117,6 +117,15 @@ function ProjectCard({ project }) {
                 className="group"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  if (project.link.href !== '#') {
+                    window.umami?.track('external_link_click', {
+                      domain: new URL(project.link.href).hostname,
+                      type: 'project',
+                      project: project.name
+                    })
+                  }
+                }}
               >
                 <span>{project.link.label}</span>
                 <svg
@@ -169,4 +178,4 @@ export default function Work() {
       </div>
     </SimpleLayout>
   )
-} 
+}

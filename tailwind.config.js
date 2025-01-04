@@ -72,7 +72,15 @@ module.exports = {
         'success-in': {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' }
-        }
+        },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
       animation: {
         'sheet-in': 'sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
@@ -80,7 +88,9 @@ module.exports = {
         'overlay-in': 'overlay-in 0.3s ease-out',
         'overlay-out': 'overlay-out 0.2s ease-in',
         'spin': 'spin 0.6s linear infinite',
-        'success-in': 'success-in 0.5s cubic-bezier(0.32, 0.72, 0, 1)'
+        'success-in': 'success-in 0.5s cubic-bezier(0.32, 0.72, 0, 1)',
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       }
     },
   },

@@ -3,26 +3,30 @@
 import Image from 'next/image'
 import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useOpenPanel } from '@openpanel/nextjs'
-import { Container } from '@/components/Container'
+import { Container } from './Container'
 
 // Import images statically
-import image1 from '@/images/photos/image-1.jpg'
-import image2 from '@/images/photos/image-2.jpg'
-import image3 from '@/images/photos/image-3.jpg'
-import image4 from '@/images/photos/image-4.jpg'
-import image5 from '@/images/photos/image-5.jpg'
-import image6 from '@/images/photos/image-6.jpg'
-import image7 from '@/images/photos/image-7.jpg'
-import image8 from '@/images/photos/image-8.jpg'
-import image9 from '@/images/photos/image-9.jpg'
+import image1 from '../images/photos/image-1.jpg'
+import image2 from '../images/photos/image-2.jpg'
+import image3 from '../images/photos/image-3.jpg'
+import image4 from '../images/photos/image-4.jpg'
+import image5 from '../images/photos/image-5.jpg'
+import image6 from '../images/photos/image-6.jpg'
+import image7 from '../images/photos/image-7.jpg'
+import image8 from '../images/photos/image-8.jpg'
+import image9 from '../images/photos/image-9.jpg'
 
 const photos = [
   {
     image: image1,
     hoverText: 'Kauai, HI',
     link: 'https://unsplash.com/photos/green-mountain-during-daytime-fFDyu46W_OA',
-    photoId: 'fFDyu46W_OA'
+    photoId: 'fFDyu46W_OA',
+    onClick: () => window.umami?.track('external_link_click', {
+      domain: 'unsplash.com',
+      type: 'photo',
+      photoId: 'fFDyu46W_OA'
+    })
   },
   {
     image: image2,
@@ -120,14 +124,14 @@ async function fetchPhotoStats(photoId) {
   }
 }
 
-function PhotoMetadataWithTracking({ metadata, visible, title, link }) {
-  const op = useOpenPanel()
-  
+function PhotoMetadata({ metadata, visible, title, link }) {
   const handleLinkClick = (e) => {
     e.stopPropagation()
-    op.track('unsplash_link_click', {
-      title: title,
-      link: link
+    // Track the click before opening the link
+    window.umami?.track('external_link_click', {
+      domain: 'unsplash.com',
+      type: 'photo',
+      photoId: link.split('/').pop()
     })
     window.open(link, '_blank', 'noopener,noreferrer')
   }
@@ -195,37 +199,6 @@ function TouchIndicator() {
         <div className="h-6 w-6 rounded-full bg-zinc-800/50 animate-[press_1.5s_ease-in-out_infinite]" />
       </div>
     </div>
-  )
-}
-
-function PhotoWithTracking(props) {
-  const op = useOpenPanel()
-  const hoverStartTime = useRef(null)
-
-  const handleMouseEnter = () => {
-    hoverStartTime.current = Date.now()
-    props.onHover(props.index)
-    props.onFetchStats(props.photo)
-  }
-
-  const handleMouseLeave = () => {
-    if (hoverStartTime.current) {
-      const hoverDuration = Date.now() - hoverStartTime.current
-      op.track('photo_hover', {
-        title: props.photo.hoverText,
-        hover_duration_ms: hoverDuration
-      })
-      hoverStartTime.current = null
-    }
-    props.onHover(null)
-  }
-
-  return (
-    <Photo 
-      {...props} 
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    />
   )
 }
 
@@ -319,7 +292,7 @@ function Photo({
             (isHovered || isSelected) ? 'opacity-100' : 'opacity-0'
           )}
         />
-        <PhotoMetadataWithTracking 
+        <PhotoMetadata 
           metadata={photoStats[photo.photoId]} 
           visible={isHovered || isSelected} 
           title={photo.hoverText} 
@@ -424,7 +397,7 @@ export function Photos() {
     <div className="mt-16 sm:mt-20">
       <div className="-my-4 flex gap-5 overflow-x-auto py-12 px-4 sm:gap-8 no-scrollbar">
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
-          <PhotoWithTracking
+          <Photo
             key={`photo-${index}-${photo.hoverText}`}
             photo={photo}
             index={index}
@@ -435,6 +408,8 @@ export function Photos() {
             photoStats={photoStats}
             onFetchStats={getPhotoStats}
             showTouchIndicator={showTouchIndicator}
+            onMouseEnter={() => handleHover(index)}
+            onMouseLeave={() => handleHover(null)}
           />
         ))}
       </div>
@@ -463,4 +438,4 @@ export function Photos() {
   )
 }
 
-export { PhotoWithTracking as Photo, fetchPhotoStats } 
+export { Photo, fetchPhotoStats }

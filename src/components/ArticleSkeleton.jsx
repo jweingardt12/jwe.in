@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@/components/Card'
+import { Card } from './Card'
 
 export function ArticleSkeleton() {
   return (
@@ -36,4 +36,4 @@ export function LoadingSkeleton() {
       ))}
     </div>
   )
-} 
+}
