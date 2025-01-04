@@ -6,14 +6,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Popover, Transition } from '@headlessui/react'
 import { useTheme } from 'next-themes'
-import { useOpenPanel } from '@openpanel/nextjs'
 import clsx from 'clsx'
-import { Mail } from "lucide-react"
 
-import { Container } from '@/components/Container'
-import { ContactDialog } from '@/components/ContactDialog'
-import avatarImage from '@/images/avatar.jpg'
-import { Button } from '@/components/ui/button'
+import { Container } from './Container'
+import { ContactDrawer } from './ContactDrawer'
+import avatarImage from '../images/avatar.jpg'
 
 function CloseIcon(props) {
   return (
@@ -62,20 +59,7 @@ function MoonIcon(props) {
   )
 }
 
-function MailIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-      />
-    </svg>
-  )
-}
-
-function MobileNavItem({ href, children, onClick }) {
+function MobileNavItem({ href, children }) {
   if (href === '/work') {
     return (
       <li>
@@ -92,63 +76,12 @@ function MobileNavItem({ href, children, onClick }) {
     )
   }
 
-  if (onClick) {
-    return (
-      <li className="pt-2">
-        <button 
-          onClick={onClick} 
-          className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg"
-        >
-          {children}
-        </button>
-      </li>
-    )
-  }
-
   return (
     <li>
       <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
         {children}
       </Popover.Button>
     </li>
-  )
-}
-
-function MobileNavigation({ className }) {
-  return (
-    <Popover className={className}>
-      <Popover.Button
-        className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20"
-        aria-label="Toggle Navigation"
-      >
-        Menu
-      </Popover.Button>
-      <Popover.Panel
-        focus
-        className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800"
-      >
-        <div className="flex flex-row-reverse items-center justify-between">
-          <Popover.Button aria-label="Close menu" className="-m-1 p-1">
-            <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-          </Popover.Button>
-          <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Navigation
-          </h2>
-        </div>
-        <nav className="mt-6">
-          <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
-            <MobileNavItem href="/">Home</MobileNavItem>
-            <MobileNavItem href="/about">About</MobileNavItem>
-            <MobileNavItem href="/work">Work</MobileNavItem>
-            <MobileNavItem href="/notes">Notes</MobileNavItem>
-            <MobileNavItem href="/reading">Reading</MobileNavItem>
-            <li className="pt-2">
-              <ContactButton className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg" />
-            </li>
-          </ul>
-        </nav>
-      </Popover.Panel>
-    </Popover>
   )
 }
 
@@ -233,7 +166,7 @@ function AvatarContainer({ className, ...props }) {
     <div
       className={clsx(
         className,
-        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10'
+        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10 transition duration-300 hover:scale-110 active:scale-95 active:shadow-md active:ring-2 active:ring-sky-500/50 dark:active:ring-sky-400/50'
       )}
       {...props}
     />
@@ -241,6 +174,8 @@ function AvatarContainer({ className, ...props }) {
 }
 
 function Avatar({ large = false, className, ...props }) {
+  const [isLoaded, setIsLoaded] = useState(false)
+
   return (
     <Link
       href="/"
@@ -253,10 +188,12 @@ function Avatar({ large = false, className, ...props }) {
         alt=""
         sizes={large ? '4rem' : '2.25rem'}
         className={clsx(
-          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800',
-          large ? 'h-16 w-16' : 'h-9 w-9'
+          'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 shadow-lg transition-opacity duration-500',
+          large ? 'h-16 w-16' : 'h-9 w-9',
+          isLoaded ? 'opacity-100' : 'opacity-0'
         )}
         priority
+        onLoad={() => setIsLoaded(true)}
       />
     </Link>
   )
@@ -264,43 +201,18 @@ function Avatar({ large = false, className, ...props }) {
 
 function ThemeToggle() {
   let { resolvedTheme, setTheme } = useTheme()
-  const op = useOpenPanel()
   let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
-
-  const handleThemeChange = () => {
-    op.track('theme_change', { 
-      from: resolvedTheme,
-      to: otherTheme
-    })
-    setTheme(otherTheme)
-  }
 
   return (
     <button
       type="button"
       aria-label={`Switch to ${otherTheme} theme`}
       className="group py-2"
-      onClick={handleThemeChange}
+      onClick={() => setTheme(otherTheme)}
     >
       <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
       <MoonIcon className="hidden h-4 w-4 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />
     </button>
-  )
-}
-
-function ContactButton({ className }) {
-  const [isContactOpen, setIsContactOpen] = useState(false)
-  
-  return (
-    <>
-      <button
-        onClick={() => setIsContactOpen(true)}
-        className={clsx("px-4 py-2 hover:text-sky-500 dark:hover:text-sky-400", className)}
-      >
-        Contact
-      </button>
-      <ContactDialog open={isContactOpen} onClose={() => setIsContactOpen(false)} />
-    </>
   )
 }
 
@@ -516,7 +428,7 @@ export function Header() {
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
                               <li className="pt-2">
-                                <ContactButton className="block w-full py-3 text-lg font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-300 hover:bg-zinc-500 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 rounded-lg" />
+                                <ContactDrawer />
                               </li>
                             </ul>
                           </nav>
@@ -532,7 +444,9 @@ export function Header() {
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
                     <ThemeToggle />
                   </div>
-                  <ContactButton />
+                  <div className="flex items-center pl-3">
+                    <ContactDrawer />
+                  </div>
                 </div>
               </div>
             </div>

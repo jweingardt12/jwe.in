@@ -1,20 +1,15 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useOpenPanel } from '@openpanel/nextjs'
 
 export function ShareFeed({ url }) {
   const [copied, setCopied] = useState(false)
   const urlRef = useRef(null)
-  const op = useOpenPanel()
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
-      op.track('rss_feed_copied', {
-        feed_url: url
-      })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
@@ -51,4 +46,4 @@ export function ShareFeed({ url }) {
       </button>
     </div>
   )
-} 
+}

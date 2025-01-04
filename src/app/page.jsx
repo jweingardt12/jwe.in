@@ -1,50 +1,25 @@
 'use client'
 
-import Image from 'next/image';
-import Link from 'next/link';
-import clsx from 'clsx';
-import { useOpenPanel } from '@openpanel/nextjs'
+import Image from 'next/image'
+import Link from 'next/link'
+import clsx from 'clsx'
 
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
-import { Container } from '@/components/Container';
-import { Photos } from '@/components/Photos';
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Container } from '../components/Container'
+import { Photos } from '../components/Photos'
 import {
   GitHubIcon,
   InstagramIcon,
   LinkedInIcon,
   ThreadsIcon,
-} from '@/components/SocialIcons';
+} from '../components/SocialIcons'
 
 function SocialLink({ icon: Icon, className, href, ...props }) {
-  const op = useOpenPanel()
-  
-  const getPlatform = (url) => {
-    if (url.startsWith('mailto:')) {
-      return 'email'
-    }
-    try {
-      const urlObj = new URL(url)
-      return urlObj.hostname.split('.')[0] === 'www' 
-        ? urlObj.hostname.split('.')[1] 
-        : urlObj.hostname.split('.')[0]
-    } catch {
-      return 'unknown'
-    }
-  }
-
-  const handleClick = () => {
-    op.track('social_link_click', { 
-      platform: getPlatform(href),
-      location: 'home'
-    })
-  }
-
   return (
     <a 
       className="group -m-1 p-1" 
       href={href} 
-      onClick={handleClick}
       target="_blank"
       rel="noopener noreferrer"
       {...props}
@@ -54,7 +29,7 @@ function SocialLink({ icon: Icon, className, href, ...props }) {
         className
       )} />
     </a>
-  );
+  )
 }
 
 export default function HomePage() {
@@ -66,7 +41,8 @@ export default function HomePage() {
             Jason Weingardt
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            I'm Jason, a product manager based in Washington, D.C. I've worked to build world-class products, teams, and experiences remotely.
+            I'm Jason, a product manager based in Washington, D.C. <br></br>
+            I've worked to build world-class products, teams, and experiences remotely.
           </p>
           <div className="mt-6 flex gap-6">
             <SocialLink href="https://www.threads.net/@jweingardt" aria-label="Follow on Threads" icon={ThreadsIcon} />
@@ -90,5 +66,5 @@ export default function HomePage() {
       </Container>
       <Photos />
     </>
-  );
+  )
 }
