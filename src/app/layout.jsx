@@ -3,6 +3,7 @@ import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
+import PlausibleProvider from 'next-plausible'
 
 import './globals.css'
 
@@ -28,15 +29,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script defer data-domain="jwe.in" src="https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js"></script>
+      </head>
       <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <div className="flex w-full">
-            <Layout>{children}</Layout>
-            <Toaster />
-          </div>
-        </ThemeProvider>
-        <SpeedInsights />
-        <Analytics />
+        <PlausibleProvider domain="jwe.in">
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <div className="flex w-full">
+              <Layout>{children}</Layout>
+              <Toaster />
+            </div>
+          </ThemeProvider>
+          <SpeedInsights />
+          <Analytics />
+        </PlausibleProvider>
       </body>
     </html>
   )
