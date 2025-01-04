@@ -3,8 +3,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from './Card'
+import { useExternalLinkTracking } from '../lib/useExternalLinkTracking'
 
 export function Articles({ articles = [] }) {
+  const trackExternalClick = useExternalLinkTracking()
+
   return (
     <div className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
       {articles.length === 0 ? (
@@ -18,6 +21,12 @@ export function Articles({ articles = [] }) {
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => {
+                trackExternalClick(post.href, {
+                  title: post.title,
+                  source: post.publicationName
+                })
+              }}
               className="group relative block"
             >
               <div className="absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />
@@ -41,7 +50,11 @@ export function Articles({ articles = [] }) {
                           </span>
                           <div className="flex items-center truncate">
                             <span className="truncate">{post.publicationName}</span>
-                            <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-1 h-4 w-4 flex-none fill-zinc-500 transition group-hover:fill-sky-500">
+                            <svg 
+                              viewBox="0 0 24 24" 
+                              aria-hidden="true" 
+                              className="ml-1 h-4 w-4 flex-none fill-zinc-500 transition group-hover:fill-sky-500"
+                            >
                               <path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6Zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8Z" />
                             </svg>
                           </div>

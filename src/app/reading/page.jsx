@@ -3,7 +3,7 @@
 import { Container } from '../../components/Container'
 import { FeedContent } from '../../components/FeedContent'
 import { ShareFeed } from '../../components/ShareFeed'
-import { Drawer } from '../../components/Drawer'
+import { DrawerComponent } from '../../components/Drawer'
 
 const FEED_URL = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
 
@@ -22,7 +22,7 @@ export default function ReadingPage() {
       <ShareFeed url={FEED_URL} />
 
       <div className="mt-6 text-base">
-        <Drawer />
+        <DrawerComponent />
       </div>
 
       <div className="mt-10 border-t border-zinc-100 pt-10 dark:border-zinc-700 sm:mt-16 sm:pt-16">

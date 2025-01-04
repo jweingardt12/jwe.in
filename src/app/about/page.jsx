@@ -67,7 +67,15 @@ export default function About() {
               I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
             <p>
-              Today, I'm a Product Manager at <a href="https://cloudkitchens.com" target="_blank" rel="noopener noreferrer">CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
+              Today, I'm a Product Manager at <a 
+                href="https://cloudkitchens.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => window.umami?.track('external_link_click', {
+                  domain: 'cloudkitchens.com',
+                  type: 'company'
+                })}
+              >CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
             </p>
           </div>
         </div>

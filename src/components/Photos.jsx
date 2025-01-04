@@ -21,7 +21,12 @@ const photos = [
     image: image1,
     hoverText: 'Kauai, HI',
     link: 'https://unsplash.com/photos/green-mountain-during-daytime-fFDyu46W_OA',
-    photoId: 'fFDyu46W_OA'
+    photoId: 'fFDyu46W_OA',
+    onClick: () => window.umami?.track('external_link_click', {
+      domain: 'unsplash.com',
+      type: 'photo',
+      photoId: 'fFDyu46W_OA'
+    })
   },
   {
     image: image2,
@@ -122,6 +127,12 @@ async function fetchPhotoStats(photoId) {
 function PhotoMetadata({ metadata, visible, title, link }) {
   const handleLinkClick = (e) => {
     e.stopPropagation()
+    // Track the click before opening the link
+    window.umami?.track('external_link_click', {
+      domain: 'unsplash.com',
+      type: 'photo',
+      photoId: link.split('/').pop()
+    })
     window.open(link, '_blank', 'noopener,noreferrer')
   }
 
