@@ -10,7 +10,7 @@ import {
   DialogBackdrop,
 } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { FolderIcon, UserCircleIcon, BuildingOffice2Icon, ChatBubbleBottomCenterIcon, RssIcon } from '@heroicons/react/24/outline'
+import { FolderIcon, UserCircleIcon, BuildingOffice2Icon, ChatBubbleBottomCenterIcon, RssIcon, CalendarIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
 
 export default function CommandPalette({ open = false, onOpenChange }) {
@@ -157,17 +157,24 @@ export default function CommandPalette({ open = false, onOpenChange }) {
             // Don't include search results that match navigation items
             const resultPath = result.url?.toLowerCase() || ''
             const resultTitle = (result.title || '').toLowerCase()
+            const queryLower = query.toLowerCase()
+            
+            // If searching for "work", filter out any result with "work" in the title
+            if (queryLower === 'work' && resultTitle.includes('work')) {
+              return false
+            }
             
             return !navigationItems.some(navItem => {
               const navPath = navItem.url?.toLowerCase() || ''
               const navName = navItem.name.toLowerCase()
+              const navTitle = navItem.title?.toLowerCase() || navName
               
               // Check if paths match (excluding trailing slashes)
               const pathMatch = navPath && resultPath && 
                 navPath.replace(/\/$/, '') === resultPath.replace(/\/$/, '')
               
-              // Check if titles match
-              const titleMatch = navName === resultTitle
+              // Check if titles or names match
+              const titleMatch = navName === resultTitle || navTitle === resultTitle
               
               return pathMatch || titleMatch
             })
@@ -179,10 +186,16 @@ export default function CommandPalette({ open = false, onOpenChange }) {
               !line.includes('---')
             )?.trim().replace(/^#+\s*/, '') || ''
 
+            // Map the icon string to the actual icon component
+            const iconMap = {
+              CalendarIcon,
+              ChatBubbleBottomCenterIcon
+            }
+
             return {
               ...result,
               firstLine: firstContentLine,
-              icon: ChatBubbleBottomCenterIcon,
+              icon: result.icon ? iconMap[result.icon] : ChatBubbleBottomCenterIcon,
             }
           })
       ]
