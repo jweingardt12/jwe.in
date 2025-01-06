@@ -13,7 +13,15 @@ import {
 } from '../../components/SocialIcons'
 import portraitImage from '../../images/portrait.jpg'
 import { LinkPreview } from '../../components/ui/link-preview'
+import { BentoGrid, BentoGridItem, SkeletonOne, SkeletonTwo, SkeletonImage, SmartHomeAnimation } from '../../components/BentoGrid'
+import {
+  IconCamera,
+  IconHome,
+  IconCode,
+  IconBallBaseball,
+} from '@tabler/icons-react'
 import ckWebsite from '../../images/previews/ck-website.png'
+import lakeImage from '../../images/photos/new-york-lake.jpg'
 
 function SocialLink({ className, href, children, icon: Icon }) {
   return (
@@ -128,6 +136,35 @@ export default function About() {
             </SocialLink>
           </ul>
         </div>
+      </div>
+      <div className="mt-24">
+        <h2 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl mb-8">
+          Learn more about me
+        </h2>
+        <BentoGrid className="w-full">
+          <BentoGridItem
+            className="md:col-span-2"
+            title="Photography"
+            header={<SkeletonImage src={lakeImage} />}
+            icon={<IconCamera className="h-4 w-4 text-neutral-500" />}
+          />
+          <BentoGridItem
+            title="Smart Home"
+            header={<SmartHomeAnimation />}
+            icon={<IconHome className="h-4 w-4 text-neutral-500" />}
+          />
+          <BentoGridItem
+            title="Technology"
+            header={<SkeletonOne />}
+            icon={<IconCode className="h-4 w-4 text-neutral-500" />}
+          />
+          <BentoGridItem
+            className="md:col-span-2"
+            title="Baseball"
+            header={<SkeletonTwo />}
+            icon={<IconBallBaseball className="h-4 w-4 text-neutral-500" />}
+          />
+        </BentoGrid>
       </div>
     </Container>
   )

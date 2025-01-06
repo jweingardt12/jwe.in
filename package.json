@@ -27,7 +27,7 @@
     "@radix-ui/react-navigation-menu": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
-    "@tabler/icons-react": "^3.26.0",
+    "@tabler/icons-react": "^3.27.1",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "cheerio": "^1.0.0-rc.12",
