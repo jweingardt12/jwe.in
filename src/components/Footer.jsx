@@ -29,7 +29,6 @@ export function Footer() {
                 </span>
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
-                <NavLink href="/changelog">Changelog</NavLink>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt

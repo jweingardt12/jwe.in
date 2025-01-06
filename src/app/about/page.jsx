@@ -12,6 +12,8 @@ import {
   ThreadsIcon,
 } from '../../components/SocialIcons'
 import portraitImage from '../../images/portrait.jpg'
+import { LinkPreview } from '../../components/ui/link-preview'
+import ckWebsite from '../../images/previews/ck-website.png'
 
 function SocialLink({ className, href, children, icon: Icon }) {
   return (
@@ -66,17 +68,16 @@ export default function About() {
             <p>
               I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
             </p>
-            <p>
-              Today, I'm a Product Manager at <a 
-                href="https://cloudkitchens.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={() => window.umami?.track('external_link_click', {
-                  domain: 'cloudkitchens.com',
-                  type: 'company'
-                })}
-              >CloudKitchens</a>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
-            </p>
+            <div>
+              Today, I'm a Product Manager at <LinkPreview 
+                href="https://cloudkitchens.com"
+                title="CloudKitchens"
+                description="CloudKitchens provides real estate, technology and services that enable food operators to open delivery restaurants."
+                imageUrl={ckWebsite}
+              >
+                CloudKitchens
+              </LinkPreview>, where I lead a team responsible for building the autonomous Ghost kitchen of the future.
+            </div>
           </div>
         </div>
         <div className="lg:pl-20">
