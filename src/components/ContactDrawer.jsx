@@ -15,11 +15,23 @@ import { Button } from './ui/button'
 import clsx from 'clsx'
 
 export function ContactDrawer() {
+  const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   })
+
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsOpen(prev => !prev)
+    }
+
+    window.addEventListener('toggle-contact-drawer', handleToggle)
+    return () => {
+      window.removeEventListener('toggle-contact-drawer', handleToggle)
+    }
+  }, [])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [countdown, setCountdown] = useState(3)
@@ -88,7 +100,7 @@ export function ContactDrawer() {
   }
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <button className={clsx(
           'relative block px-3 py-2 transition',

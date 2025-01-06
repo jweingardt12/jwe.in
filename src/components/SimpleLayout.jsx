@@ -1,6 +1,19 @@
-import { Container } from '@/components/Container'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Container } from './Container'
 
 export function SimpleLayout({ title, customTitle, intro, children }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <Container className="mt-16 sm:mt-32">
       <header className="max-w-2xl">
@@ -9,9 +22,9 @@ export function SimpleLayout({ title, customTitle, intro, children }) {
             {title}
           </h1>
         )}
-        <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+        <div className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
           {intro}
-        </p>
+        </div>
       </header>
       {children && <div className="mt-16 sm:mt-20">{children}</div>}
     </Container>

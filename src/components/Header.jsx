@@ -1,15 +1,17 @@
 'use client'
 
 import { Fragment, useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { Popover, Transition } from '@headlessui/react'
-import { useTheme } from 'next-themes'
+import Link from 'next/link'
+import Image from 'next/image'
 import clsx from 'clsx'
+import { MagnifyingGlassIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
+import CommandPalette from './CommandPalette'
 import avatarImage from '../images/avatar.jpg'
 
 function CloseIcon(props) {
@@ -27,97 +29,36 @@ function CloseIcon(props) {
   )
 }
 
-function SunIcon(props) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <path d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z" />
-      <path
-        d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
-        fill="none"
-      />
-    </svg>
-  )
-}
-
-function MoonIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      <path
-        d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 function MobileNavItem({ href, children }) {
-  if (href === '/work') {
-    return (
-      <li>
-        <button 
-          className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400 cursor-not-allowed"
-          onClick={(e) => e.preventDefault()}
-        >
-          <span className="flex items-center justify-between">
-            {children}
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">Under construction</span>
-          </span>
-        </button>
-      </li>
-    )
-  }
-
+  const isWork = href === '/work'
   return (
     <li>
-      <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
-        {children}
-      </Popover.Button>
+      {isWork ? (
+        <span className="block w-full py-3 text-lg font-semibold text-zinc-400 cursor-not-allowed">
+          {children} (Under Construction)
+        </span>
+      ) : (
+        <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
+          {children}
+        </Popover.Button>
+      )}
     </li>
   )
 }
 
 function NavItem({ href, children }) {
   let isActive = usePathname() === href
+  const isWork = href === '/work'
 
-  if (href === '/work') {
+  if (isWork) {
     return (
       <li>
-        <Popover className="relative">
-          <Popover.Button className={clsx(
-            'relative block px-3 py-2 transition cursor-not-allowed',
-            'hover:text-sky-500 dark:hover:text-sky-400'
-          )}>
-            {children}
-          </Popover.Button>
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 translate-y-1"
-            enterTo="opacity-100 translate-y-0"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 translate-y-1"
-          >
-            <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-max -translate-x-1/2 transform px-4">
-              <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="bg-white dark:bg-zinc-800 p-4">
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    🚧 Under construction 🚧
-                  </p>
-                </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
-        </Popover>
+        <span
+          className="relative block px-3 py-2 text-zinc-400 cursor-not-allowed"
+          title="Under Construction"
+        >
+          {children} (Under Construction)
+        </span>
       </li>
     )
   }
@@ -147,7 +88,10 @@ function DesktopNavigation(props) {
     <nav {...props}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
         <NavItem href="/about">About</NavItem>
-        <NavItem href="/work">Work</NavItem>
+        <li className="group relative block px-3 py-2 transition cursor-not-allowed">
+  <span className="text-zinc-400 dark:text-zinc-500">Work</span>
+  <span className="absolute left-1/2 -translate-x-1/2 -bottom-4 text-[10px] text-zinc-400 dark:text-zinc-500 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Under Construction</span>
+</li>
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
       </ul>
@@ -199,19 +143,53 @@ function Avatar({ large = false, className, ...props }) {
   )
 }
 
+function SearchButton() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Search"
+        className="group flex items-center justify-center md:px-1 md:h-auto md:w-auto h-12 w-12"
+        onClick={() => setIsOpen(true)}
+      >
+        <MagnifyingGlassIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:text-zinc-400 dark:group-hover:text-sky-400" />
+      </button>
+      <CommandPalette open={isOpen} onOpenChange={setIsOpen} />
+    </>
+  )
+}
+
 function ThemeToggle() {
   let { resolvedTheme, setTheme } = useTheme()
-  let otherTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+  let [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <button type="button" className="group flex items-center justify-center md:px-1 md:h-auto md:w-auto h-12 w-12">
+        <span className="flex items-center justify-center">
+          <SunIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition" />
+        </span>
+      </button>
+    )
+  }
 
   return (
     <button
       type="button"
-      aria-label={`Switch to ${otherTheme} theme`}
-      className="group py-2"
-      onClick={() => setTheme(otherTheme)}
+      aria-label="Toggle theme"
+      className="group flex items-center justify-center md:px-2 md:h-auto md:w-auto h-12 w-12"
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
-      <SunIcon className="h-4 w-4 fill-orange-100 stroke-orange-500 transition group-hover:fill-orange-200 group-hover:stroke-orange-700 dark:hidden" />
-      <MoonIcon className="hidden h-4 w-4 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400" />
+      <span className="flex items-center justify-center">
+        <SunIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:hidden" />
+        <MoonIcon className="hidden h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:block dark:text-zinc-400 dark:group-hover:text-sky-400" />
+      </span>
     </button>
   )
 }
@@ -379,11 +357,14 @@ export function Header() {
               <div className="flex flex-1 justify-end md:justify-center">
                 <div className="pointer-events-auto md:hidden">
                   <Popover>
-                    <div className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
-                      <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
-                        <ThemeToggle />
+                    <div className="flex rounded-full bg-white/90 px-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
+                      <div className="flex items-center border-r border-zinc-900/5 pr-2 dark:border-white/10">
+                        <SearchButton />
+                        <div className="border-l border-zinc-900/5 dark:border-white/10">
+                          <ThemeToggle />
+                        </div>
                       </div>
-                      <Popover.Button className="group px-3 py-2">
+                      <Popover.Button className="group px-4 py-3 min-w-[4rem]">
                         Menu
                       </Popover.Button>
                     </div>
@@ -424,7 +405,10 @@ export function Header() {
                             <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
                               <MobileNavItem href="/">Home</MobileNavItem>
                               <MobileNavItem href="/about">About</MobileNavItem>
-                              <MobileNavItem href="/work">Work</MobileNavItem>
+                              <li className="block w-full py-3 text-lg font-semibold text-zinc-400 dark:text-zinc-500 cursor-not-allowed relative">
+  Work
+  <span className="absolute text-xs text-zinc-400 dark:text-zinc-500">Under Construction</span>
+</li>
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
                               <li className="pt-2">
@@ -442,7 +426,10 @@ export function Header() {
               <div className="hidden md:flex md:justify-end md:flex-1">
                 <div className="pointer-events-auto flex h-9 rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
-                    <ThemeToggle />
+                    <SearchButton />
+                    <div className="ml-2 border-l border-zinc-900/5 pl-2 dark:border-white/10">
+                      <ThemeToggle />
+                    </div>
                   </div>
                   <div className="flex items-center pl-3">
                     <ContactDrawer />

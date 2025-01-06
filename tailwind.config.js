@@ -8,6 +8,26 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        'dot-pattern': 'radial-gradient(circle at center, currentColor 1px, transparent 1px)',
+        'dot-black': 'radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px)',
+        'dot-white': 'radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'dot-pattern': '24px 24px',
+      },
+      transitionTimingFunction: {
+        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      },
+      keyframes: {
+        'zoom-in': {
+          '0%': { transform: 'scale(0.95) translate(-50%, -100%) translateY(-8px)', opacity: '0' },
+          '100%': { transform: 'scale(1) translate(-50%, -100%) translateY(-8px)', opacity: '1' }
+        },
+      },
+      animation: {
+        'zoom-in': 'zoom-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -49,6 +69,16 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        'fade-in': {
+          '0%': { 
+            opacity: '0',
+            transform: 'translateY(20px)'
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        },
         'sheet-in': {
           '0%': { transform: 'translateY(100%)' },
           '100%': { transform: 'translateY(0)' }
@@ -83,6 +113,7 @@ module.exports = {
         },
       },
       animation: {
+        'fade-in': 'fade-in 0.7s cubic-bezier(0.33, 0.85, 0.4, 0.96)',
         'sheet-in': 'sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
         'sheet-out': 'sheet-out 0.2s cubic-bezier(0.32, 0.72, 0, 1)',
         'overlay-in': 'overlay-in 0.3s ease-out',

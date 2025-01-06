@@ -139,7 +139,7 @@ function PhotoMetadata({ metadata, visible, title, link }) {
   if (!visible) return null
   
   return (
-    <div className="absolute inset-0 p-4 text-white animate-[fadeIn_0.2s_ease-out_0.3s] opacity-0 [animation-fill-mode:forwards]">
+    <div className="absolute inset-0 p-4 text-white animate-[fadeIn_0.15s_ease-out_0.05s] opacity-0 [animation-fill-mode:forwards]">
       <div className="flex flex-col w-full">
         <div className="flex items-start justify-between mb-2">
           <div className="text-xl font-medium">{title}</div>
@@ -254,13 +254,12 @@ function Photo({
       role="button"
       tabIndex={0}
       className={clsx(
-        'relative aspect-[9/10] w-60 flex-none overflow-visible rounded-2xl bg-zinc-100 dark:bg-zinc-800',
-        'shadow-[0_8px_28px_-6px_rgba(0,0,0,0.3)] dark:shadow-[0_8px_28px_-6px_rgba(0,0,0,0.5)]',
-        'ring-1 ring-zinc-400/20 dark:ring-zinc-300/20',
+        'group relative aspect-[9/10] w-56 flex-none rounded-2xl',
+        'border border-zinc-400/50 dark:border-zinc-200/50',
         rotations[index % rotations.length],
         'transition-opacity duration-1000',
+        'shadow-[0_8px_28px_-6px_rgba(0,0,0,0.3)] dark:shadow-[0_8px_28px_-6px_rgba(0,0,0,0.5)]',
         isVisible && isLoaded ? 'opacity-100' : 'opacity-0',
-        'cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500',
         className
       )}
       onMouseEnter={onMouseEnter}
@@ -272,12 +271,12 @@ function Photo({
         }
       }}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-2xl">
+      <div className="relative h-full w-full bg-zinc-100 dark:bg-zinc-800 rounded-2xl overflow-hidden">
         {index === 0 && showTouchIndicator && <TouchIndicator />}
         <Image
           src={photo.image}
           alt={photo.hoverText}
-          sizes="(min-width: 640px) 240px, 240px"
+          sizes="(min-width: 640px) 224px, 224px"
           quality={95}
           className={clsx(
             'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
@@ -395,7 +394,7 @@ export function Photos() {
 
   return (
     <div className="mt-16 sm:mt-20">
-      <div className="-my-4 flex gap-5 overflow-x-auto py-12 px-4 sm:gap-8 no-scrollbar">
+      <div className="-my-4 flex gap-6 overflow-x-auto py-20 px-12 sm:gap-8 sm:px-16 no-scrollbar">
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
           <Photo
             key={`photo-${index}-${photo.hoverText}`}
@@ -439,3 +438,4 @@ export function Photos() {
 }
 
 export { Photo, fetchPhotoStats }
+

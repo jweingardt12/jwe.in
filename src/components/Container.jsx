@@ -1,10 +1,22 @@
-import { forwardRef } from 'react'
+'use client'
+
+import { forwardRef, useState, useEffect } from 'react'
 import clsx from 'clsx'
 
 export const ContainerOuter = forwardRef(function OuterContainer(
   { className, children, ...props },
   ref,
 ) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <div ref={ref} className={clsx('sm:px-8', className)} {...props}>
       <div className="mx-auto w-full max-w-7xl lg:px-8">{children}</div>
