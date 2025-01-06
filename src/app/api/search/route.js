@@ -35,6 +35,18 @@ const navigationItems = [
   }
 ]
 
+// Hidden pages that are searchable but not in navigation
+const hiddenPages = [
+  {
+    type: 'page',
+    title: 'Schedule a Meeting',
+    url: '/meet',
+    content: 'Schedule a meeting using Reclaim.ai calendar',
+    description: 'Find a time that works for us to connect',
+    icon: 'CalendarIcon'
+  }
+]
+
 async function getMarkdownFiles() {
   try {
     const notesDir = path.join(process.cwd(), 'src/app/notes')
@@ -89,8 +101,8 @@ export async function GET(request) {
     // Get all markdown notes
     const notes = await getMarkdownFiles()
     
-    // Combine navigation items and notes for searching
-    const allContent = [...navigationItems, ...notes]
+    // Combine navigation items, hidden pages, and notes for searching
+    const allContent = [...navigationItems, ...hiddenPages, ...notes]
 
     const results = allContent.filter(item => 
       item.title?.toLowerCase().includes(query) ||
