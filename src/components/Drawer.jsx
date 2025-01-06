@@ -12,7 +12,7 @@ import { Button } from "./ui/button"
 
 export function DrawerComponent() {
   return (
-    <Drawer>
+    <Drawer shouldScaleBackground>
       <DrawerTrigger asChild>
         <button 
           className="text-zinc-600 dark:text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-100 text-xs"

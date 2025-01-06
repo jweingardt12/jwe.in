@@ -18,11 +18,11 @@ const DrawerClose = DrawerPrimitive.Close
 
 const DrawerContent = React.forwardRef(({ className, children, ...props }, ref) => (
   <DrawerPrimitive.Portal>
-    <DrawerPrimitive.Overlay className="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
+    <DrawerPrimitive.Overlay className="fixed inset-0 z-[49] bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-[10px] border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900",
+        "fixed inset-x-0 bottom-0 z-[51] mt-24 flex flex-col rounded-t-[10px] border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900",
         className
       )}
       {...props}

@@ -1,6 +1,7 @@
 import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
+import { FeedbackComment } from '../components/FeedbackComment'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
 
@@ -30,9 +31,10 @@ export default function RootLayout({ children }) {
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
         <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
-          <div className="flex w-full">
+          <div className="relative flex w-full">
             <Layout>{children}</Layout>
             <Toaster />
+            <FeedbackComment />
           </div>
         </ThemeProvider>
         <SpeedInsights />

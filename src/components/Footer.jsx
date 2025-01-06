@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ContainerInner, ContainerOuter } from './Container'
+import { BugAntIcon } from '@heroicons/react/24/outline'
 
 function NavLink({ href, children }) {
   return (
@@ -26,10 +27,21 @@ export function Footer() {
                 <NavLink href="/work">Work</NavLink>
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
+                <NavLink href="/changelog">Changelog</NavLink>
               </div>
-              <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                &copy; {new Date().getFullYear()} Jason Weingardt
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-sm text-zinc-400 dark:text-zinc-500">
+                  &copy; {new Date().getFullYear()} Jason Weingardt
+                </p>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('toggle-feedback'))}
+                  className="group flex items-center gap-1.5 rounded-full bg-zinc-50 px-3 py-1.5 text-sm text-zinc-600 shadow-sm transition-all duration-200 ease-spring hover:scale-105 hover:bg-white hover:shadow-md dark:bg-zinc-800/90 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                  aria-label="Report a bug"
+                >
+                  <BugAntIcon className="h-4 w-4" />
+                  <span>Report</span>
+                </button>
+              </div>
             </div>
           </ContainerInner>
         </div>

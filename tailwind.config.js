@@ -8,6 +8,18 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      transitionTimingFunction: {
+        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      },
+      keyframes: {
+        'zoom-in': {
+          '0%': { transform: 'scale(0.95) translate(-50%, -100%) translateY(-8px)', opacity: '0' },
+          '100%': { transform: 'scale(1) translate(-50%, -100%) translateY(-8px)', opacity: '1' }
+        },
+      },
+      animation: {
+        'zoom-in': 'zoom-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
