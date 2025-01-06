@@ -10,14 +10,16 @@ import {
   DialogBackdrop,
 } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { FolderIcon } from '@heroicons/react/24/outline'
-import { UserCircleIcon, BriefcaseIcon, DocumentTextIcon, BookOpenIcon, BugAntIcon } from '@heroicons/react/24/outline'
+import { FolderIcon, UserCircleIcon, BuildingOffice2Icon, ChatBubbleBottomCenterIcon, RssIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
 
 export default function CommandPalette() {
   const buttonRef = useRef(null)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   const navigationItems = [
     { 
@@ -25,91 +27,146 @@ export default function CommandPalette() {
       name: 'About', 
       url: '/about', 
       icon: UserCircleIcon,
-      description: 'Learn more about me and my background' 
+      description: 'Who I am, what I\'m interested in, and what I do.' 
     },
     { 
       id: 2, 
-      name: 'Work', 
-      url: '/work', 
-      icon: BriefcaseIcon,
-      description: 'See my professional experience and projects' 
+      name: 'Work (Under Construction)', 
+      icon: BuildingOffice2Icon,
+      description: 'What I\'ve done. Where I\'ve done it. Why it mattered.',
+      disabled: true
     },
     { 
       id: 3, 
       name: 'Notes', 
       url: '/notes', 
-      icon: DocumentTextIcon,
-      description: 'Read my thoughts and articles on various topics' 
+      icon: ChatBubbleBottomCenterIcon,
+      description: 'Quick thoughts on what I\'m learning, reading, and working on.' 
     },
     { 
       id: 4, 
       name: 'Reading', 
       url: '/reading', 
-      icon: BookOpenIcon,
-      description: 'Discover what I\'m currently reading and recommendations' 
+      icon: RssIcon,
+      description: 'Follow along with a live-updating feed of what I\'m reading.' 
     },
     {
       id: 5,
       name: 'Contact',
       icon: UserCircleIcon,
-      description: 'Get in touch with me directly',
+      description: 'Have an idea? Let\'s chat.',
       action: (setOpen) => {
         setOpen(false)
         setTimeout(() => {
           try {
-          console.log('Dispatching toggle-contact-drawer event')
-          const event = new CustomEvent('toggle-contact-drawer', {
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            detail: { source: 'command-palette' }
-          })
-          window.dispatchEvent(event)
-          console.log('Event dispatched successfully')
+            console.log('Dispatching toggle-contact-drawer event')
+            const event = new CustomEvent('toggle-contact-drawer', {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              detail: { source: 'command-palette' }
+            })
+            window.dispatchEvent(event)
+            console.log('Event dispatched successfully')
           } catch (error) {
             console.error('Error opening contact drawer:', error)
           }
         }, 100)
       }
-    },
-    {
-      id: 6,
-      name: 'Report Bug',
-      icon: BugAntIcon,
-      description: 'Found an issue? Let me know!',
-      action: (setOpen) => {
-        setOpen(false)
-        setTimeout(() => {
-          const event = new Event('toggle-feedback')
-          window.dispatchEvent(event)
-        }, 100)
-      }
     }
   ]
 
-  const filteredItems = navigationItems.filter((item) => {
-    return item.name.toLowerCase().includes(query.toLowerCase())
-  })
-
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === '/') {
-        setOpen(true)
+    const fetchSearchResults = async () => {
+      if (!query) {
+        setSearchResults([])
+        return
+      }
+
+      setIsLoading(true)
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        const data = await response.json()
+        setSearchResults(data.results)
+      } catch (error) {
+        console.error('Error fetching search results:', error)
+        setSearchResults([])
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    const debounceTimeout = setTimeout(fetchSearchResults, 200)
+    return () => clearTimeout(debounceTimeout)
+  }, [query])
+
+  const allItems = query === ''
+    ? navigationItems
+    : [
+        ...navigationItems.filter(item => 
+          item.name.toLowerCase().includes(query.toLowerCase())
+        ),
+        ...searchResults
+          .filter(result => 
+            // Filter out results that match navigation items
+            !navigationItems.some(navItem => 
+              navItem.url === result.url || 
+              navItem.name.toLowerCase() === result.title?.toLowerCase()
+            )
+          )
+          .map(result => {
+            const contentLines = result.content?.split('\n') || []
+            const firstContentLine = contentLines.find(line => 
+              line.trim() && 
+              !line.includes('---')
+            )?.trim().replace(/^#+\s*/, '') || ''
+
+            return {
+              ...result,
+              firstLine: firstContentLine,
+              icon: ChatBubbleBottomCenterIcon,
+            }
+          })
+      ]
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Only handle '/' key if no input elements are focused
+      if (event.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+        event.preventDefault();
+        event.stopPropagation();
+        setOpen(true);
+      }
+    }
+
+    // Use capture phase to ensure we get the event first
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, []);
+
+  const handleSelect = (item) => {
+    if (item && !item.disabled) {
+      setIsNavigating(true)
+      if (item.action) {
+        item.action(setOpen)
+      } else {
+        setTimeout(() => {
+          window.location = item.url
+        }, 150)
+      }
+    }
+  }
 
   return (
     <>
       <Dialog
-        className="relative z-50"
+        className="relative z-[300]"
         open={open}
         onClose={() => {
-          setOpen(false)
-          setQuery('')
+          if (!isNavigating) {
+            setOpen(false)
+            setQuery('')
+          }
         }}
       >
         <DialogBackdrop
@@ -120,23 +177,17 @@ export default function CommandPalette() {
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
           <DialogPanel
             transition
-            className="mx-auto max-w-2xl transform divide-y divide-gray-500/10 dark:divide-zinc-800 overflow-hidden rounded-xl bg-white/80 dark:bg-zinc-900/80 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur backdrop-filter transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+            className={`mx-auto max-w-2xl transform divide-y divide-gray-500/10 dark:divide-zinc-800 overflow-hidden rounded-xl bg-white/80 dark:bg-zinc-900/80 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur backdrop-filter transition-all ${
+              isNavigating 
+                ? 'opacity-0 scale-95 duration-150 ease-in'
+                : 'data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in'
+            }`}
           >
-            <Combobox
-              onChange={(item) => {
-                if (item) {
-                  if (item.action) {
-                    item.action(setOpen)
-                  } else {
-                    window.location = item.url
-                  }
-                }
-              }}
-            >
+            <Combobox onChange={handleSelect}>
               <div className="grid grid-cols-1">
                 <ComboboxInput
                   autoFocus
-                  className="col-start-1 row-start-1 h-12 w-full bg-transparent pl-11 pr-4 text-base text-gray-900 dark:text-zinc-100 outline-none placeholder:text-gray-500 dark:placeholder:text-zinc-400 sm:text-sm"
+                  className="col-start-1 row-start-1 h-12 w-full bg-transparent pl-11 pr-4 text-base text-gray-900 dark:text-zinc-100 outline-none placeholder:text-gray-500 dark:placeholder:text-zinc-400 antialiased font-medium"
                   placeholder="Search..."
                   onChange={(event) => setQuery(event.target.value)}
                   onBlur={() => setQuery('')}
@@ -150,40 +201,70 @@ export default function CommandPalette() {
               <ComboboxOptions
                 static
                 as="ul"
-                className="max-h-80 scroll-py-2 divide-y divide-gray-500/10 dark:divide-zinc-800 overflow-y-auto"
+                className="max-h-80 scroll-py-2 divide-y divide-gray-500/10 dark:divide-zinc-800 overflow-y-auto antialiased"
               >
                 <li className="p-2">
                   <ul className="text-sm text-gray-700 dark:text-zinc-200">
-                    {filteredItems.map((item) => (
-                      <ComboboxOption
-                        as="li"
-                        key={item.id}
-                        value={item}
-                        className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-[focus]:bg-gray-900/5 dark:data-[focus]:bg-zinc-800 data-[focus]:text-gray-900 dark:data-[focus]:text-zinc-100 data-[focus]:outline-none"
-                      >
-                        <item.icon
-                          className="size-6 flex-none text-gray-900/40 dark:text-zinc-500 group-data-[focus]:text-gray-900 dark:group-data-[focus]:text-zinc-100"
-                          aria-hidden="true"
-                        />
-                        <div className="ml-3 flex flex-col">
-                          <span className="truncate">{item.name}</span>
-                          <span className="text-xs text-gray-500 dark:text-zinc-400">{item.description}</span>
-                        </div>
-                        {item.url && (
-                          <span className="ml-3 hidden flex-none text-gray-500 dark:text-zinc-400 group-data-[focus]:inline">
-                            Jump to...
-                          </span>
-                        )}
-                      </ComboboxOption>
-                    ))}
+                    {isLoading ? (
+                      <li className="px-3 py-2 text-gray-500 dark:text-zinc-400">
+                        Searching...
+                      </li>
+                    ) : (
+                      allItems.map((item, index) => (
+                        <ComboboxOption
+                          as="li"
+                          key={item.id || `search-${index}`}
+                          value={item}
+                          className={`group flex select-none items-center rounded-md px-3 py-2 ${
+                            item.disabled 
+                              ? 'cursor-not-allowed opacity-50' 
+                              : 'cursor-default data-[focus]:bg-gray-900/5 dark:data-[focus]:bg-zinc-800 data-[focus]:text-gray-900 dark:data-[focus]:text-zinc-100'
+                          } data-[focus]:outline-none`}
+                        >
+                          <item.icon
+                            className="size-6 flex-none text-gray-900/40 dark:text-zinc-500 group-data-[focus]:text-gray-900 dark:group-data-[focus]:text-zinc-100"
+                            aria-hidden="true"
+                          />
+                          <div className="ml-3 flex flex-col flex-grow min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              {item.parent && (
+                                <>
+                                  <span className="text-xs text-gray-500 dark:text-zinc-400 truncate">
+                                    {item.parent.name}
+                                  </span>
+                                  <span className="text-xs text-gray-400 dark:text-zinc-500">/</span>
+                                </>
+                              )}
+                              <span className="truncate font-medium">{item.title || item.name}</span>
+                            </div>
+                            {item.type === 'note' ? (
+                              <>
+                                {item.firstLine && (
+                                  <span className="text-xs text-gray-600 dark:text-zinc-300 truncate mt-0.5">
+                                    {item.firstLine}
+                                  </span>
+                                )}
+                                <span className="text-xs text-gray-500 dark:text-zinc-400 truncate mt-0.5">
+                                  {item.description}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-xs text-gray-500 dark:text-zinc-400 truncate">
+                                {item.description}
+                              </span>
+                            )}
+                          </div>
+                        </ComboboxOption>
+                      ))
+                    )}
                   </ul>
                 </li>
               </ComboboxOptions>
 
-              {query !== '' && filteredItems.length === 0 && (
+              {query !== '' && !isLoading && allItems.length === 0 && (
                 <div className="px-6 py-14 text-center sm:px-14">
                   <FolderIcon className="mx-auto size-6 text-gray-900/40 dark:text-zinc-500" aria-hidden="true" />
-                  <p className="mt-4 text-sm text-gray-900 dark:text-zinc-100">
+                  <p className="mt-4 text-sm text-gray-900 dark:text-zinc-100 font-medium">
                     No results found.
                   </p>
                 </div>
@@ -192,7 +273,6 @@ export default function CommandPalette() {
           </DialogPanel>
         </div>
       </Dialog>
-
     </>
   )
 }

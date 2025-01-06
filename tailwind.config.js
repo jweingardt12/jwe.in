@@ -8,6 +8,14 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        'dot-pattern': 'radial-gradient(circle at center, currentColor 1px, transparent 1px)',
+        'dot-black': 'radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px)',
+        'dot-white': 'radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'dot-pattern': '24px 24px',
+      },
       transitionTimingFunction: {
         'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       },

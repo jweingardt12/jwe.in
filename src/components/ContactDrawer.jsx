@@ -100,7 +100,7 @@ export function ContactDrawer() {
   }
 
   return (
-    <Drawer shouldScaleBackground open={isOpen} onOpenChange={setIsOpen}>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <button className={clsx(
           'relative block px-3 py-2 transition',

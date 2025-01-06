@@ -2,7 +2,6 @@
 
 import { Footer } from './Footer'
 import { Header } from './Header'
-import CommandPalette from './CommandPalette'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 
@@ -17,7 +16,6 @@ export function Layout({ children }) {
         </div>
       </div>
       <div className="relative flex w-full flex-col min-h-screen" data-vaul-drawer-wrapper>
-        <CommandPalette />
         <Header />
         <main className="flex-auto">
           <motion.div

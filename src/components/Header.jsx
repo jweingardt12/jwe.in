@@ -60,17 +60,38 @@ function MoonIcon(props) {
 }
 
 function MobileNavItem({ href, children }) {
+  const isWork = href === '/work'
   return (
     <li>
-      <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
-        {children}
-      </Popover.Button>
+      {isWork ? (
+        <span className="block w-full py-3 text-lg font-semibold text-zinc-400 cursor-not-allowed">
+          {children} (Under Construction)
+        </span>
+      ) : (
+        <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
+          {children}
+        </Popover.Button>
+      )}
     </li>
   )
 }
 
 function NavItem({ href, children }) {
   let isActive = usePathname() === href
+  const isWork = href === '/work'
+
+  if (isWork) {
+    return (
+      <li>
+        <span
+          className="relative block px-3 py-2 text-zinc-400 cursor-not-allowed"
+          title="Under Construction"
+        >
+          {children} (Under Construction)
+        </span>
+      </li>
+    )
+  }
 
   return (
     <li>
@@ -97,7 +118,10 @@ function DesktopNavigation(props) {
     <nav {...props}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
         <NavItem href="/about">About</NavItem>
-        <NavItem href="/work">Work</NavItem>
+        <li className="group relative block px-3 py-2 transition cursor-not-allowed">
+  <span className="text-zinc-400 dark:text-zinc-500">Work</span>
+  <span className="absolute left-1/2 -translate-x-1/2 -bottom-4 text-[10px] text-zinc-400 dark:text-zinc-500 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Under Construction</span>
+</li>
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
       </ul>
@@ -386,7 +410,10 @@ export function Header() {
                             <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
                               <MobileNavItem href="/">Home</MobileNavItem>
                               <MobileNavItem href="/about">About</MobileNavItem>
-                              <MobileNavItem href="/work">Work</MobileNavItem>
+                              <li className="block w-full py-3 text-lg font-semibold text-zinc-400 dark:text-zinc-500 cursor-not-allowed relative">
+  Work
+  <span className="absolute text-xs text-zinc-400 dark:text-zinc-500">Under Construction</span>
+</li>
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
                               <li className="pt-2">
