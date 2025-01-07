@@ -16,8 +16,11 @@ import {
 import ckWebsite from '../../images/previews/ck-website.png'
 import lakeImage from '../../images/photos/new-york-lake.jpg'
 import sideProjectsImage from '../../images/photos/side-projects.jpg'
+import { useOpenPanel } from '@openpanel/nextjs'
 
 export default function About() {
+  const { track } = useOpenPanel()
+
   return (
     <Container className="mt-16 sm:mt-32">
       <div className="grid grid-cols-1 gap-y-16">
@@ -65,6 +68,7 @@ export default function About() {
           <ExpandableCard
             title="Photography"
             description="The best camera is the one you have with you"
+            onClick={() => track('card_click', { title: 'Photography' })}
             header={
               <div className="absolute inset-0">
                 <Image
@@ -95,6 +99,7 @@ export default function About() {
           <ExpandableCard
             title="Smart Home"
             description="Thoughts on designing a smart home"
+            onClick={() => track('card_click', { title: 'Smart Home' })}
             header={
               <div className="absolute inset-0">
                 <SmartHomeAnimation className="w-full h-full" />
@@ -108,6 +113,7 @@ export default function About() {
           <ExpandableCard
             title="Side Projects"
             description="Random stuff I've built"
+            onClick={() => track('card_click', { title: 'Side Projects' })}
             header={
               <div className="absolute inset-0">
                 <Image
