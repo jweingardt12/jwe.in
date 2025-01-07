@@ -29,6 +29,9 @@ dependencies:
   '@next/mdx':
     specifier: ^14.2.22
     version: 14.2.22(@mdx-js/loader@3.1.0)(@mdx-js/react@3.1.0)
+  '@openpanel/nextjs':
+    specifier: ^1.0.7
+    version: 1.0.7(next@15.1.3)(react-dom@19.0.0)(react@19.0.0)
   '@radix-ui/react-accordion':
     specifier: ^1.2.2
     version: 1.2.2(@types/react@19.0.3)(react-dom@19.0.0)(react@19.0.0)
@@ -1009,6 +1012,29 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
     dev: true
+
+  /@openpanel/nextjs@1.0.7(next@15.1.3)(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-XygTPiVlxUkcnZ3DYYwnWiogDgCL1hFK5G8nxokdrFKKuM0XQ+9mFElW/+dKgnVfmV2QiP1aAscudHAlRSUQhg==}
+    peerDependencies:
+      next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      '@openpanel/web': 1.0.1
+      next: 15.1.3(@babel/core@7.26.0)(react-dom@19.0.0)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    dev: false
+
+  /@openpanel/sdk@1.0.0:
+    resolution: {integrity: sha512-FNmmfjdXoC/VHEjA+WkrQ4lyM5lxEmV7xDd57uj4E+lIS0sU3DLG2mV/dpS8AscnZbUvuMn3kPhiLCqYzuv/gg==}
+    dev: false
+
+  /@openpanel/web@1.0.1:
+    resolution: {integrity: sha512-cVZ7Kr9SicczJ/RDIfEtZs8+1iGDzwkabVA/j3NqSl8VSucsC8m1+LVbjmCDzCJNnK4yVn6tEcc9PJRi2rtllw==}
+    dependencies:
+      '@openpanel/sdk': 1.0.0
+    dev: false
 
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}

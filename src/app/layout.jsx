@@ -5,6 +5,7 @@ import { Toaster } from '../components/ui/toaster'
 import CommandPalette from '../components/CommandPalette'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
+import { OpenPanelComponent } from '@openpanel/nextjs'
 
 import './globals.css'
 
@@ -32,6 +33,12 @@ export default function RootLayout({ children }) {
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
         <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
+          <OpenPanelComponent
+            clientId="ea026472-f238-401a-81d3-cdedf7385f2b"
+            trackScreenViews={true}
+            trackOutgoingLinks={true}
+            debug={process.env.NODE_ENV === 'development'}
+          />
           <div className="relative flex w-full">
             <div className="fixed inset-0">
               <DotBackgroundDemo />
