@@ -1,24 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { ChatBubbleOvalLeftEllipsisIcon, DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
+
 import { SimpleLayout } from '../../components/SimpleLayout'
 import { Timeline } from '../../components/ui/timeline'
 import { ExpandableCard } from '../../components/ui/expandable-card'
-import { motion } from 'framer-motion'
-import { cn } from '../../lib/utils'
-import { createContext, useContext } from 'react'
 import { TextHighlight } from '../../components/ui/text-highlight'
-
-export const ExpandedContext = createContext({
-  isExpanded: false,
-  setIsExpanded: () => {},
-});
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from '../../components/ui/accordion'
 
 const logoCloudKitchens = '/images/logos/cloudkitchens.svg'
-const logoRitual = '/images/logos/ritual.svg'
-const logoCountable = '/images/logos/countable.svg'
+const logoRitual = '/images/logos/ritual.png'
+const logoCountable = '/images/logos/Countable.png'
 const logoUber = '/images/logos/uber.svg'
+
+import { ExpandedContext } from '../../contexts/expanded'
 
 const RoboticsSkeleton = () => {
   return (
@@ -288,41 +291,57 @@ export default function Work() {
     return null
   }
 
+  const handleFaqOpen = (value) => {
+    if (value) {
+      const questions = {
+        'item-1': 'What type of roles are you interested in?',
+        'item-2': 'What\'s your management style?',
+        'item-3': 'How do you approach product development?',
+        'item-4': 'What\'s your experience with remote teams?',
+        'item-5': 'What industries have you worked in?'
+      }
+      const event = new CustomEvent('openpanel', { 
+        detail: { question: questions[value] }
+      })
+      window.dispatchEvent(event)
+    }
+  }
+
   return (
     <ExpandedContext.Provider value={{ isExpanded, setIsExpanded }}>
       <SimpleLayout>
         <div className="relative">
           {/* Header section */}
-          <div className="relative mb-16">
+          <div className="relative mb-32">
             <div className="max-w-2xl">
               {/* Header content */}
               <div className="relative">
-                <div className="overflow-hidden">
+                <div className="overflow-hidden min-h-[3.5rem]">
                   <motion.h1 
                     className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-                    initial={{ y: 100 }}
-                    animate={{ y: 0 }}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
                   >
                     What I've done.
                   </motion.h1>
                 </div>
-                <div className="overflow-hidden">
+                <div className="overflow-hidden min-h-[3.5rem] -mt-2">
                   <motion.h1 
                     className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-                    initial={{ y: 100 }}
-                    animate={{ y: 0 }}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 1, ease: [0.33, 1, 0.68, 1] }}
                   >
                     Where I've done it.
                   </motion.h1>
                 </div>
-                <div className="overflow-hidden">
+                <div className="overflow-hidden min-h-[3.5rem] -mt-2">
                   <motion.h1 
                     className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-                    initial={{ y: 100 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.5, delay: 2, ease: [0.33, 1, 0.68, 1] }}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 2.5, ease: [0.33, 1, 0.68, 1] }}
                   >
                     Why it mattered.
                   </motion.h1>
@@ -330,13 +349,107 @@ export default function Work() {
                 <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
                   I've built and scaled products at high-growth technology companies, focusing on product management, operations, and growth.
                 </p>
+                <div className="mt-6 flex gap-4">
+                <button
+        type="button"
+        className="inline-flex items-center gap-x-2 rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+        onClick={() => {
+          const link = document.createElement('a');
+          link.href = '/files/Jason_Weingardt_CV.pdf';
+          link.download = 'Jason_Weingardt_CV.pdf';
+          link.click();
+        }}
+      >
+        Download CV
+        <DocumentArrowDownIcon aria-hidden="true" className="-mr-0.5 size-5" />
+      </button>
+                <button
+        type="button"
+        className="inline-flex items-center gap-x-2 rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+        onClick={() => {
+          const event = new Event('toggle-contact-drawer');
+          window.dispatchEvent(event);
+        }}
+      >
+        Contact
+        <ChatBubbleOvalLeftEllipsisIcon aria-hidden="true" className="-mr-0.5 size-5" />
+      </button>
+                <a
+        href="#faqs"
+        type="button"
+        className="inline-flex items-center gap-x-2 rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+        onClick={(e) => {
+          e.preventDefault();
+          const faqsSection = document.getElementById('faqs');
+          if (faqsSection) {
+            faqsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        FAQ's
+        <LightBulbIcon aria-hidden="true" className="-mr-0.5 size-5" />
+      </a>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8" />
+
           {/* Timeline */}
           <div className="space-y-8" suppressHydrationWarning>
             <Timeline data={timelineData} />
+          </div>
+
+          {/* FAQs Section */}
+          <div id="faqs" className="mt-24">
+            <div className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8" />
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-8">
+              Frequently Asked Questions
+            </h2>
+            <Accordion 
+              type="single" 
+              collapsible 
+              className="w-full"
+              defaultValue="item-1"
+              onValueChange={handleFaqOpen}
+            >
+              <AccordionItem value="item-1">
+                <AccordionTrigger>What type of roles are you interested in?</AccordionTrigger>
+                <AccordionContent>
+                  I'm primarily interested in product management roles focused on emerging technologies like robotics, AI/ML, and automation. I enjoy working on complex technical products that solve real operational challenges.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger>How do you work?</AccordionTrigger>
+                <AccordionContent>
+                  I believe in empowering teams through clear communication, setting measurable goals, and fostering an environment of continuous learning. I focus on removing blockers and ensuring team members have the resources they need to succeed.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3">
+                <AccordionTrigger>How do you approach product development?</AccordionTrigger>
+                <AccordionContent>
+                  My approach combines data-driven decision making with strong user empathy. I start by deeply understanding user needs and business objectives, then iterate quickly with continuous feedback loops. I believe in shipping early and often, while maintaining high quality standards.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <AccordionTrigger>What's your experience with remote teams?</AccordionTrigger>
+                <AccordionContent>
+                  I have extensive experience managing remote and distributed teams across different time zones. I've developed effective strategies for asynchronous communication, documentation, and collaboration that maintain high productivity and team cohesion.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5">
+                <AccordionTrigger>Your journey seems to be a bit of a rollercoaster. Where do you see yourself in 5 years?</AccordionTrigger>
+                <AccordionContent>
+                  I've worked across various sectors including food tech, robotics/automation, transportation, and civic technology. This diverse experience has given me valuable insights into different business models and operational challenges.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </SimpleLayout>

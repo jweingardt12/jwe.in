@@ -2,7 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { ExpandedContext } from '../../app/work/page';
+import { ExpandedContext } from '../../contexts/expanded';
 
 export const Timeline = ({ data }) => {
   const ref = useRef(null);
