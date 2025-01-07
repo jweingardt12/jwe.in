@@ -13,6 +13,7 @@ import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
 import CommandPalette from './CommandPalette'
 import avatarImage from '../images/avatar.jpg'
+import { Button } from './ui/button'
 
 function CloseIcon(props) {
   return (
@@ -34,13 +35,23 @@ function MobileNavItem({ href, children }) {
   return (
     <li>
       {isWork ? (
-        <span className="block w-full py-3 text-lg font-semibold text-zinc-400 cursor-not-allowed">
+        <Button
+          variant="ghost"
+          disabled
+          className="w-full justify-start text-lg font-semibold text-zinc-400"
+        >
           {children} (Under Construction)
-        </span>
+        </Button>
       ) : (
-        <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
-          {children}
-        </Popover.Button>
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-lg font-semibold"
+          asChild
+        >
+          <Popover.Button as={Link} href={href}>
+            {children}
+          </Popover.Button>
+        </Button>
       )}
     </li>
   )
@@ -405,14 +416,26 @@ export function Header() {
                             <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
                               <MobileNavItem href="/">Home</MobileNavItem>
                               <MobileNavItem href="/about">About</MobileNavItem>
-                              <li className="block w-full py-3 text-lg font-semibold text-zinc-400 dark:text-zinc-500 cursor-not-allowed relative">
-  Work
-  <span className="absolute text-xs text-zinc-400 dark:text-zinc-500">Under Construction</span>
-</li>
+                              <li>
+                                <Button
+                                  variant="ghost"
+                                  disabled
+                                  className="w-full justify-start text-lg font-semibold text-zinc-400"
+                                >
+                                  Work (Under Construction)
+                                </Button>
+                              </li>
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
                               <li className="pt-2">
-                                <ContactDrawer />
+                                <Button 
+                                  className="w-full"
+                                  onClick={() => {
+                                    window.dispatchEvent(new Event('toggle-contact-drawer'))
+                                  }}
+                                >
+                                  Contact
+                                </Button>
                               </li>
                             </ul>
                           </nav>
