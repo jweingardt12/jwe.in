@@ -3,67 +3,43 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
-
+import { ExpandableCard } from '../../components/ui/expandable-card'
 import { Container } from '../../components/Container'
-import {
-  GitHubIcon,
-  InstagramIcon,
-  LinkedInIcon,
-  ThreadsIcon,
-} from '../../components/SocialIcons'
 import portraitImage from '../../images/portrait.jpg'
 import { LinkPreview } from '../../components/ui/link-preview'
+import { SmartHomeAnimation } from '../../components/BentoGrid'
+import {
+  IconCamera,
+  IconHome,
+  IconCode,
+} from '@tabler/icons-react'
 import ckWebsite from '../../images/previews/ck-website.png'
-
-function SocialLink({ className, href, children, icon: Icon }) {
-  return (
-    <li className={clsx(className, 'flex')}>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group flex text-sm font-medium text-zinc-800 transition hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-500"
-      >
-        <Icon className="h-6 w-6 flex-none fill-zinc-500 transition group-hover:fill-sky-500" />
-        <span className="ml-4">{children}</span>
-      </a>
-    </li>
-  )
-}
-
-function MailIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      <path
-        fillRule="evenodd"
-        d="M6 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6Zm.245 2.187a.75.75 0 0 0-.99 1.126l6.25 5.5a.75.75 0 0 0 .99 0l6.25-5.5a.75.75 0 0 0-.99-1.126L12 12.251 6.245 7.187Z"
-      />
-    </svg>
-  )
-}
+import lakeImage from '../../images/photos/new-york-lake.jpg'
+import sideProjectsImage from '../../images/photos/side-projects.jpg'
 
 export default function About() {
   return (
     <Container className="mt-16 sm:mt-32">
-      <div className="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-y-12">
-        <div className="lg:pl-20">
-          <div className="max-w-[12rem] sm:max-w-xs px-2.5 lg:max-w-[15rem]">
-            <div className="pointer-events-none">
-              <Image
-                src={portraitImage}
-                alt=""
-                sizes="(min-width: 1024px) 15rem, (min-width: 640px) 12rem, 12rem"
-                className="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800 select-none"
-                draggable="false"
-              />
+      <div className="grid grid-cols-1 gap-y-16">
+        <div className="max-w-4xl">
+          <div className="flex flex-col-reverse sm:flex-row items-center gap-8">
+            <h1 className="flex-1 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl leading-relaxed">
+              Hi! I'm Jason.<br />
+              I'm a <span className="text-sky-500">product manager</span> and <span className="text-sky-500">technologist</span> living in DC.
+            </h1>
+            <div className="w-48 sm:max-w-[12rem] flex-shrink-0">
+              <div className="pointer-events-none">
+                <Image
+                  src={portraitImage}
+                  alt=""
+                  sizes="(min-width: 1024px) 15rem, (min-width: 640px) 12rem, 12rem"
+                  className="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800 select-none"
+                  draggable="false"
+                  priority
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="lg:order-first lg:row-span-2">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-            Hi! I'm Jason. 
-            <br />
-          </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
               I'm a technical generalist who's spent the last decade+ working at some of the most innovative companies in the world. I'm a husband, dad, product manager, amateur photographer, and endlessly curious technologist. I've been working hands-on with technology since I was a kid, enjoy nothing more than learning how things work.
@@ -80,53 +56,73 @@ export default function About() {
             </div>
           </div>
         </div>
-        <div className="lg:pl-20">
-          <ul role="list">
-            <SocialLink 
-              href="https://www.threads.net/@jweingardt" 
-              icon={ThreadsIcon} 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Follow on Threads
-            </SocialLink>
-            <SocialLink 
-              href="https://instagram.com/jweingardt" 
-              icon={InstagramIcon} 
-              className="mt-4" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Follow on Instagram
-            </SocialLink>
-            <SocialLink 
-              href="https://github.com/jweingardt12" 
-              icon={GitHubIcon} 
-              className="mt-4" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Follow on GitHub
-            </SocialLink>
-            <SocialLink 
-              href="https://linkedin.com/in/jasonweingardt" 
-              icon={LinkedInIcon} 
-              className="mt-4" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Follow on LinkedIn
-            </SocialLink>
-            <SocialLink
-              href="mailto:hi@jwe.in"
-              icon={MailIcon}
-              className="mt-8 border-t border-zinc-100 pt-8 dark:border-zinc-700/40"
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              hi@jwe.in
-            </SocialLink>
-          </ul>
+      </div>
+      <div className="mt-16">
+        <h2 className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-8">
+          Learn more
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ExpandableCard
+            title="Photography"
+            description="The best camera is the one you have with you"
+            header={
+              <div className="absolute inset-0">
+                <Image
+                  src={lakeImage}
+                  alt="Photography"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            }
+          >
+            <p>
+              I've been taking pictures of things since I was young, starting with basic cameras and eventually trying out different types of photography equipment over the years. It's always been a way for me to remember moments and places that matter to me. <br />
+              <br />
+              These days, I just use my phone for all my photos. My daughter was born in 2020, and I've captured every moment on my phone. It makes sense - I always have it with me, and it takes good enough pictures for what I need. Not having to carry around a separate camera means I end up taking more photos, which is what really matters.
+              <br />
+              <br />
+              <span className="font-bold text-xl ">My stack:</span>
+              <br />
+              <ul className="list-disc list-inside">
+                <li><strong>Camera:</strong> <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a></li>
+                <li><strong>Software:</strong> <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a></li>
+                <li><strong>Editing hardware:</strong> <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a></li>
+                <li><strong>Video:</strong> <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a></li>
+              </ul>
+            </p>
+          </ExpandableCard>
+          <ExpandableCard
+            title="Smart Home"
+            description="Thoughts on designing a smart home"
+            header={
+              <div className="absolute inset-0">
+                <SmartHomeAnimation className="w-full h-full" />
+              </div>
+            }
+          >
+            <p>
+              I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment.
+            </p>
+          </ExpandableCard>
+          <ExpandableCard
+            title="Side Projects"
+            description="Random stuff I've built"
+            header={
+              <div className="absolute inset-0">
+                <Image
+                  src={sideProjectsImage}
+                  alt="Side Projects"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            }
+          >
+            <p>
+              From web applications to automation tools, I'm constantly working on side projects that let me explore new technologies and solve interesting problems.
+            </p>
+          </ExpandableCard>
         </div>
       </div>
     </Container>

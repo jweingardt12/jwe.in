@@ -1,7 +1,40 @@
 'use client'
 
 import Link from 'next/link'
+import clsx from 'clsx'
+import {
+  GitHubIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  ThreadsIcon,
+} from './SocialIcons'
 import { ContainerInner, ContainerOuter } from './Container'
+
+function MailIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path
+        fillRule="evenodd"
+        d="M6 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6Zm.245 2.187a.75.75 0 0 0-.99 1.126l6.25 5.5a.75.75 0 0 0 .99 0l6.25-5.5a.75.75 0 0 0-.99-1.126L12 12.251 6.245 7.187Z"
+      />
+    </svg>
+  )
+}
+
+function SocialLink({ href, icon: Icon }) {
+  return (
+    <li>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group"
+      >
+        <Icon className="h-5 w-5 fill-zinc-500 transition group-hover:fill-sky-500" />
+      </a>
+    </li>
+  )
+}
 
 function NavLink({ href, children }) {
   return (
@@ -30,9 +63,33 @@ export function Footer() {
                 <NavLink href="/notes">Notes</NavLink>
                 <NavLink href="/reading">Reading</NavLink>
               </div>
-              <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                &copy; {new Date().getFullYear()} Jason Weingardt
-              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0">
+                  <SocialLink 
+                    href="https://www.threads.net/@jweingardt" 
+                    icon={ThreadsIcon}
+                  />
+                  <SocialLink 
+                    href="https://instagram.com/jweingardt" 
+                    icon={InstagramIcon}
+                  />
+                  <SocialLink 
+                    href="https://github.com/jweingardt12" 
+                    icon={GitHubIcon}
+                  />
+                  <SocialLink 
+                    href="https://linkedin.com/in/jasonweingardt" 
+                    icon={LinkedInIcon}
+                  />
+                  <SocialLink
+                    href="mailto:hi@jwe.in"
+                    icon={MailIcon}
+                  />
+                </ul>
+                <p className="text-sm text-zinc-400 dark:text-zinc-500">
+                  &copy; {new Date().getFullYear()} Jason Weingardt
+                </p>
+              </div>
             </div>
           </ContainerInner>
         </div>
