@@ -57,7 +57,6 @@ export default function RootLayout({ children }) {
                 trackOutgoingLinks={true}
                 trackSessions={true}
                 enable={true}
-                trackAttributes={true}
               />
               <div className="relative z-10 flex w-full">
                 <Layout>{children}</Layout>

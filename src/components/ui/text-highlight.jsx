@@ -23,7 +23,7 @@ export const TextHighlight = ({
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
     }
-  }, [isInView]);
+  }, [isInView, hasAnimated]);
 
   return (
     <span ref={ref} className={cn("relative inline-block", className)}>
