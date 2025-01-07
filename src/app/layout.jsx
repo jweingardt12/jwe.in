@@ -55,7 +55,6 @@ export default function RootLayout({ children }) {
                 trackScreenViews={true}
                 trackAttributes={true}
                 trackOutgoingLinks={true}
-                profileId={'123'}
                 enable={true}
               />
               <div className="relative z-10 flex w-full">
