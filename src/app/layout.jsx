@@ -50,36 +50,6 @@ export default function RootLayout({ children }) {
               <div className="fixed inset-0">
                 <DotBackgroundDemo />
               </div>
-              <div className="relative z-10 flex w-full">
-                <Layout>{children}</Layout>
-                <Toaster />
-              </div>
-              <CommandPalette />
-            </div>
-          </ThemeProvider>
-          <SpeedInsights />
-          <Analytics />
-        </body>
-      </html>
-    </>
-    <>
-      <HighlightInit
-        projectId={'3ej74nve'}
-        serviceName="my-nextjs-frontend"
-        tracingOrigins
-        networkRecording={{
-          enabled: true,
-          recordHeadersAndBody: true,
-          urlBlocklist: [],
-        }}
-      />
-      <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-        <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
-          <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
-            <div className="relative flex w-full">
-              <div className="fixed inset-0">
-                <DotBackgroundDemo />
-              </div>
               <OpenPanelComponent
                 clientId="92f043db-86e1-444e-9a0a-899cfc61b387"
                 trackScreenViews={true}
