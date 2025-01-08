@@ -64,7 +64,7 @@ export function Footer() {
                 <NavLink href="/reading">Reading</NavLink>
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0">
+                <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
                   <SocialLink 
                     href="https://www.threads.net/@jweingardt" 
                     icon={ThreadsIcon}
