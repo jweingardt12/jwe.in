@@ -1,18 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+  env: {
+    CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
+    CONTENTFUL_ACCESS_TOKEN: process.env.CONTENTFUL_ACCESS_TOKEN,
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: '**',
-      },
-      {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'images.ctfassets.net',
       }
     ],
     unoptimized: false
