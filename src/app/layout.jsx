@@ -5,7 +5,7 @@ import { Toaster } from '../components/ui/toaster'
 import CommandPalette from '../components/CommandPalette'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react'
-import { OpenPanelComponent } from '@openpanel/nextjs'
+import OpenPanelProvider from '../components/OpenPanelProvider'
 import { HighlightInit } from '@highlight-run/next/client'
 
 import './globals.css'
@@ -50,23 +50,16 @@ export default function RootLayout({ children }) {
               <div className="fixed inset-0">
                 <DotBackgroundDemo />
               </div>
-              <OpenPanelComponent
-                clientId="92f043db-86e1-444e-9a0a-899cfc61b387"
-                trackScreenViews={true}
-                trackAttributes={true}
-                trackOutgoingLinks={true}
-                trackSessions={true}
-                enable={true}
-              />
-              <div className="relative z-10 flex w-full">
+              <div className="relative flex w-full flex-col">
                 <Layout>{children}</Layout>
-                <Toaster />
               </div>
-              <CommandPalette />
             </div>
+            <CommandPalette />
+            <Toaster />
+            <Analytics />
+            <SpeedInsights />
+            <OpenPanelProvider />
           </ThemeProvider>
-          <SpeedInsights />
-          <Analytics />
         </body>
       </html>
     </>
