@@ -12,9 +12,9 @@ const options = {
     [BLOCKS.HEADING_1]: (node, children) => <h1 className="mt-6 text-2xl font-bold">{children}</h1>,
     [BLOCKS.HEADING_2]: (node, children) => <h2 className="mt-6 text-xl font-bold">{children}</h2>,
     [BLOCKS.HEADING_3]: (node, children) => <h3 className="mt-6 text-lg font-bold">{children}</h3>,
-    [BLOCKS.UL_LIST]: (node, children) => <ul className="mt-4 list-disc pl-4">{children}</ul>,
-    [BLOCKS.OL_LIST]: (node, children) => <ol className="mt-4 list-decimal pl-4">{children}</ol>,
-    [BLOCKS.LIST_ITEM]: (node, children) => <li className="mt-1">{children}</li>,
+    [BLOCKS.UL_LIST]: (node, children) => <ul className="mt-2 list-disc pl-4">{children}</ul>,
+    [BLOCKS.OL_LIST]: (node, children) => <ol className="mt-2 list-decimal pl-4">{children}</ol>,
+    [BLOCKS.LIST_ITEM]: (node, children) => <li className="mt-0.5">{children}</li>,
     [BLOCKS.QUOTE]: (node, children) => (
       <blockquote className="mt-6 border-l-2 border-zinc-300 pl-6 italic">{children}</blockquote>
     ),
@@ -22,13 +22,12 @@ const options = {
     [BLOCKS.EMBEDDED_ASSET]: (node) => {
       const { title, description, file } = node.data.target.fields;
       return (
-        <div className="my-8">
+        <div className="my-8 rounded-lg overflow-hidden aspect-[3/2] relative">
           <Image
             src={`https:${file.url}`}
             alt={description || title}
-            width={file.details.image.width}
-            height={file.details.image.height}
-            className="rounded-lg"
+            fill
+            className="object-cover"
           />
         </div>
       );
@@ -81,7 +80,7 @@ export function ArticleLayout({ article, children }) {
               </time>
             </header>
             {article.image && (
-              <div className="relative w-full h-96 mt-8 rounded-2xl overflow-hidden">
+              <div className="relative w-full mt-8 rounded-lg overflow-hidden aspect-[3/2]">
                 <Image
                   src={article.image}
                   alt={article.title}

@@ -126,7 +126,21 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    require('@tailwindcss/typography')({
+      theme: {
+        css: {
+          '--tw-prose-body': 'rgb(82 82 91)', // zinc-600
+          '--tw-prose-headings': 'rgb(24 24 27)', // zinc-900
+          '--tw-prose-links': 'rgb(14 165 233)', // sky-500
+          '--tw-prose-invert-body': 'rgb(161 161 170)', // zinc-400
+          '--tw-prose-invert-headings': 'rgb(244 244 245)', // zinc-100
+          '--tw-prose-invert-links': 'rgb(14 165 233)', // sky-500
+          img: {
+            borderRadius: '1rem'
+          }
+        }
+      }
+    }),
     require('tailwindcss-motion'),
   ],
 }

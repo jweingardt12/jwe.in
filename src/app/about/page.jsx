@@ -69,43 +69,59 @@ export default function About() {
             title="Photography"
             description="The best camera is the one you have with you"
             header={
-              <div className="absolute inset-0">
-                <Image
-                  src={lakeImage}
-                  alt="Photography"
-                  fill
-                  className="object-cover"
-                  loading="lazy"
-                  placeholder="blur"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHSIeHx8dIigjJCUmJSQkIiYoLTEwLS4xKSEoMC0vMSw5OTk5OTk5OTk5OTn/2wBDARUXFyAeIB4gHh4gIiAoJCAoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-                />
-              </div>
+              <Image
+                src={lakeImage}
+                alt="Photography"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              />
             }
           >
-            <p>
-              I've been taking pictures of things since I was young, starting with basic cameras and eventually trying out different types of photography equipment over the years. It's always been a way for me to remember moments and places that matter to me. <br />
-              <br />
-              These days, I just use my phone for all my photos. My daughter was born in 2020, and I've captured every moment on my phone. It makes sense - I always have it with me, and it takes good enough pictures for what I need. Not having to carry around a separate camera means I end up taking more photos, which is what really matters.
-              <br />
-              <br />
-              <span className="font-bold text-xl ">My stack:</span>
-              <br />
-              <ul className="list-disc list-inside">
-                <li><strong>Camera:</strong> <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a></li>
-                <li><strong>Software:</strong> <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a></li>
-                <li><strong>Editing hardware:</strong> <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a></li>
-                <li><strong>Video:</strong> <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a></li>
-              </ul>
-            </p>
+            <div className="space-y-6">
+              <p>
+                I've been taking pictures of things since I was young, starting with basic cameras and eventually trying out different types of photography equipment over the years. It's always been a way for me to remember moments and places that matter to me.
+                <br /><br />
+                These days, I just use my phone for all my photos. My daughter was born in 2020, and I've captured every moment on my phone. It makes sense - I always have it with me, and it takes good enough pictures for what I need. Not having to carry around a separate camera means I end up taking more photos, which is what really matters.
+              </p>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">My stack</h3>
+                <table className="w-full text-left">
+                  <tbody>
+                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                      <td className="py-3 font-medium">Camera</td>
+                      <td className="py-3">
+                        <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                      <td className="py-3 font-medium">Software</td>
+                      <td className="py-3">
+                        <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                      <td className="py-3 font-medium">Editing hardware</td>
+                      <td className="py-3">
+                        <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                      <td className="py-3 font-medium">Video</td>
+                      <td className="py-3">
+                        <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </ExpandableCard>
           <ExpandableCard
             title="Smart Home"
             description="Thoughts on designing a smart home"
             header={
-              <div className="absolute inset-0">
-                <SmartHomeAnimation className="w-full h-full" />
-              </div>
+              <SmartHomeAnimation className="w-full h-full" />
             }
           >
             <p>
@@ -116,18 +132,13 @@ export default function About() {
             title="Side Projects"
             description="Random stuff I've built"
             header={
-              <div className="absolute inset-0">
-                <Image
-                  src={sideProjectsImage}
-                  alt="Side Projects"
-                  fill
-                  className="object-cover"
-                  loading="lazy"
-                  placeholder="blur"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHSIeHx8dIigjJCUmJSQkIiYoLTEwLS4xKSEoMC0vMSw5OTk5OTk5OTk5OTn/2wBDARUXFyAeIB4gHh4gIiAoJCAoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-                />
-              </div>
+              <Image
+                src={sideProjectsImage}
+                alt="Side Projects"
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              />
             }
           >
             <p>

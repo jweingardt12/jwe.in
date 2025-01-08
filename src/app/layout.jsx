@@ -3,8 +3,8 @@ import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
 import dynamic from 'next/dynamic'
 import { HighlightInit } from '@highlight-run/next/client'
-
 import './globals.css'
+import '@radix-ui/themes/styles.css'
 
 const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background').then(mod => mod.DotBackgroundDemo), { ssr: false })
 const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
