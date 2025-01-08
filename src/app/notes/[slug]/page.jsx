@@ -2,6 +2,8 @@ import { ArticleLayout } from '../../../components/ArticleLayout'
 import { getAllArticles, getArticleBySlug } from '../../../lib/articles'
 import { notFound } from 'next/navigation'
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export async function generateStaticParams() {
   try {
     const articles = await getAllArticles()

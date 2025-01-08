@@ -26,6 +26,8 @@ async function ArticlesFeed() {
   )
 }
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default function NotesPage() {
   return (
     <Container className="mt-16 sm:mt-32">
