@@ -8,13 +8,13 @@ import { BLOCKS, MARKS, INLINES } from '@contentful/rich-text-types'
 
 const options = {
   renderNode: {
-    [BLOCKS.PARAGRAPH]: (node, children) => <p className="mt-6">{children}</p>,
-    [BLOCKS.HEADING_1]: (node, children) => <h1 className="mt-8 text-2xl font-bold">{children}</h1>,
-    [BLOCKS.HEADING_2]: (node, children) => <h2 className="mt-8 text-xl font-bold">{children}</h2>,
-    [BLOCKS.HEADING_3]: (node, children) => <h3 className="mt-8 text-lg font-bold">{children}</h3>,
-    [BLOCKS.UL_LIST]: (node, children) => <ul className="mt-6 list-disc pl-4">{children}</ul>,
-    [BLOCKS.OL_LIST]: (node, children) => <ol className="mt-6 list-decimal pl-4">{children}</ol>,
-    [BLOCKS.LIST_ITEM]: (node, children) => <li className="mt-2">{children}</li>,
+    [BLOCKS.PARAGRAPH]: (node, children) => <p className="mt-4">{children}</p>,
+    [BLOCKS.HEADING_1]: (node, children) => <h1 className="mt-6 text-2xl font-bold">{children}</h1>,
+    [BLOCKS.HEADING_2]: (node, children) => <h2 className="mt-6 text-xl font-bold">{children}</h2>,
+    [BLOCKS.HEADING_3]: (node, children) => <h3 className="mt-6 text-lg font-bold">{children}</h3>,
+    [BLOCKS.UL_LIST]: (node, children) => <ul className="mt-4 list-disc pl-4">{children}</ul>,
+    [BLOCKS.OL_LIST]: (node, children) => <ol className="mt-4 list-decimal pl-4">{children}</ol>,
+    [BLOCKS.LIST_ITEM]: (node, children) => <li className="mt-1">{children}</li>,
     [BLOCKS.QUOTE]: (node, children) => (
       <blockquote className="mt-6 border-l-2 border-zinc-300 pl-6 italic">{children}</blockquote>
     ),
