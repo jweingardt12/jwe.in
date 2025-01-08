@@ -24,8 +24,8 @@ export async function getAllPosts() {
     const contentTypes = await client.getContentTypes();
     console.log('Available content types:', contentTypes.items.map(type => type.sys.id));
 
-    // Use the correct content type name
-    const contentTypeIds = ['notes', 'Notes'];
+    // Use the correct content type ID from Contentful
+    const contentTypeIds = ['title'];
     let response;
 
     for (const contentType of contentTypeIds) {
@@ -57,7 +57,7 @@ export async function getAllPosts() {
       return {
         slug: item.fields.slug,
         title: item.fields.title,
-        date: item.sys.createdAt,
+        date: item.fields.date || item.sys.createdAt,
         description: item.fields.description,
         image: item.fields.image?.fields?.file?.url ? `https:${item.fields.image.fields.file.url}` : null,
         content: item.fields.content || item.fields.body || null, // Try alternate field name
@@ -76,9 +76,9 @@ export async function getPostBySlug(slug) {
   }
 
   try {
-    // Use the correct content type name
+    // Use the correct content type ID from Contentful
     const contentTypes = await client.getContentTypes();
-    const contentTypeIds = ['notes', 'Notes'];
+    const contentTypeIds = ['title'];
     let response;
 
     for (const contentType of contentTypeIds) {
@@ -108,7 +108,7 @@ export async function getPostBySlug(slug) {
     return {
       title: post.fields.title,
       description: post.fields.description,
-      date: post.sys.createdAt,
+      date: post.fields.date || post.sys.createdAt,
       image: post.fields.image?.fields?.file?.url ? `https:${post.fields.image.fields.file.url}` : null,
       content: post.fields.content || post.fields.body || null,
       slug: post.fields.slug,
