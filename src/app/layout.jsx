@@ -2,12 +2,12 @@ import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
 import dynamic from 'next/dynamic'
-import OpenPanelProvider from '../components/OpenPanelProvider'
 import { HighlightInit } from '@highlight-run/next/client'
 
 import './globals.css'
 
 const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background').then(mod => mod.DotBackgroundDemo), { ssr: false })
+const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false })
 const Analytics = dynamic(() => import('@vercel/analytics/react').then(mod => mod.Analytics), { ssr: false })
 const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then(mod => mod.SpeedInsights), { ssr: false })
@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
             <Toaster />
             <Analytics />
             <SpeedInsights />
-            <OpenPanelProvider />
+            <OpenPanelWrapper />
           </ThemeProvider>
         </body>
       </html>

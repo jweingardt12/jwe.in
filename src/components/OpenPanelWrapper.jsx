@@ -2,12 +2,7 @@
 
 import { OpenPanelComponent } from '@openpanel/nextjs'
 
-export default function OpenPanelProvider() {
-  if (!process.env.NEXT_PUBLIC_OPENPANEL_PUBLIC_KEY) {
-    console.warn('OpenPanel public key is not configured');
-    return null;
-  }
-
+export default function OpenPanelWrapper() {
   return (
     <OpenPanelComponent
       clientId="6382021f-a0bc-43de-bb62-e1ddee2d1396"
@@ -16,7 +11,6 @@ export default function OpenPanelProvider() {
       trackAttributes={true}
       trackOutgoingLinks={true}
       trackSessions={true}
-      enable={true}
     />
   )
 }
