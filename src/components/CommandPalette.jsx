@@ -12,14 +12,34 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { FolderIcon, UserCircleIcon, BuildingOffice2Icon, ChatBubbleBottomCenterIcon, RssIcon, CalendarIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
+import { useOpenPanel } from '@openpanel/nextjs'
 
-export default function CommandPalette({ open = false, onOpenChange }) {
+export default function CommandPalette({ open = false, onOpenChange, source = null }) {
   const buttonRef = useRef(null)
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isNavigating, setIsNavigating] = useState(false)
+  const { track } = useOpenPanel()
+  const lastOpenState = useRef(open)
+
+  // Track when the palette is opened
+  useEffect(() => {
+    if (open && !lastOpenState.current) {
+      // Only track keyboard shortcut if no source is provided
+      if (!source) {
+        track('command_palette_open', {
+          source: 'keyboard_shortcut'
+        })
+      } else {
+        track('command_palette_open', {
+          source
+        })
+      }
+    }
+    lastOpenState.current = open
+  }, [open, source, track])
 
   // Focus input when dialog opens
   useEffect(() => {

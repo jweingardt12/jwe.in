@@ -4,6 +4,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Container } from './Container'
+import { useOpenPanel } from '@openpanel/nextjs'
 
 // Import images statically
 import image1 from '../images/photos/image-1.jpg'
@@ -309,12 +310,23 @@ export function Photos() {
   const [photoStats, setPhotoStats] = useState({})
   const [showTouchIndicator, setShowTouchIndicator] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
+  const { track } = useOpenPanel()
 
   const handleHover = (index) => {
     if (!hasInteracted) {
       setHasInteracted(true)
     }
     setHoveredIndex(index)
+    
+    // Only track when entering hover state (not when leaving)
+    if (index !== null) {
+      const photo = [...photos, ...photos.slice(0, 3)][index]
+      track('photo_hover', {
+        photo_id: photo.photoId,
+        location: photo.hoverText,
+        index: index
+      })
+    }
   }
 
   const handleSelect = (index) => {

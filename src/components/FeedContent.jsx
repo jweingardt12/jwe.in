@@ -31,8 +31,12 @@ export function FeedContent() {
         const processedArticles = items.map(item => {
           console.log('Processing item:', item)
 
-          // Get publication name from _reeder.feed.title if available
-          const publicationName = item._reeder?.feed?.title || 'Unknown Source'
+          // Get and clean publication name from _reeder.feed.title if available
+          let publicationName = item._reeder?.feed?.title || 'Unknown Source'
+          // Truncate "The Verge - All Posts" to just "The Verge"
+          if (publicationName === 'The Verge - All Posts') {
+            publicationName = 'The Verge'
+          }
           console.log('Publication name:', publicationName)
           
           // Get image from multiple possible sources

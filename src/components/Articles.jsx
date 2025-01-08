@@ -72,13 +72,13 @@ export function Articles({ articles = [] }) {
                   </div>
 
                   {post.imageUrl && (
-                    <div className="flex-shrink-0">
-                      <div className="relative h-24 w-24 sm:h-32 sm:w-32 lg:h-44 lg:w-44 overflow-hidden rounded-md">
+                    <div className="hidden sm:block flex-shrink-0">
+                      <div className="relative h-32 w-32 sm:h-40 sm:w-40 lg:h-44 lg:w-44 overflow-hidden rounded-md">
                         <Image
                           alt=""
                           src={post.imageUrl}
                           fill
-                          sizes="(min-width: 1024px) 176px, (min-width: 640px) 128px, 96px"
+                          sizes="(min-width: 1024px) 176px, (min-width: 640px) 160px, 128px"
                           className="object-cover bg-zinc-200 dark:bg-zinc-800 transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>

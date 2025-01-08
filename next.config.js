@@ -2,7 +2,7 @@
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   compiler: {
-    removeConsole: false,
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   images: {
     remotePatterns: [
@@ -15,8 +15,9 @@ const nextConfig = {
         hostname: '**',
       }
     ],
-    unoptimized: true
+    unoptimized: false
   },
+  swcMinify: true,
 }
 
 module.exports = nextConfig

@@ -1,14 +1,16 @@
 import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
-import { DotBackgroundDemo } from '../components/ui/dot-background'
 import { Toaster } from '../components/ui/toaster'
-import CommandPalette from '../components/CommandPalette'
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from '@vercel/analytics/react'
+import dynamic from 'next/dynamic'
 import OpenPanelProvider from '../components/OpenPanelProvider'
 import { HighlightInit } from '@highlight-run/next/client'
 
 import './globals.css'
+
+const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background').then(mod => mod.DotBackgroundDemo), { ssr: false })
+const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false })
+const Analytics = dynamic(() => import('@vercel/analytics/react').then(mod => mod.Analytics), { ssr: false })
+const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then(mod => mod.SpeedInsights), { ssr: false })
 
 export const viewport = {
   width: 'device-width',

@@ -3,6 +3,8 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
+export const dynamic = 'force-dynamic'
+
 // Function to recursively find all page files
 async function findPages(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true })

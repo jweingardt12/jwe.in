@@ -8,11 +8,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
 import { MagnifyingGlassIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline'
+import { useOpenPanel } from '@openpanel/nextjs'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
 import CommandPalette from './CommandPalette'
 import avatarImage from '../images/avatar.jpg'
+import { Button } from '@/components/ui/button'
 
 function CloseIcon(props) {
   return (
@@ -143,21 +145,19 @@ function Avatar({ large = false, className, ...props }) {
   )
 }
 
-function SearchButton() {
-  const [isOpen, setIsOpen] = useState(false)
-
+function SearchButton({ setIsOpen, setSource }) {
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Search"
-        className="group flex items-center justify-center md:px-1 md:h-auto md:w-auto h-12 w-12"
-        onClick={() => setIsOpen(true)}
-      >
-        <MagnifyingGlassIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:text-zinc-400 dark:group-hover:text-sky-400" />
-      </button>
-      <CommandPalette open={isOpen} onOpenChange={setIsOpen} />
-    </>
+    <button
+      type="button"
+      aria-label="Search"
+      className="group flex items-center justify-center md:px-1 md:h-auto md:w-auto h-12 w-12"
+      onClick={() => {
+        setSource('search_icon')
+        setIsOpen(true)
+      }}
+    >
+      <MagnifyingGlassIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:text-zinc-400 dark:group-hover:text-sky-400" />
+    </button>
   )
 }
 
@@ -199,6 +199,8 @@ export function Header() {
   let headerRef = useRef(null)
   let avatarRef = useRef(null)
   let isInitial = useRef(true)
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
+  const [commandPaletteSource, setCommandPaletteSource] = useState(null)
 
   useEffect(() => {
     let downDelay = avatarRef.current?.offsetTop ?? 0
@@ -359,7 +361,10 @@ export function Header() {
                   <Popover>
                     <div className="flex rounded-full bg-white/90 px-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                       <div className="flex items-center border-r border-zinc-900/5 pr-2 dark:border-white/10">
-                        <SearchButton />
+                        <SearchButton 
+                          setIsOpen={setIsCommandPaletteOpen} 
+                          setSource={setCommandPaletteSource}
+                        />
                         <div className="border-l border-zinc-900/5 dark:border-white/10">
                           <ThemeToggle />
                         </div>
@@ -397,9 +402,6 @@ export function Header() {
                             <Popover.Button aria-label="Close menu" className="-m-1 p-1">
                               <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
                             </Popover.Button>
-                            <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                              Navigation
-                            </h2>
                           </div>
                           <nav className="mt-6">
                             <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
@@ -412,7 +414,11 @@ export function Header() {
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
                               <MobileNavItem href="/reading">Reading</MobileNavItem>
                               <li className="pt-2">
-                                <ContactDrawer />
+                                <ContactDrawer>
+                                  <Button className="w-full">
+                                    Contact
+                                  </Button>
+                                </ContactDrawer>
                               </li>
                             </ul>
                           </nav>
@@ -426,13 +432,18 @@ export function Header() {
               <div className="hidden md:flex md:justify-end md:flex-1">
                 <div className="pointer-events-auto flex h-9 rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
-                    <SearchButton />
+                    <SearchButton 
+                      setIsOpen={setIsCommandPaletteOpen}
+                      setSource={setCommandPaletteSource}
+                    />
                     <div className="ml-2 border-l border-zinc-900/5 pl-2 dark:border-white/10">
                       <ThemeToggle />
                     </div>
                   </div>
                   <div className="flex items-center pl-3">
-                    <ContactDrawer />
+                    <ContactDrawer>
+                      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-sky-500 dark:hover:text-sky-400 transition px-3 py-2">Contact</span>
+                    </ContactDrawer>
                   </div>
                 </div>
               </div>
@@ -443,6 +454,16 @@ export function Header() {
       {isHomePage && (
         <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
+      <CommandPalette 
+        open={isCommandPaletteOpen} 
+        onOpenChange={(open) => {
+          setIsCommandPaletteOpen(open)
+          if (!open) {
+            setCommandPaletteSource(null)
+          }
+        }}
+        source={commandPaletteSource}
+      />
     </>
   )
 }
