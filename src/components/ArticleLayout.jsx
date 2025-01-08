@@ -1,7 +1,9 @@
 import Link from 'next/link'
-import { Container } from '@/components/Container'
-import { Prose } from '@/components/Prose'
-import { formatDate } from '@/lib/formatDate'
+import Image from 'next/image'
+import { Container } from './Container'
+import { Prose } from './Prose'
+import { formatDate } from '../lib/formatDate'
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 
 function ArrowLeft() {
   return (
@@ -36,12 +38,23 @@ export function ArticleLayout({ article, children }) {
                 <span className="ml-3">{formatDate(article.date)}</span>
               </time>
             </header>
+            {article.image && (
+              <div className="relative w-full h-96 mt-8 rounded-2xl overflow-hidden">
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
             <Prose className="mt-8" data-mdx-content>
-              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+              {documentToReactComponents(article.content)}
             </Prose>
           </article>
         </div>
       </div>
     </Container>
   )
-} 
+}
