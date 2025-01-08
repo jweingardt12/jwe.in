@@ -23,7 +23,7 @@ export const metadata = {
     template: '%s - Jason Weingardt',
     default: 'Jason Weingardt - Product Manager, technologist, nerd.',
   },
-  description: "I'm Jason Weingardt, a product manager and technologist based in Washington, DC.",
+  description: "Jason Weingardt is a product manager and technologist based in Washington, DC.",
   alternates: {
     types: {
       'application/rss+xml': `${process.env.NEXT_PUBLIC_SITE_URL}/feed.xml`,
