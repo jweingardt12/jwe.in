@@ -41,8 +41,9 @@ export default function HomePage() {
             Jason Weingardt
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            I'm Jason, a product manager based in Washington, D.C. <br></br>
-            I've worked to build world-class products, teams, and experiences remotely.
+            I'm Jason, a product manager based in Washington, D.C. <br />
+            I'm an amateur photographer, fantasy baseball champion,<br />
+            dad to an awesome four-year-old, and constant tinkerer.
           </p>
           <div className="mt-6 flex gap-6">
             <SocialLink href="https://www.threads.net/@jweingardt" aria-label="Follow on Threads" icon={ThreadsIcon} />
