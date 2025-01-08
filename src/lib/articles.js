@@ -1,77 +1,56 @@
-import fs from 'fs/promises'
-import path from 'path'
-import matter from 'gray-matter'
+import axios from 'axios'
 import { marked } from 'marked'
 
+const strapiUrl = 'http://localhost:1339'
+
 export async function getAllArticles() {
-  const notesDirectory = path.join(process.cwd(), 'src/app/notes')
-  const files = await fs.readdir(notesDirectory)
-  
-  const articles = await Promise.all(
-    files
-      .filter(file => file.endsWith('.md') && !file.startsWith('_'))
-      .map(async filename => {
-        const filePath = path.join(notesDirectory, filename)
-        const content = await fs.readFile(filePath, 'utf8')
-        const { data, content: markdown } = matter(content)
-        const htmlContent = marked.parse(markdown, { 
+  try {
+    const response = await axios.get(`${strapiUrl}/api/notes`)
+    
+    const articles = response.data.data.map(article => {
+      const attributes = article.attributes
+      
+      return {
+        slug: article.id.toString(),
+        title: attributes.title,
+        date: attributes.createdAt,
+        description: attributes.description,
+        image: attributes.image,
+        content: marked.parse(attributes.content || '', {
           headerIds: false,
           mangle: false,
           gfm: true
         })
-        
-        // Get the slug from metadata or generate from filename
-        const slug = data.slug || filename.replace(/\.md$/, '')
-        
-        // Parse date safely
-        let date = null
-        if (data.date) {
-          const parsedDate = new Date(data.date)
-          if (!isNaN(parsedDate.getTime())) {
-            date = parsedDate.toISOString()
-          }
-        }
-        
-        return {
-          slug,
-          title: data.title,
-          date,
-          description: data.description,
-          image: data.image,
-          content: htmlContent,
-        }
-      })
-  )
-  
-  return articles.sort((a, b) => new Date(b.date) - new Date(a.date))
+      }
+    })
+    
+    return articles.sort((a, b) => new Date(b.date) - new Date(a.date))
+  } catch (error) {
+    console.error('Error fetching articles:', error)
+    return []
+  }
 }
 
 export async function getArticleBySlug(slug) {
-  const notesDirectory = path.join(process.cwd(), 'src/app/notes')
-  const filePath = path.join(notesDirectory, `${slug}.md`)
-  const content = await fs.readFile(filePath, 'utf8')
-  const { data, content: markdown } = matter(content)
-  const parsedContent = marked.parse(markdown.trim(), { 
-    headerIds: false,
-    mangle: false,
-    gfm: true
-  })
-  
-  // Parse date safely
-  let date = new Date().toISOString()
-  if (data.date) {
-    const parsedDate = new Date(data.date)
-    if (!isNaN(parsedDate.getTime())) {
-      date = parsedDate.toISOString()
+  try {
+    const response = await axios.get(`${strapiUrl}/api/notes/${slug}`)
+    const article = response.data.data
+    const attributes = article.attributes
+    
+    return {
+      title: attributes.title,
+      description: attributes.description,
+      date: attributes.createdAt,
+      image: attributes.image,
+      content: marked.parse(attributes.content || '', {
+        headerIds: false,
+        mangle: false,
+        gfm: true
+      }),
+      slug: article.id.toString()
     }
+  } catch (error) {
+    console.error('Error fetching article:', error)
+    return null
   }
-  
-  return {
-    title: data.title,
-    description: data.description,
-    date,
-    image: data.image,
-    content: parsedContent,
-    slug
-  }
-} 
+}
