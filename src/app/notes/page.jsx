@@ -7,6 +7,16 @@ import { LoadingSkeleton } from '../../components/ArticleSkeleton'
 async function ArticlesFeed() {
   const articles = await getAllArticles()
   
+  if (!articles || articles.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-zinc-600 dark:text-zinc-400">
+          No articles available at the moment. Check back soon!
+        </p>
+      </div>
+    )
+  }
+  
   return (
     <div className="space-y-16">
       {articles.map((article) => (
