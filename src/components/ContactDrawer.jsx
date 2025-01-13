@@ -130,7 +130,12 @@ export function ContactDrawer({ children }) {
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
+    <Drawer 
+      open={isOpen} 
+      onOpenChange={handleOpenChange}
+      className="fixed inset-0 z-50"
+      data-state={isOpen ? 'open' : 'closed'}
+    >
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
