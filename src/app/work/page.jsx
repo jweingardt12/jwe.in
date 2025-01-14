@@ -749,7 +749,7 @@ const WorkContent = () => {
   return (
     <ExpandedContext.Provider value={{ isExpanded, setIsExpanded }}>
       <SimpleLayout>
-        <div className={`space-y-20 sm:space-y-32 ${(jobData || isLoading) ? 'pt-4' : 'pt-8'}`}>
+        <div className={`space-y-20 sm:space-y-32 ${(jobData || isLoading) ? 'pt-4' : 'mt-16 sm:mt-32'}`}>
           <TldrCard jobData={jobData} isLoading={isLoading} />
 
           <div>
