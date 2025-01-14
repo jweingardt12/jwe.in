@@ -7,7 +7,6 @@ import { ChatBubbleOvalLeftEllipsisIcon, DocumentArrowDownIcon, LightBulbIcon } 
 
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { Timeline } from '@/components/ui/timeline'
-import { ExpandableCard } from '@/components/ui/expandable-card'
 import { 
   Accordion, 
   AccordionContent, 
@@ -25,36 +24,6 @@ import logoCloudKitchens from '@/images/logos/cloudkitchens.svg'
 import logoRitual from '@/images/logos/ritual.svg'
 import logoCountable from '@/images/logos/countable.svg'
 import logoUber from '@/images/logos/uber.svg'
-
-const RoboticsSkeleton = () => {
-  return (
-    <motion.div
-      initial="initial"
-      whileHover="animate"
-      className="relative w-full h-[140px] overflow-hidden"
-    >
-      <Image
-        src="/images/photos/robots.jpg"
-        alt="Robotics facility with delivery robots"
-        fill
-        className="object-cover"
-        priority
-      />
-    </motion.div>
-  )
-}
-
-const MetricsSkeleton = () => {
-  return (
-    <motion.div
-      initial="initial"
-      whileHover="animate"
-      className="relative w-full h-[140px] overflow-hidden flex flex-col justify-center items-center bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20">
-      <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">30%</div>
-      <div className="text-base text-neutral-500 text-center mt-2">Labor Cost Savings</div>
-    </motion.div>
-  )
-}
 
 const TeamSkeleton = () => {
   return (
@@ -548,7 +517,7 @@ export default function Work() {
                       className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl lg:text-5xl"
                       initial={{ y: 30, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 1.5, ease: [0.33, 1, 0.68, 1] }}
+                      transition={{ duration: 0.5, delay: 2, ease: [0.33, 1, 0.68, 1] }}
                     >
                       Why it mattered.
                     </motion.h1>
