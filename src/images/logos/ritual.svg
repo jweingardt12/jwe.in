@@ -1,0 +1,42 @@
+<svg version="1.1" id="Layer_1" xmlns:x="ns_extend;" xmlns:i="ns_ai;" xmlns:graph="ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 361.56 42" style="enable-background:new 0 0 361.56 42;" xml:space="preserve">
+ <style type="text/css">
+  .st0{fill-rule:evenodd;clip-rule:evenodd;}
+	.st1{clip-path:url(#SVGID_2_);}
+	.st2{opacity:0.8;enable-background:new    ;}
+ </style>
+ <metadata>
+  <sfw xmlns="ns_sfw;">
+   <slices>
+   </slices>
+   <sliceSourceBounds bottomLeftOrigin="true" height="42" width="361.56" x="-118.06" y="-13.94">
+   </sliceSourceBounds>
+  </sfw>
+ </metadata>
+ <g>
+  <path class="st0" d="M39.87,15.67C39.87,7.2,33.75,0.31,25.35,0H24.8H0v41.33h8.87v-10h11.6l7.34,10h10.24l-7.96-10.91
+		C36.14,28.25,39.87,22.46,39.87,15.67z M30.93,15.81V16v0.02c-0.19,4.69-3.47,8.42-8.2,8.42H8.87V9.64V9.21V7.58h13.85
+		c4.74,0,8.01,3.06,8.2,7.75v0.02v0.19v0.14V15.81z M214.72,0.24h10.19l0.07,0.1l19.06,40.97l-9.23,0.02l-3.44-6.94h-23.08
+		l-3.44,7.03l-9.3-0.02L214.72,0.24z M219.81,8.27l-8.71,19.4h17.46L219.81,8.27z M268.23,34.11h15.07c0.79,0,1.48,0.45,1.79,1.2
+		l2.15,5.29c0.14,0.36-0.12,0.74-0.5,0.74h-27.29V0.69h8.78V34.11z M162.93,34.01c6.05,0,10.95-4.9,10.95-10.95
+		c0-0.22-0.02-22.03-0.05-22.03h8.44v22.03C182.21,33.7,173.58,42,162.91,42c-10.67,0-19.3-8.3-19.37-18.94V1.03h8.44v22.03
+		C151.98,29.11,156.88,34.01,162.93,34.01z M88.79,8.94h14.18V41h8.61V8.94h14.16V1.03H88.79V8.94z M60.9,0.5h8.78v40.14H60.9V0.5z">
+  </path>
+  <g>
+   <defs>
+    <rect id="SVGID_1_" x="305.97" y="0.67" width="55.59" height="40.66">
+    </rect>
+   </defs>
+   <clipPath id="SVGID_2_">
+    <use href="#SVGID_1_" style="overflow:visible;">
+    </use>
+   </clipPath>
+   <g class="st1">
+    <path class="st2" d="M360.86,10.8l-9.39-9.43c-0.91-0.91-2.31-0.91-3.23,0l-14.48,14.58L319.26,1.38c-0.91-0.91-2.31-0.91-3.22,0
+				l-9.36,9.43c-0.91,0.91-0.91,2.31,0,3.22l27.09,27.3l27.09-27.27C361.77,13.12,361.77,11.75,360.86,10.8z">
+    </path>
+    <path d="M333.77,15.95l-12.62,12.69l12.62,12.69l12.58-12.69L333.77,15.95z">
+    </path>
+   </g>
+  </g>
+ </g>
+</svg>

@@ -24,9 +24,23 @@ module.exports = {
           '0%': { transform: 'scale(0.95) translate(-50%, -100%) translateY(-8px)', opacity: '0' },
           '100%': { transform: 'scale(1) translate(-50%, -100%) translateY(-8px)', opacity: '1' }
         },
+        "shooting-star": {
+          "0%": {
+            transform: "rotate(215deg) translateX(0)",
+            opacity: 1,
+          },
+          "70%": {
+            opacity: 1,
+          },
+          "100%": {
+            transform: "rotate(215deg) translateX(-500px)",
+            opacity: 0,
+          },
+        },
       },
       animation: {
         'zoom-in': 'zoom-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+        "shooting-star": "shooting-star linear infinite",
       },
       colors: {
         border: "hsl(var(--border))",

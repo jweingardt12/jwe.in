@@ -18,22 +18,24 @@ const DrawerClose = DrawerPrimitive.Close
 
 const DrawerContent = React.forwardRef(({ className, children, ...props }, ref) => (
   <DrawerPrimitive.Portal>
-    <DrawerPrimitive.Overlay 
-      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" 
-    />
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 shadow-lg outline-none",
-        "transition-all duration-300 ease-in-out",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
-        className
-      )}
-      {...props}
-    >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-zinc-100 dark:bg-zinc-800" />
-      {children}
-    </DrawerPrimitive.Content>
+    <div className="fixed inset-0 z-[60]">
+      <DrawerPrimitive.Overlay 
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+      />
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn(
+          "fixed inset-x-0 bottom-0 flex h-auto flex-col rounded-t-[10px] border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 shadow-lg outline-none",
+          "transition-all duration-300 ease-in-out will-change-transform",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+          className
+        )}
+        {...props}
+      >
+        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-zinc-100 dark:bg-zinc-800" />
+        {children}
+      </DrawerPrimitive.Content>
+    </div>
   </DrawerPrimitive.Portal>
 ))
 DrawerContent.displayName = "DrawerContent"
