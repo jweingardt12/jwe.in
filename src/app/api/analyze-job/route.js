@@ -84,6 +84,40 @@ async function fetchJobContent(url) {
   }
 }
 
+export async function GET(request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  
+  if (!id) {
+    return NextResponse.json({ error: 'No job ID provided' }, { status: 400 })
+  }
+
+  try {
+    // For now, return a mock response since we don't have a database
+    // In a real app, you would fetch this from your database
+    return NextResponse.json({
+      jobTitle: "Product Manager",
+      companyName: "Example Corp",
+      introText: "I'm the right person for the Product Manager role at Example Corp because I have extensive experience leading product teams and driving measurable results across multiple industries.",
+      bulletPoints: [
+        "**Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year.",
+        "**Product Innovation:** While I was Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months.",
+        "**Operational Excellence:** While I was Product Manager at CloudKitchens, I reduced facility technology support escalations by 80% through self-serve ops tooling."
+      ],
+      relevantSkills: [
+        "Product Strategy",
+        "Product Analytics",
+        "Cross-functional Leadership",
+        "Technical Architecture",
+        "User Research"
+      ]
+    })
+  } catch (error) {
+    console.error('Error in GET handler:', error)
+    return NextResponse.json({ error: 'Failed to retrieve job analysis' }, { status: 500 })
+  }
+}
+
 export async function POST(request) {
   try {
     if (!openai) {
