@@ -523,8 +523,8 @@ export default function Work() {
       <SimpleLayout>
         <div className="relative">
           {/* Header section */}
-          <div className="relative mb-32 md:mb-32">
-            <div className="flex flex-col lg:grid lg:grid-cols-[1fr_600px] gap-16 lg:gap-8 items-start lg:items-center">
+          <div className="relative mb-16 md:mb-32">
+            <div className="flex flex-col lg:grid lg:grid-cols-[1fr_500px] gap-8 lg:gap-4 items-start lg:items-center">
               <div className="w-full">
                 <div className="relative">
                   <div className="space-y-1">
@@ -564,23 +564,11 @@ export default function Work() {
                     </motion.p>
                   </div>
                   <motion.div 
-                    className="mt-6 flex flex-wrap gap-3 sm:gap-4"
+                    className="mt-6 flex items-center gap-x-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 3.5 }}
                   >
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-x-2 rounded-md bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-                      onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = '/files/Jason_Weingardt_CV.pdf';
-                        link.download = 'Jason_Weingardt_CV.pdf';
-                        link.click();
-                      }}
-                    >
-                      Download CV
-                    </button>
                     <button
                       type="button"
                       onClick={(e) => {
@@ -589,14 +577,12 @@ export default function Work() {
                         const event = new Event('toggle-contact-drawer');
                         window.dispatchEvent(event);
                       }}
-                      className="inline-flex items-center gap-x-2 rounded-md bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+                      className="rounded-md bg-black px-6 py-3 text-base font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
                     >
-                      Contact
+                      Send a message
                     </button>
                     <a
                       href="#faqs"
-                      type="button"
-                      className="inline-flex items-center gap-x-2 rounded-md bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
                       onClick={(e) => {
                         e.preventDefault();
                         const faqsSection = document.getElementById('faqs');
@@ -604,14 +590,15 @@ export default function Work() {
                           faqsSection.scrollIntoView({ behavior: 'smooth' });
                         }
                       }}
+                      className="text-base font-medium text-zinc-600 hover:text-zinc-800 dark:text-zinc-300 dark:hover:text-white"
                     >
-                      FAQ's
+                      Read FAQ's <span aria-hidden="true">→</span>
                     </a>
                   </motion.div>
                 </div>
               </div>
               <motion.div 
-                className="relative w-full lg:w-[600px] mb-16 md:mb-0"
+                className="relative w-full lg:w-[500px] mb-1 md:mb-0"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 4 }}
@@ -662,7 +649,7 @@ export default function Work() {
               <AccordionItem value="item-1">
                 <AccordionTrigger>What type of roles are you interested in?</AccordionTrigger>
                 <AccordionContent>
-                  I'm primarily interested in product management roles focused on emerging technologies like robotics, AI/ML, and automation. I enjoy working on complex technical products that solve real operational challenges.
+                  I'm interested in Product Management/Product Operations roles in the software industry. I'm looking for an opportunity to work in an area I'm passionate about, and I'm open to working remotely or in a hybrid environment in the Washington, DC area.
                 </AccordionContent>
               </AccordionItem>
 
@@ -683,7 +670,7 @@ export default function Work() {
               <AccordionItem value="item-4">
                 <AccordionTrigger>What's your experience with remote teams?</AccordionTrigger>
                 <AccordionContent>
-                  I've been a remote employee at CloudKitchens for the past 4+ years, and I've managed product teams remotely during that time. 
+                  I've been a remote employee at CloudKitchens for the past 4+ years, and I've managed product teams remotely during that time. I've greatly enjoyed the flexibility and freedom that come with remote work, but I'm also a big fan of in-person collaboration. I've been able to have a bit of both during this time, and I'm open to keeping that balance going.
                 </AccordionContent>
               </AccordionItem>
 
@@ -737,7 +724,7 @@ export default function Work() {
                       href="/meet" 
                       className="text-sm font-semibold text-zinc-300 hover:text-white"
                     >
-                      Schedule a call <span aria-hidden="true">→</span>
+                     Schedule a call <span aria-hidden="true">→</span>
                     </a>
                   </div>
                 </div>

@@ -28,7 +28,7 @@ const HighlightText = ({ content, isActive }) => {
             duration: 0.6,
             ease: [0.33, 1, 0.68, 1]
           }}
-          className="absolute inset-0 bg-yellow-100 dark:bg-yellow-500/30 -z-10 origin-left"
+          className="absolute inset-0 bg-yellow-100 dark:bg-yellow-500/30 -z-10 origin-left hidden md:block"
         />
       </span>
     </span>
@@ -163,7 +163,7 @@ export const CardStack = ({
   };
 
   return (
-    <div className="relative min-h-[15rem] w-full mt-12 md:mt-16">
+    <div className="relative min-h-[15rem] w-full max-w-lg mx-auto mt-4 md:mt-0">
       {cards.map((card, index) => {
         const textSize = getTextSize(card.content);
         return (
@@ -175,10 +175,10 @@ export const CardStack = ({
             }}
             onMouseEnter={index === 0 ? handleMouseEnter : undefined}
             onMouseLeave={index === 0 ? handleMouseLeave : undefined}
-            className="absolute dark:bg-black bg-white w-full rounded-3xl pt-8 md:pt-10 pb-6 md:pb-8 px-4 md:px-6 shadow-xl border border-neutral-200 dark:border-white/[0.2] dark:shadow-white/[0.05] dark:hover:border-white/[0.3] transition-colors"
+            className="absolute dark:bg-black bg-white w-full rounded-2xl pt-3 md:pt-4 pb-2 md:pb-3 px-4 md:px-5 shadow-xl border border-neutral-200 dark:border-white/[0.2] dark:shadow-white/[0.05] dark:hover:border-white/[0.3] transition-colors"
             style={{
               transformOrigin: "top center",
-              height: window.innerWidth < 768 ? '320px' : undefined
+              height: window.innerWidth < 768 ? '220px' : '280px'
             }}
             animate={{
               top: index * -CARD_OFFSET,
@@ -186,16 +186,16 @@ export const CardStack = ({
               zIndex: cards.length - index,
             }}
           >
-            <div className="flex flex-col h-full md:h-auto">
-              <div className="flex-1">
+            <div className="flex flex-col justify-center h-full">
+              <div className="flex-none">
                 <div className={`font-normal text-neutral-700 dark:text-neutral-200 italic ${textSize} max-w-[95%]`}>
                   "{renderHighlightedContent(card.content, index === 0)}"
                 </div>
               </div>
-              <div className="flex-none mt-4 md:mt-8 mb-12 md:mb-0">
+              <div className="flex-none mt-4">
                 <div className="flex items-center gap-3">
                   {card.profileImage && (
-                    <div className="relative h-8 w-8 md:h-10 md:w-10 shrink-0">
+                    <div className="relative h-7 w-7 md:h-8 md:w-8 shrink-0">
                       <Image
                         src={card.profileImage}
                         alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
