@@ -293,10 +293,22 @@ const WorkContent = () => {
       const jobUrl = searchParams.get('job')
       
       if (jobUrl) {
-        // Check if we have cached data for this URL
-        const cachedData = localStorage.getItem(`job-analysis-${jobUrl}`)
+        let cachedData = null
+        
+        // Only access localStorage on the client side
+        if (typeof window !== 'undefined') {
+          try {
+            const cached = localStorage.getItem(`job-analysis-${jobUrl}`)
+            if (cached) {
+              cachedData = JSON.parse(cached)
+            }
+          } catch (error) {
+            console.error('Error accessing localStorage:', error)
+          }
+        }
+
         if (cachedData) {
-          setJobData(JSON.parse(cachedData))
+          setJobData(cachedData)
           return
         }
 
@@ -313,13 +325,18 @@ const WorkContent = () => {
           if (!response.ok) throw new Error('Failed to analyze job')
           
           const data = await response.json()
-          // Cache the successful response
-          if (!data.error) {
-            localStorage.setItem(`job-analysis-${jobUrl}`, JSON.stringify(data))
+          // Cache the successful response only on client side
+          if (!data.error && typeof window !== 'undefined') {
+            try {
+              localStorage.setItem(`job-analysis-${jobUrl}`, JSON.stringify(data))
+            } catch (error) {
+              console.error('Error setting localStorage:', error)
+            }
           }
           setJobData(data)
         } catch (error) {
           console.error('Error analyzing job:', error)
+          setJobData({ error: 'Failed to analyze job. Please try again.' })
         } finally {
           setIsLoading(false)
         }
