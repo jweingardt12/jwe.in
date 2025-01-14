@@ -688,56 +688,40 @@ const WorkContent = () => {
   useEffect(() => {
     const initializePage = async () => {
       setMounted(true)
-      const jobUrl = searchParams.get('job')
+      const jobId = searchParams.get('job')
       
-      if (jobUrl) {
-        let cachedData = null
-        
-        // Only access localStorage on the client side
-        if (typeof window !== 'undefined') {
-          try {
-            const cached = localStorage.getItem(`job-analysis-${jobUrl}`)
-            if (cached) {
-              cachedData = JSON.parse(cached)
-            }
-          } catch (error) {
-            console.error('Error accessing localStorage:', error)
-          }
-        }
-
-        if (cachedData) {
-          setJobData(cachedData)
-          return
-        }
-
+      if (jobId) {
         setIsLoading(true)
+        
         try {
-          const response = await fetch('/api/analyze-job', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ jobUrl }),
-          })
-          
-          if (!response.ok) throw new Error('Failed to analyze job')
-          
+          const response = await fetch(`/api/job-analysis?id=${jobId}`)
           const data = await response.json()
-          // Cache the successful response only on client side
-          if (!data.error && typeof window !== 'undefined') {
-            try {
-              localStorage.setItem(`job-analysis-${jobUrl}`, JSON.stringify(data))
-            } catch (error) {
-              console.error('Error setting localStorage:', error)
+          
+          if (response.ok) {
+            // Ensure we have all required fields
+            if (data.jobTitle && 
+                data.companyName && 
+                data.introText && 
+                data.bulletPoints?.length >= 3 && 
+                data.relevantSkills?.length) {
+              setJobData(data)
+              setIsLoading(false)
+              return
             }
           }
-          setJobData(data)
+          
+          // If we don't have valid data, show error
+          setJobData({ 
+            error: 'This job analysis is no longer available. Please generate a new one.' 
+          })
         } catch (error) {
-          console.error('Error analyzing job:', error)
-          setJobData({ error: 'Failed to analyze job. Please try again.' })
-        } finally {
-          setIsLoading(false)
+          console.error('Error fetching job analysis:', error)
+          setJobData({ 
+            error: 'Failed to load job analysis. Please try again later.' 
+          })
         }
+        
+        setIsLoading(false)
       }
     }
 
