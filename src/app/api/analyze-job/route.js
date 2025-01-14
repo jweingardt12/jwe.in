@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import * as cheerio from 'cheerio'
 
-const openai = new OpenAI(process.env.OPENAI_API_KEY)
+const openai = process.env.OPENAI_API_KEY 
+  ? new OpenAI(process.env.OPENAI_API_KEY)
+  : null
 
 export async function POST(request) {
   try {
+    if (!openai) {
+      return NextResponse.json({ 
+        error: 'OpenAI API key not configured. Please contact the site administrator.' 
+      }, { status: 500 })
+    }
+
     const { jobUrl } = await request.json()
 
     if (!jobUrl) {

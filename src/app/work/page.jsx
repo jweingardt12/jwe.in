@@ -293,6 +293,13 @@ export default function Work() {
       const jobUrl = searchParams.get('job')
       
       if (jobUrl) {
+        // Check if we have cached data for this URL
+        const cachedData = localStorage.getItem(`job-analysis-${jobUrl}`)
+        if (cachedData) {
+          setJobData(JSON.parse(cachedData))
+          return
+        }
+
         setIsLoading(true)
         try {
           const response = await fetch('/api/analyze-job', {
@@ -306,6 +313,10 @@ export default function Work() {
           if (!response.ok) throw new Error('Failed to analyze job')
           
           const data = await response.json()
+          // Cache the successful response
+          if (!data.error) {
+            localStorage.setItem(`job-analysis-${jobUrl}`, JSON.stringify(data))
+          }
           setJobData(data)
         } catch (error) {
           console.error('Error analyzing job:', error)
