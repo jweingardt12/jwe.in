@@ -9,30 +9,28 @@ const HighlightText = ({ content, isActive }) => {
 
   useEffect(() => {
     if (isActive) {
-      const timer = setTimeout(() => setIsVisible(true), 800);
+      const timer = setTimeout(() => setIsVisible(true), 400);
       return () => clearTimeout(timer);
-    } else {
-      setIsVisible(false);
     }
+    setIsVisible(false);
   }, [isActive]);
 
   return (
-    <span className="relative inline-block">
-      <span className="relative z-10 font-semibold">{content}</span>
-      <motion.span
-        initial={{ scaleX: 0 }}
-        animate={{ 
-          scaleX: isVisible ? 1 : 0
-        }}
-        transition={{ 
-          duration: 0.8,
-          ease: "easeOut"
-        }}
-        className="absolute inset-0 bg-yellow-200/50 dark:bg-yellow-400/20 -z-10"
-        style={{
-          transformOrigin: 'left'
-        }}
-      />
+    <span className="inline">
+      <span className="relative inline">
+        <span className="relative z-10">{content}</span>
+        <motion.span
+          initial={{ scaleX: 0 }}
+          animate={{ 
+            scaleX: isVisible ? 1 : 0
+          }}
+          transition={{ 
+            duration: 0.6,
+            ease: [0.33, 1, 0.68, 1]
+          }}
+          className="absolute inset-0 bg-yellow-100 dark:bg-yellow-500/30 -z-10 origin-left"
+        />
+      </span>
     </span>
   );
 };
@@ -153,23 +151,19 @@ export const CardStack = ({
   };
 
   const renderHighlightedContent = (content, isActive) => {
-    // Split content by highlight tags, preserving the tags in the result
     const parts = content.split(/(<highlight>.*?<\/highlight>)/g);
     
     return parts.map((part, index) => {
-      // Check if this part is a highlight tag
       const highlightMatch = part.match(/<highlight>(.*?)<\/highlight>/);
       if (highlightMatch) {
-        // Extract the text between highlight tags and render it with the HighlightText component
         return <HighlightText key={index} content={highlightMatch[1]} isActive={isActive} />;
       }
-      // Return regular text as is
-      return <span key={index}>{part}</span>;
+      return <span key={index} className="inline">{part}</span>;
     });
   };
 
   return (
-    <div className="relative min-h-[15rem] w-full mt-12 md:mt-16" style={{ height: maxHeight > 0 ? maxHeight : 'auto' }}>
+    <div className="relative min-h-[15rem] w-full mt-12 md:mt-16">
       {cards.map((card, index) => {
         const textSize = getTextSize(card.content);
         return (
@@ -184,7 +178,7 @@ export const CardStack = ({
             className="absolute dark:bg-black bg-white w-full rounded-3xl pt-8 md:pt-10 pb-6 md:pb-8 px-4 md:px-6 shadow-xl border border-neutral-200 dark:border-white/[0.2] dark:shadow-white/[0.05] dark:hover:border-white/[0.3] transition-colors"
             style={{
               transformOrigin: "top center",
-              height: maxHeight > 0 ? maxHeight : 'auto'
+              height: window.innerWidth < 768 ? '320px' : undefined
             }}
             animate={{
               top: index * -CARD_OFFSET,
@@ -192,68 +186,66 @@ export const CardStack = ({
               zIndex: cards.length - index,
             }}
           >
-            <div className="flex flex-col h-full px-2 md:px-4 py-2 md:py-4">
-              <div className="flex-1 flex flex-col justify-center">
-                <div className={`font-normal text-neutral-700 dark:text-neutral-200 italic ${textSize} max-w-[90%]`}>
+            <div className="flex flex-col h-full md:h-auto">
+              <div className="flex-1">
+                <div className={`font-normal text-neutral-700 dark:text-neutral-200 italic ${textSize} max-w-[95%]`}>
                   "{renderHighlightedContent(card.content, index === 0)}"
                 </div>
-                <div className="mt-6 md:mt-8">
-                  <div className="flex items-center gap-3">
-                    {card.profileImage && (
-                      <div className="relative h-8 w-8 md:h-10 md:w-10 shrink-0">
-                        <Image
-                          src={card.profileImage}
-                          alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
-                          fill
-                          className="object-cover rounded-full"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <p 
-                        className="text-neutral-500 font-medium dark:text-white text-sm md:text-base"
-                        dangerouslySetInnerHTML={{ __html: card.name }}
+              </div>
+              <div className="flex-none mt-4 md:mt-8 mb-12 md:mb-0">
+                <div className="flex items-center gap-3">
+                  {card.profileImage && (
+                    <div className="relative h-8 w-8 md:h-10 md:w-10 shrink-0">
+                      <Image
+                        src={card.profileImage}
+                        alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
+                        fill
+                        className="object-cover rounded-full"
                       />
-                      <p className="text-neutral-400 font-normal dark:text-neutral-200 text-xs md:text-xs italic">
-                        {card.designation}
-                      </p>
                     </div>
+                  )}
+                  <div className="flex-1">
+                    <p 
+                      className="text-neutral-500 font-medium dark:text-white text-sm md:text-base"
+                      dangerouslySetInnerHTML={{ __html: card.name }}
+                    />
+                    <p className="text-neutral-400 font-normal dark:text-neutral-200 text-xs md:text-xs italic">
+                      {card.designation}
+                    </p>
                   </div>
                 </div>
               </div>
               {index === 0 && (
-                <>
-                  <div className="absolute bottom-0 left-0 right-0 mx-4 md:mx-6 mb-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="h-0.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                          <motion.div
-                            className="h-full bg-zinc-300 dark:bg-zinc-600"
-                            initial={{ width: "0%" }}
-                            animate={{ width: `${progress}%` }}
-                            transition={{ duration: 0.1, ease: "linear" }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex gap-1 ml-3">
-                        <button
-                          onClick={moveToPrevious}
-                          className="p-1 md:p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                          aria-label="Previous card"
-                        >
-                          <ChevronUpIcon className="h-3 w-3 md:h-4 md:w-4 text-zinc-500" />
-                        </button>
-                        <button
-                          onClick={moveToNext}
-                          className="p-1 md:p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                          aria-label="Next card"
-                        >
-                          <ChevronDownIcon className="h-3 w-3 md:h-4 md:w-4 text-zinc-500" />
-                        </button>
+                <div className="absolute bottom-0 left-0 right-0 mx-4 md:mx-6 mb-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="h-0.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-zinc-300 dark:bg-zinc-600"
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.1, ease: "linear" }}
+                        />
                       </div>
                     </div>
+                    <div className="flex gap-1 ml-3">
+                      <button
+                        onClick={moveToPrevious}
+                        className="p-2 md:p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                        aria-label="Previous card"
+                      >
+                        <ChevronUpIcon className="h-4 w-4 md:h-4 md:w-4 text-zinc-500" />
+                      </button>
+                      <button
+                        onClick={moveToNext}
+                        className="p-2 md:p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                        aria-label="Next card"
+                      >
+                        <ChevronDownIcon className="h-4 w-4 md:h-4 md:w-4 text-zinc-500" />
+                      </button>
+                    </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
