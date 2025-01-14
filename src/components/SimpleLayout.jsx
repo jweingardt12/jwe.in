@@ -15,7 +15,7 @@ export function SimpleLayout({ title, customTitle, intro, children }) {
   }
 
   return (
-    <Container className="mt-16 sm:mt-32">
+    <Container className="mt-8 sm:mt-16">
       <header className="max-w-2xl">
         {customTitle || (
           <h1 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
@@ -26,7 +26,7 @@ export function SimpleLayout({ title, customTitle, intro, children }) {
           {intro}
         </div>
       </header>
-      {children && <div className="mt-16 sm:mt-20">{children}</div>}
+      {children && <div className="mt-8 sm:mt-12">{children}</div>}
     </Container>
   )
 }
