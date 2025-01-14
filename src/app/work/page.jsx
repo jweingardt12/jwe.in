@@ -146,7 +146,7 @@ const TldrCard = ({ jobData, isLoading }) => {
           <div className="relative flex flex-col mb-4">
             <div className="flex items-start justify-between">
               <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100 pr-8">
-                ✨ Analyzing your fit...
+                ✨ Jason's a fit for your role because...
               </h3>
               <div className="group relative">
                 <div className="text-sm text-purple-400 dark:text-purple-300 cursor-help">?</div>
@@ -749,7 +749,7 @@ const WorkContent = () => {
   return (
     <ExpandedContext.Provider value={{ isExpanded, setIsExpanded }}>
       <SimpleLayout>
-        <div className="space-y-20 sm:space-y-32">
+        <div className={`space-y-20 sm:space-y-32 ${(jobData || isLoading) ? 'pt-4' : 'pt-8'}`}>
           <TldrCard jobData={jobData} isLoading={isLoading} />
 
           <div>
