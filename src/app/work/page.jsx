@@ -579,10 +579,13 @@ const WorkContent = () => {
       
       if (jobId) {
         setIsLoading(true)
+        console.log('Fetching job data for ID:', jobId)
         
         try {
-          const response = await fetch(`/api/job-analysis?id=${jobId}`)
+          const response = await fetch(`/api/analyze-job?id=${jobId}`)
+          console.log('API Response status:', response.status)
           const data = await response.json()
+          console.log('API Response data:', data)
           
           if (response.ok) {
             // Ensure we have all required fields
