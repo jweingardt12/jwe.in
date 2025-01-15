@@ -113,10 +113,21 @@ async function fetchJobContent(url) {
 }
 
 function countSentences(text) {
-  // Match sentences that end with . ! or ? followed by a space or end of string
-  // Handles common abbreviations like "U.S." or "Ph.D." by requiring space/end after period
-  const sentences = text.match(/[^.!?]+[.!?](?:\s|$)/g) || [];
-  return sentences.length;
+  // Remove the emoji and headline part before counting sentences
+  const contentPart = text.replace(/\*\*[^*]+\*\*:/, '').trim();
+  
+  // Split by period, exclamation, or question mark followed by a space or end of string
+  // But ignore periods in common abbreviations and numbers
+  const sentences = contentPart.match(/[^.!?]+(?:[.!?](?:(?=\s)|$))/g) || [];
+  
+  // Filter out false positives from abbreviations like "U.S." or "Ph.D."
+  return sentences.filter(s => {
+    // Ignore if it's just an abbreviation or number
+    if (s.trim().match(/^(Mr|Mrs|Ms|Dr|Prof|Sr|Jr|U\.S|Ph\.D|Inc|Ltd|etc)\./i)) {
+      return false;
+    }
+    return true;
+  }).length;
 }
 
 function validateAnalysis(analysis) {

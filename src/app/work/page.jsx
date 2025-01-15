@@ -358,7 +358,7 @@ const WorkContent = () => {
                   <li>Led GTM and product vision, and program management for five distinct product lines.</li>
                   <li>Direct a remote team of 10 engineers, designers, and data scientists to ship robotics and food delivery mobile (iOS/Android) and web products</li>
                   <li>Connect with all customer and stakeholder segments to understand their needs and drive product development and planning.</li>
-                  <li>Developed SQL queries and dashboards, as well as leveraged Python, and Zapier/AI tools to help my teams do more with less</li>
+                  <li>Developed SQL queries and dashboards, as well as leveraged Python and Zapier/AI tools to help my teams do more with less</li>
                   <li>Promoted twice, previously serving as the first Product Operations Manager in the Facility Tech business unit</li>
                 </>
               )}
