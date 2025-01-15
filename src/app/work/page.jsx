@@ -248,6 +248,110 @@ const WorkContent = () => {
   const searchParams = useSearchParams()
   const jobId = searchParams.get('job')
 
+  const timelineData = [
+    {
+      title: "2021 - Present",
+      role: "Product Manager, Facility Technology",
+      logo: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-64 space-y-4 py-4"
+        >
+          <a href="https://www.cloudkitchens.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+            <Image
+              src={logoCloudKitchens}
+              alt="CloudKitchens"
+              width={258}
+              height={20}
+              className="dark:invert object-contain w-auto h-full"
+            />
+          </a>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Ghost kitchen technology and operations platform</p>
+          <CompanyDetails>
+            <CompanyInfo 
+              industry="Food Tech, Real Estate"
+              size="3,000+"
+              location="Los Angeles, CA"
+              website="https://www.cloudkitchens.com"
+              tools={[
+                "SQL",
+                "Mixpanel",
+                "Jira",
+                "Slack",
+                "Zapier",
+                "Looker",
+                "Figma",
+                "Python",
+                "G-Suite"
+              ]}
+              headlines={[
+                {
+                  title: "Uber Founder Envisions 'Internet Food Court' Future",
+                  url: "https://foodondemand.com/05082024/uber-co-founder-travis-kalanick-envisions-internet-food-court-future/",
+                  publication: "Food On Demand"
+                },
+                {
+                  title: "CloudKitchens Raises $850M at $15B Valuation",
+                  url: "https://www.wsj.com/articles/uber-co-founder-travis-kalanicks-cloudkitchens-valued-at-15-billion-in-new-funding-11636137601",
+                  publication: "Wall Street Journal"
+                },
+                {
+                  title: "The Rise of Ghost Kitchens",
+                  url: "https://www.nytimes.com/2019/08/14/technology/uber-ghost-kitchen.html",
+                  publication: "New York Times"
+                }
+              ]}
+            />
+          </CompanyDetails>
+        </motion.div>
+      ),
+      content: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-4 pb-8"
+        >
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm font-normal leading-relaxed space-y-3">
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Impact:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.CloudKitchens?.impact?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Took Otter Lockers product 0 → 1, growing ARR 150% in 6 months.</li>
+                  <li>Scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90.</li>
+                  <li>Reduced facility technology support escalations by 80% through self-serve ops tooling. </li>
+                  <li>Contributed 250+ custom Slack emojis, each designed for maximum hilarity.</li>
+                </>
+              )}
+            </ul>
+            <div className="h-px bg-zinc-200 dark:bg-zinc-700/40 my-3" />
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Responsibilities:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.CloudKitchens?.responsibilities?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Led GTM and product vision, and program management for five distinct product lines.</li>
+                  <li>Direct a remote team of 10 engineers, designers, and data scientists to ship robotics and food delivery mobile (iOS/Android) and web products</li>
+                  <li>Connect with all customer and stakeholder segments to understand their needs and drive product development and planning.</li>
+                  <li>Pull Developed SQL queries and dashboards, Python, and Zapier/AI tools to help other teams do more with less</li>
+                  <li>Promoted twice, previously serving as the first Product Operations Manager in the Facility Tech business unit</li>
+                </>
+              )}
+            </ul>
+          </div>
+        </motion.div>
+      )
+    },
+    // ... rest of the timeline data ...
+  ]
+
   useEffect(() => {
     const initializePage = async () => {
       setMounted(true)
