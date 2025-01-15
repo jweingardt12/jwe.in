@@ -5,6 +5,8 @@ const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null
 
+const analyzedJobs = new Map();
+
 function cleanHtmlContent(html) {
   // Remove script and style tags and their contents
   html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -93,20 +95,17 @@ export async function GET(request) {
   }
 
   try {
-    // Return a minimal placeholder response
-    return NextResponse.json({
-      jobTitle: "Loading...",
-      companyName: "Loading...",
-      introText: "Loading job analysis...",
-      bulletPoints: [
-        "Loading...",
-        "Loading...",
-        "Loading..."
-      ],
-      relevantSkills: [
-        "Loading..."
-      ]
-    })
+    // Try to get the analysis from our storage
+    const analysis = analyzedJobs.get(id)
+    
+    if (!analysis) {
+      return NextResponse.json({ 
+        error: 'Job analysis not found. Please generate a new analysis.' 
+      }, { status: 404 })
+    }
+
+    // Return the stored analysis
+    return NextResponse.json(analysis)
   } catch (error) {
     console.error('Error in GET handler:', error)
     return NextResponse.json({ error: 'Failed to retrieve job analysis' }, { status: 500 })
@@ -123,7 +122,7 @@ export async function POST(request) {
     }
 
     const body = await request.json()
-    console.log('Request body:', body) // Log the request body
+    console.log('Request body:', body)
 
     const { jobUrl, jobContent } = body
 
@@ -293,15 +292,13 @@ export async function POST(request) {
     console.log('Raw OpenAI response:', completion.choices[0].message.content)
 
     try {
-      // Clean up the response content by removing markdown code block markers
       const cleanContent = completion.choices[0].message.content
-        .replace(/```json\n/, '')  // Remove opening code block
-        .replace(/\n```$/, '')     // Remove closing code block
+        .replace(/```json\n/, '')
+        .replace(/\n```$/, '')
         .trim()
 
       const analysis = JSON.parse(cleanContent)
       
-      // Validate the response
       if (!analysis.bulletPoints?.length || analysis.bulletPoints.length < 3) {
         console.error('Invalid bullet points:', analysis.bulletPoints)
         return NextResponse.json({ 
@@ -316,14 +313,24 @@ export async function POST(request) {
         }, { status: 400 })
       }
 
-      // Return both the analysis and the job content
-      return NextResponse.json({
+      // Generate a unique ID for this analysis
+      const analysisId = Math.random().toString(36).substring(2, 15)
+      
+      // Store the analysis with the generated ID
+      analyzedJobs.set(analysisId, {
         ...analysis,
-        jobContent: content // Include the job content in the response
+        jobContent: content,
+        createdAt: new Date().toISOString()
+      })
+
+      // Return both the analysis and the ID
+      return NextResponse.json({
+        id: analysisId,
+        ...analysis,
+        jobContent: content
       })
     } catch (parseError) {
       console.error('Error parsing OpenAI response:', parseError)
-      console.error('Raw response content:', completion.choices[0].message.content)
       return NextResponse.json({ 
         error: 'Failed to parse AI response. Please try again.' 
       }, { status: 500 })
