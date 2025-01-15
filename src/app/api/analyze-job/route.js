@@ -61,6 +61,31 @@ async function fetchJobContent(url) {
       return content
     }
 
+    // Special handling for Ashby job board URLs
+    if (url.includes('jobs.ashbyhq.com')) {
+      // Extract the job ID from the URL
+      const jobId = url.split('/').pop().split('?')[0]
+      // Use Ashby's API endpoint to fetch the job data
+      const apiUrl = `https://jobs.ashbyhq.com/api/public-job/${jobId}`
+      const response = await fetch(apiUrl)
+      
+      if (!response.ok) {
+        throw new Error('Could not fetch job details from Ashby. Please try pasting the job description directly.')
+      }
+      
+      const data = await response.json()
+      // Combine relevant fields into a single text
+      const content = [
+        `Job Title: ${data.title || ''}`,
+        `Company: ${data.organizationName || ''}`,
+        `Description: ${data.descriptionHtml || data.description || ''}`,
+        `Requirements: ${data.requirements || ''}`,
+        `Location: ${data.locationName || ''}`
+      ].filter(Boolean).join('\n\n')
+      
+      return cleanHtmlContent(content)
+    }
+
     // Default handling for other URLs
     const response = await fetch(url, {
       headers: {
