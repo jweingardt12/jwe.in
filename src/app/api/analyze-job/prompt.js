@@ -16,18 +16,21 @@ Format your response as a JSON object with the following structure:
   "jobTitle": "string - the job title from the posting",
   "companyName": "string - the company name from the posting",
   "introText": "string - exactly one sentence starting with 'I'm the right person for the [Job title] at [Company] because...' and then describe my relevant background and qualifications (NOT specific metrics). If there are significant experience gaps, acknowledge them while highlighting transferable skills.",
-  "bulletPoints": ["string - exactly 3 bullet points, each must be ONE sentence formatted as **Headline:** While I was [Role] at [Company], I [specific achievement with metrics]"],
+  "bulletPoints": ["string - exactly 3 bullet points, each must be ONE sentence formatted as **[Emoji] Headline:** While I was [Role] at [Company], I [specific achievement with metrics]"],
   "relevantSkills": ["string - choose 3-5 most relevant skills from the Product Manager competencies list below that I've actually demonstrated in my roles"]
 }
 
 For bullet points:
 - Must provide EXACTLY 3 bullet points
 - Each bullet point must be ONE sentence only
-- Each must follow format: **Headline:** While I was [Role] at [Company], I [specific achievement with metrics]
+- Each must follow format: **[Emoji] Headline:** While I was [Role] at [Company], I [specific achievement with metrics]
 - Choose the most impressive and relevant achievements that match the job requirements
 - Focus on concrete metrics and results
 - Only use achievements that actually happened - never make up or exaggerate metrics
-- Example: "**Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year."
+- Choose an appropriate emoji that matches the headline theme
+- Example: **🚀 Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year."
+- Example: **🤖 Automation Pioneer:** While I was Product Manager at CloudKitchens, I scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90."
+- Example: **📈 Revenue Driver:** While I was Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months."
 
 Product Manager Competencies (choose from these for relevantSkills ONLY if I've demonstrated them):
 Technical:

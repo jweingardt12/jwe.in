@@ -112,6 +112,39 @@ async function fetchJobContent(url) {
   }
 }
 
+function countSentences(text) {
+  // Match sentences that end with . ! or ? followed by a space or end of string
+  // Handles common abbreviations like "U.S." or "Ph.D." by requiring space/end after period
+  const sentences = text.match(/[^.!?]+[.!?](?:\s|$)/g) || [];
+  return sentences.length;
+}
+
+function validateAnalysis(analysis) {
+  // Check required fields exist
+  if (!analysis.jobTitle || !analysis.companyName || !analysis.introText || !analysis.relevantSkills?.length) {
+    throw new Error('Missing required fields in analysis');
+  }
+
+  // Validate intro text is exactly one sentence
+  if (countSentences(analysis.introText) !== 1) {
+    throw new Error('Intro text must be exactly one sentence');
+  }
+
+  // Validate bullet points
+  if (!analysis.bulletPoints?.length || analysis.bulletPoints.length !== 3) {
+    throw new Error('Must have exactly 3 bullet points');
+  }
+
+  // Validate each bullet point is one sentence
+  for (const bullet of analysis.bulletPoints) {
+    if (countSentences(bullet) !== 1) {
+      throw new Error('Each bullet point must be exactly one sentence');
+    }
+  }
+
+  return true;
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
@@ -209,17 +242,12 @@ export async function POST(request) {
 
       const analysis = JSON.parse(cleanContent)
       
-      if (!analysis.bulletPoints?.length || analysis.bulletPoints.length < 3) {
-        console.error('Invalid bullet points:', analysis.bulletPoints)
+      try {
+        validateAnalysis(analysis);
+      } catch (validationError) {
+        console.error('Validation error:', validationError.message)
         return NextResponse.json({ 
-          error: 'Unable to generate relevant bullet points from the job posting' 
-        }, { status: 400 })
-      }
-
-      if (!analysis.jobTitle || !analysis.companyName || !analysis.introText || !analysis.relevantSkills?.length) {
-        console.error('Missing required fields:', analysis)
-        return NextResponse.json({ 
-          error: 'Invalid response format from AI' 
+          error: validationError.message
         }, { status: 400 })
       }
 
