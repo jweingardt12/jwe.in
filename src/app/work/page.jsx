@@ -131,6 +131,7 @@ const TldrCard = ({ jobData, isLoading }) => {
   if (isLoading) {
     return (
       <div className="relative overflow-hidden rounded-xl bg-white/5 dark:bg-white/10 shadow-lg border-2 border-purple-300/30 dark:border-purple-500/30">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-[shimmer_3s_linear_infinite]" />
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-transparent to-transparent dark:from-purple-900/20 dark:via-transparent dark:to-transparent" />
         <SparklesCore
           className="absolute inset-0 h-full w-full"
@@ -171,6 +172,7 @@ const TldrCard = ({ jobData, isLoading }) => {
   if (jobData && !jobData.error) {
     return (
       <div className="relative overflow-hidden rounded-xl bg-white/5 dark:bg-white/10 shadow-lg border-2 border-purple-300/30 dark:border-purple-500/30">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-[shimmer_3s_linear_infinite]" />
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-transparent to-transparent dark:from-purple-900/20 dark:via-transparent dark:to-transparent" />
         <div className="relative p-4">
           <div className="relative flex flex-col mb-2">

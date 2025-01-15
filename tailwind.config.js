@@ -37,10 +37,15 @@ module.exports = {
             opacity: 0,
           },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '0 0' },
+          '100%': { backgroundPosition: '-125% 0' },
+        },
       },
       animation: {
         'zoom-in': 'zoom-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
         "shooting-star": "shooting-star linear infinite",
+        shimmer: 'shimmer 3s linear infinite',
       },
       colors: {
         border: "hsl(var(--border))",
