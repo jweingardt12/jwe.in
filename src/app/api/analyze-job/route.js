@@ -1,12 +1,41 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { SYSTEM_PROMPT } from './prompt.js'
+import fs from 'fs'
+import path from 'path'
 
 const openai = process.env.OPENAI_API_KEY 
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null
 
-const analyzedJobs = new Map();
+// File path for storing analyzed jobs
+const STORAGE_FILE = path.join(process.cwd(), 'data', 'analyzed-jobs.json')
+
+// Initialize storage directory if it doesn't exist
+if (!fs.existsSync(path.join(process.cwd(), 'data'))) {
+  fs.mkdirSync(path.join(process.cwd(), 'data'))
+}
+
+// Load existing analyzed jobs from file
+let analyzedJobs = new Map()
+try {
+  if (fs.existsSync(STORAGE_FILE)) {
+    const data = JSON.parse(fs.readFileSync(STORAGE_FILE, 'utf8'))
+    analyzedJobs = new Map(Object.entries(data))
+  }
+} catch (error) {
+  console.error('Error loading analyzed jobs:', error)
+}
+
+// Save analyzed jobs to file
+function saveAnalyzedJobs() {
+  try {
+    const data = Object.fromEntries(analyzedJobs)
+    fs.writeFileSync(STORAGE_FILE, JSON.stringify(data, null, 2))
+  } catch (error) {
+    console.error('Error saving analyzed jobs:', error)
+  }
+}
 
 function cleanHtmlContent(html) {
   // Remove script and style tags and their contents
@@ -277,6 +306,9 @@ export async function POST(request) {
         jobContent: content,
         createdAt: new Date().toISOString()
       })
+
+      // Save to file
+      saveAnalyzedJobs()
 
       // Return both the analysis and the ID
       return NextResponse.json({

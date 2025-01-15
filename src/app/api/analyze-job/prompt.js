@@ -6,19 +6,27 @@ Important:
 - Never use the word 'innovative' - instead use more specific terms like 'forward-thinking', 'transformative', 'impactful', or 'groundbreaking'
 - Never use generic phrases like "aligning with mission", "passionate about the mission", "culture fit", or similar vague statements
 - Always focus on concrete achievements, specific metrics, and real experience
-- NEVER claim experience I don't have - if a job requires specific experience not listed in my background, acknowledge that gap
-- If a role requires significant experience in areas I haven't worked in (e.g. security, hardware, specific industries), be upfront about that
-- Focus on transferable skills and actual experience rather than making claims about direct experience
-- For the introText, be honest about fit - if there are significant gaps, acknowledge them while highlighting relevant transferable skills
+- NEVER claim experience I don't have
+- Focus on transferable skills and actual experience
+- Keep the intro text casual, concise, and focused only on relevant strengths - never mention gaps or what I don't have
 
 Format your response as a JSON object with the following structure:
 {
   "jobTitle": "string - the job title from the posting",
   "companyName": "string - the company name from the posting",
-  "introText": "string - exactly one sentence starting with 'I'm the right person for the [Job title] at [Company] because...' and then describe my relevant background and qualifications (NOT specific metrics). If there are significant experience gaps, acknowledge them while highlighting transferable skills.",
+  "introText": "string - exactly one casual, concise sentence starting with 'I'm the right person for the [Job title] at [Company] because...' and then highlight 1-2 most relevant strengths from my background (NOT specific metrics)",
   "bulletPoints": ["string - exactly 3 bullet points, each must be ONE sentence formatted as **[Emoji] Headline:** While I was [Role] at [Company], I [specific achievement with metrics]"],
   "relevantSkills": ["string - choose 3-5 most relevant skills from the Product Manager competencies list below that I've actually demonstrated in my roles"]
 }
+
+For the introText:
+- Must be exactly ONE sentence
+- Must start with exactly: "I'm the right person for the [Job title] at [Company] because..."
+- Keep it casual and concise
+- Focus on 1-2 most relevant strengths from my background
+- Never mention gaps or what I don't have
+- Keep it high-level - save specific metrics for bullet points
+- Example: "I'm the right person for the Senior Product Manager at Acme Corp because I have experience building and scaling technical products, most recently at CloudKitchens."
 
 For bullet points:
 - Must provide EXACTLY 3 bullet points
@@ -65,14 +73,17 @@ Business:
 • Customer Development
 • Partnership Development
 
-For the introText:
-- Must start with exactly: "I'm the right person for the [Job title] at [Company] because..."
-- Fill in the actual job title and company name from the posting
-- Complete the sentence by describing my relevant background and qualifications
-- Focus on general experience and skills that match the role
-- Keep it high-level - save specific metrics for bullet points
-- If there are significant gaps in required experience, acknowledge them while highlighting transferable skills
-- Example: "I'm the right person for the Senior Product Manager at Acme Corp because while I don't have direct experience in the insurance industry, I have a strong track record of leading cross-functional teams and delivering complex technical products, as demonstrated by my work scaling robotics systems at CloudKitchens."
+For bullet points:
+- Must provide EXACTLY 3 bullet points
+- Each bullet point must be ONE sentence only
+- Each must follow format: **[Emoji] Headline:** While I was [Role] at [Company], I [specific achievement with metrics]
+- Choose the most impressive and relevant achievements that match the job requirements
+- Focus on concrete metrics and results
+- Only use achievements that actually happened - never make up or exaggerate metrics
+- Choose an appropriate emoji that matches the headline theme
+- Example: **🚀 Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year."
+- Example: **🤖 Automation Pioneer:** While I was Product Manager at CloudKitchens, I scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90."
+- Example: **📈 Revenue Driver:** While I was Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months."
 
 Each bullet point should highlight a specific achievement that matches the job requirements or duties. This is where we use concrete metrics and results.
 
