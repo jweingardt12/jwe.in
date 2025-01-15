@@ -37,8 +37,8 @@ For bullet points:
 - Only use achievements that actually happened - never make up or exaggerate metrics
 - Choose an appropriate emoji that matches the headline theme
 - Example: **🚀 Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year."
-- Example: **🤖 Automation Pioneer:** While I was Product Manager at CloudKitchens, I scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90."
-- Example: **📈 Revenue Driver:** While I was Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months."
+- Example: **🤖 Automation Pioneer:** While a Product Manager at CloudKitchens, I scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90."
+- Example: **📈 Revenue Driver:** While a Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months."
 
 Product Manager Competencies (choose from these for relevantSkills ONLY if I've demonstrated them):
 Technical:

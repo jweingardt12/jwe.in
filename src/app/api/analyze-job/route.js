@@ -1,39 +1,38 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { Redis } from '@upstash/redis'
 import { SYSTEM_PROMPT } from './prompt.js'
-import fs from 'fs'
-import path from 'path'
 
 const openai = process.env.OPENAI_API_KEY 
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null
 
-// File path for storing analyzed jobs
-const STORAGE_FILE = path.join(process.cwd(), 'data', 'analyzed-jobs.json')
+// Initialize Redis client
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+})
 
-// Initialize storage directory if it doesn't exist
-if (!fs.existsSync(path.join(process.cwd(), 'data'))) {
-  fs.mkdirSync(path.join(process.cwd(), 'data'))
-}
-
-// Load existing analyzed jobs from file
-let analyzedJobs = new Map()
-try {
-  if (fs.existsSync(STORAGE_FILE)) {
-    const data = JSON.parse(fs.readFileSync(STORAGE_FILE, 'utf8'))
-    analyzedJobs = new Map(Object.entries(data))
-  }
-} catch (error) {
-  console.error('Error loading analyzed jobs:', error)
-}
-
-// Save analyzed jobs to file
-function saveAnalyzedJobs() {
+// Helper function to store job analysis in Redis
+async function storeAnalysis(id, analysis) {
   try {
-    const data = Object.fromEntries(analyzedJobs)
-    fs.writeFileSync(STORAGE_FILE, JSON.stringify(data, null, 2))
+    // Store with 7 day expiration
+    await redis.set(`job:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
+    return true
   } catch (error) {
-    console.error('Error saving analyzed jobs:', error)
+    console.error('Error storing analysis in Redis:', error)
+    return false
+  }
+}
+
+// Helper function to retrieve job analysis from Redis
+async function getAnalysis(id) {
+  try {
+    const analysis = await redis.get(`job:${id}`)
+    return analysis ? JSON.parse(analysis) : null
+  } catch (error) {
+    console.error('Error retrieving analysis from Redis:', error)
+    return null
   }
 }
 
@@ -194,8 +193,8 @@ export async function GET(request) {
   }
 
   try {
-    // Try to get the analysis from our storage
-    const analysis = analyzedJobs.get(id)
+    // Try to get the analysis from Redis
+    const analysis = await getAnalysis(id)
     
     if (!analysis) {
       return NextResponse.json({ 
@@ -256,7 +255,7 @@ export async function POST(request) {
 
     // Use OpenAI to analyze the job posting
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4",
       messages: [
         {
           role: "system",
@@ -300,15 +299,19 @@ export async function POST(request) {
       // Generate a unique ID for this analysis
       const analysisId = Math.random().toString(36).substring(2, 15)
       
-      // Store the analysis with the generated ID
-      analyzedJobs.set(analysisId, {
+      // Store the analysis in Redis
+      const analysisData = {
         ...parsedContent,
         jobContent: content,
         createdAt: new Date().toISOString()
-      })
-
-      // Save to file
-      saveAnalyzedJobs()
+      }
+      
+      const stored = await storeAnalysis(analysisId, analysisData)
+      if (!stored) {
+        return NextResponse.json({ 
+          error: 'Failed to store job analysis. Please try again.' 
+        }, { status: 500 })
+      }
 
       // Return both the analysis and the ID
       return NextResponse.json({

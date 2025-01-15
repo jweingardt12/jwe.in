@@ -1,6 +1,5 @@
-'use client';
-
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
+import React from "react";
 import { motion } from "framer-motion";
 
 export const BackgroundGradient = ({
@@ -18,7 +17,7 @@ export const BackgroundGradient = ({
     },
   };
   return (
-    <div className={cn("relative group rounded-2xl", containerClassName)}>
+    (<div className={cn("relative p-[4px] group", containerClassName)}>
       <motion.div
         variants={animate ? variants : undefined}
         initial={animate ? "initial" : undefined}
@@ -33,16 +32,33 @@ export const BackgroundGradient = ({
             : undefined
         }
         style={{
-          backgroundSize: animate ? "200% 200%" : undefined,
+          backgroundSize: animate ? "400% 400%" : undefined,
         }}
         className={cn(
-          "absolute -inset-2.5 rounded-[1.2rem] opacity-0 group-hover:opacity-100 blur-md",
-          "bg-gradient-to-r from-cyan-500/40 via-purple-500/40 to-cyan-500/40"
-        )}
-      />
-      <div className={cn("relative z-[1] rounded-2xl overflow-hidden", className)}>
-        {children}
-      </div>
-    </div>
+          "absolute inset-0 rounded-3xl z-[1] opacity-60 group-hover:opacity-100 blur-xl  transition duration-500 will-change-transform",
+          " bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]"
+        )} />
+      <motion.div
+        variants={animate ? variants : undefined}
+        initial={animate ? "initial" : undefined}
+        animate={animate ? "animate" : undefined}
+        transition={
+          animate
+            ? {
+                duration: 5,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }
+            : undefined
+        }
+        style={{
+          backgroundSize: animate ? "400% 400%" : undefined,
+        }}
+        className={cn(
+          "absolute inset-0 rounded-3xl z-[1] will-change-transform",
+          "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]"
+        )} />
+      <div className={cn("relative z-10", className)}>{children}</div>
+    </div>)
   );
 };
