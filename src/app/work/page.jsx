@@ -367,7 +367,266 @@ const WorkContent = () => {
         </motion.div>
       )
     },
-    // ... rest of the timeline data ...
+    {
+      title: "2017 - 2020",
+      role: "Regional Manager",
+      logo: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-64 space-y-4 py-4"
+        >
+          <a href="https://www.ritual.co" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+            <Image
+              src={logoRitual}
+              alt="Ritual"
+              width={258}
+              height={20}
+              className="dark:invert object-contain w-auto h-full"
+            />
+          </a>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Food ordering and pickup platform</p>
+          <CompanyDetails>
+            <CompanyInfo 
+              industry="Food Tech"
+              size="500+"
+              location="Toronto, ON"
+              website="https://www.ritual.co"
+              tools={[
+                "SQL",
+                "Amplitude",
+                "Jira",
+                "Slack",
+                "Looker",
+                "G-Suite"
+              ]}
+              headlines={[
+                {
+                  title: "Ritual Raises $70M Series C",
+                  url: "https://techcrunch.com/2018/06/07/ritual-raises-70m-to-add-social-element-to-take-out-ordering/",
+                  publication: "TechCrunch"
+                },
+                {
+                  title: "Ritual Expands to Europe",
+                  url: "https://techcrunch.com/2019/04/23/ritual-launches-its-first-international-market/",
+                  publication: "TechCrunch"
+                }
+              ]}
+            />
+          </CompanyDetails>
+        </motion.div>
+      ),
+      content: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-4 pb-8"
+        >
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm font-normal leading-relaxed space-y-3">
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Impact:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Ritual?.impact?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Grew monthly active users by 300% across 15+ markets in first year.</li>
+                  <li>Increased restaurant partner retention by 40% through improved operational practices and support.</li>
+                  <li>Launched and scaled operations in 3 major US markets with $1M+ monthly GMV each.</li>
+                  <li>Built and managed a team of 4 City Managers across North America.</li>
+                </>
+              )}
+            </ul>
+            <div className="h-px bg-zinc-200 dark:bg-zinc-700/40 my-3" />
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Responsibilities:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Ritual?.responsibilities?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Led operations and growth strategy for 15+ markets including Washington D.C., Boston, and Philadelphia.</li>
+                  <li>Served as voice of customer to product and engineering teams, influencing roadmap priorities.</li>
+                  <li>Managed geographically dispersed team of city managers throughout North America.</li>
+                  <li>Orchestrated multi-city promotional campaigns with Apple, driving significant user acquisition.</li>
+                  <li>Developed and executed local marketing strategies to drive both supply and demand growth.</li>
+                </>
+              )}
+            </ul>
+          </div>
+        </motion.div>
+      )
+    },
+    {
+      title: "2016 - 2017",
+      role: "Growth Operations Manager",
+      logo: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-64 space-y-4 py-4"
+        >
+          <a href="https://www.countable.us" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+            <Image
+              src={logoCountable}
+              alt="Countable"
+              width={258}
+              height={20}
+              className="dark:invert object-contain w-auto h-full"
+            />
+          </a>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Civic engagement platform</p>
+          <CompanyDetails>
+            <CompanyInfo 
+              industry="Civic Tech"
+              size="50+"
+              location="Washington, DC"
+              website="https://www.countable.us"
+              tools={[
+                "SQL",
+                "Mixpanel",
+                "Trello",
+                "Slack",
+                "G-Suite"
+              ]}
+              headlines={[
+                {
+                  title: "Countable Makes Civic Engagement Easy",
+                  url: "https://techcrunch.com/2016/10/11/countable-makes-learning-about-politics-easier/",
+                  publication: "TechCrunch"
+                }
+              ]}
+            />
+          </CompanyDetails>
+        </motion.div>
+      ),
+      content: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-4 pb-8"
+        >
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm font-normal leading-relaxed space-y-3">
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Impact:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Countable?.impact?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Secured featured placement on App Store multiple times following 2016 election.</li>
+                  <li>Led D.C. business development efforts, pitching and closing partnerships with nonprofits and NGOs representing 150%+ growth.</li>
+                  <li>Created editorial practices and content to drive user acquisition and engagement.</li>
+                </>
+              )}
+            </ul>
+            <div className="h-px bg-zinc-200 dark:bg-zinc-700/40 my-3" />
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Responsibilities:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Countable?.responsibilities?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Led marketing and growth strategy for leading iOS/Android civic engagement application.</li>
+                  <li>Developed and implemented editorial, support, and marketing initiatives.</li>
+                  <li>Streamlined operations using low-code tools.</li>
+                  <li>Orchestrated cross-functional collaborations and established strategic partnerships.</li>
+                </>
+              )}
+            </ul>
+          </div>
+        </motion.div>
+      )
+    },
+    {
+      title: "2014 - 2016",
+      role: "Launch/Marketing/Operations Manager",
+      logo: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-64 space-y-4 py-4"
+        >
+          <a href="https://www.uber.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+            <Image
+              src={logoUber}
+              alt="Uber"
+              width={258}
+              height={20}
+              className="dark:invert object-contain w-auto h-full"
+            />
+          </a>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Transportation and delivery platform</p>
+          <CompanyDetails>
+            <CompanyInfo 
+              industry="Transportation"
+              size="10,000+"
+              location="Raleigh-Durham, NC"
+              website="https://www.uber.com"
+              tools={[
+                "SQL",
+                "Excel",
+                "Salesforce",
+                "Slack",
+                "G-Suite"
+              ]}
+              headlines={[
+                {
+                  title: "Uber Launches in North Carolina",
+                  url: "https://www.wral.com/uber-launches-ride-sharing-service-in-durham-chapel-hill/13677970/",
+                  publication: "WRAL"
+                }
+              ]}
+            />
+          </CompanyDetails>
+        </motion.div>
+      ),
+      content: (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-4 pb-8"
+        >
+          <div className="text-zinc-600 dark:text-zinc-400 text-sm font-normal leading-relaxed space-y-3">
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Impact:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Uber?.impact?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Successfully launched and scaled two major markets in North Carolina.</li>
+                  <li>Established key partnerships with major universities and businesses.</li>
+                </>
+              )}
+            </ul>
+            <div className="h-px bg-zinc-200 dark:bg-zinc-700/40 my-3" />
+            <div className="text-base font-semibold text-zinc-800 dark:text-zinc-200">Responsibilities:</div>
+            <ul className="list-disc pl-4 space-y-3 leading-snug">
+              {jobData?.companyMatches?.Uber?.responsibilities?.map((point, index) => (
+                <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
+              )) || (
+                <>
+                  <li>Led market launches in Raleigh-Durham and Charlotte.</li>
+                  <li>Acted as liaison between local regulators and corporate legal team.</li>
+                  <li>Developed partnerships with local businesses and universities (Duke, UNC, NC State).</li>
+                  <li>Led marketing initiatives and demand generation in North Carolina.</li>
+                  <li>Executed creative campaigns including Uber Ice Cream and Uber Kittens.</li>
+                </>
+              )}
+            </ul>
+          </div>
+        </motion.div>
+      )
+    }
   ]
 
   useEffect(() => {
