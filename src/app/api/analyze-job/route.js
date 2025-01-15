@@ -5,6 +5,8 @@ const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null
 
+const analyzedJobs = new Map();
+
 function cleanHtmlContent(html) {
   // Remove script and style tags and their contents
   html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -59,6 +61,31 @@ async function fetchJobContent(url) {
       return content
     }
 
+    // Special handling for Ashby job board URLs
+    if (url.includes('jobs.ashbyhq.com')) {
+      // Extract the job ID from the URL
+      const jobId = url.split('/').pop().split('?')[0]
+      // Use Ashby's API endpoint to fetch the job data
+      const apiUrl = `https://jobs.ashbyhq.com/api/public-job/${jobId}`
+      const response = await fetch(apiUrl)
+      
+      if (!response.ok) {
+        throw new Error('Could not fetch job details from Ashby. Please try pasting the job description directly.')
+      }
+      
+      const data = await response.json()
+      // Combine relevant fields into a single text
+      const content = [
+        `Job Title: ${data.title || ''}`,
+        `Company: ${data.organizationName || ''}`,
+        `Description: ${data.descriptionHtml || data.description || ''}`,
+        `Requirements: ${data.requirements || ''}`,
+        `Location: ${data.locationName || ''}`
+      ].filter(Boolean).join('\n\n')
+      
+      return cleanHtmlContent(content)
+    }
+
     // Default handling for other URLs
     const response = await fetch(url, {
       headers: {
@@ -84,6 +111,32 @@ async function fetchJobContent(url) {
   }
 }
 
+export async function GET(request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  
+  if (!id) {
+    return NextResponse.json({ error: 'No job ID provided' }, { status: 400 })
+  }
+
+  try {
+    // Try to get the analysis from our storage
+    const analysis = analyzedJobs.get(id)
+    
+    if (!analysis) {
+      return NextResponse.json({ 
+        error: 'Job analysis not found. Please generate a new analysis.' 
+      }, { status: 404 })
+    }
+
+    // Return the stored analysis
+    return NextResponse.json(analysis)
+  } catch (error) {
+    console.error('Error in GET handler:', error)
+    return NextResponse.json({ error: 'Failed to retrieve job analysis' }, { status: 500 })
+  }
+}
+
 export async function POST(request) {
   try {
     if (!openai) {
@@ -94,7 +147,7 @@ export async function POST(request) {
     }
 
     const body = await request.json()
-    console.log('Request body:', body) // Log the request body
+    console.log('Request body:', body)
 
     const { jobUrl, jobContent } = body
 
@@ -136,7 +189,7 @@ export async function POST(request) {
           content: `You are me (Jason) writing about my experience and fit for job postings. Write in first-person voice.
           Important: 
           - Always refer to me as "Jason" (never use my last name)
-          - Always write in first-person (use "I", "my", "me")
+          - Always write in the third-person (use "j
           - Never use the word 'innovative' - instead use more specific terms like 'forward-thinking', 'transformative', 'impactful', or 'groundbreaking'
           - Never use generic phrases like "aligning with mission", "passionate about the mission", "culture fit", or similar vague statements
           - Always focus on concrete achievements, specific metrics, and real experience
@@ -264,15 +317,13 @@ export async function POST(request) {
     console.log('Raw OpenAI response:', completion.choices[0].message.content)
 
     try {
-      // Clean up the response content by removing markdown code block markers
       const cleanContent = completion.choices[0].message.content
-        .replace(/```json\n/, '')  // Remove opening code block
-        .replace(/\n```$/, '')     // Remove closing code block
+        .replace(/```json\n/, '')
+        .replace(/\n```$/, '')
         .trim()
 
       const analysis = JSON.parse(cleanContent)
       
-      // Validate the response
       if (!analysis.bulletPoints?.length || analysis.bulletPoints.length < 3) {
         console.error('Invalid bullet points:', analysis.bulletPoints)
         return NextResponse.json({ 
@@ -287,14 +338,24 @@ export async function POST(request) {
         }, { status: 400 })
       }
 
-      // Return both the analysis and the job content
-      return NextResponse.json({
+      // Generate a unique ID for this analysis
+      const analysisId = Math.random().toString(36).substring(2, 15)
+      
+      // Store the analysis with the generated ID
+      analyzedJobs.set(analysisId, {
         ...analysis,
-        jobContent: content // Include the job content in the response
+        jobContent: content,
+        createdAt: new Date().toISOString()
+      })
+
+      // Return both the analysis and the ID
+      return NextResponse.json({
+        id: analysisId,
+        ...analysis,
+        jobContent: content
       })
     } catch (parseError) {
       console.error('Error parsing OpenAI response:', parseError)
-      console.error('Raw response content:', completion.choices[0].message.content)
       return NextResponse.json({ 
         error: 'Failed to parse AI response. Please try again.' 
       }, { status: 500 })
