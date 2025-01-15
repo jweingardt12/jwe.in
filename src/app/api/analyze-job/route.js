@@ -235,7 +235,7 @@ export async function POST(request) {
         },
         {
           role: "user",
-          content: `Analyze this job posting content: ${content}`
+          content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
         }
       ],
       temperature: 0.7,
@@ -251,14 +251,20 @@ export async function POST(request) {
         .replace(/\n```$/, '')
         .trim()
 
-      const analysis = JSON.parse(cleanContent)
-      
+      let parsedContent;
       try {
-        validateAnalysis(analysis);
-      } catch (validationError) {
-        console.error('Validation error:', validationError.message)
+        parsedContent = JSON.parse(cleanContent);
+      } catch (parseError) {
+        console.error('Error parsing OpenAI response:', parseError)
         return NextResponse.json({ 
-          error: validationError.message
+          error: 'Could not extract job details. Please ensure the URL points to a specific job posting.' 
+        }, { status: 400 })
+      }
+
+      // Check if the response indicates an error
+      if (parsedContent.error) {
+        return NextResponse.json({ 
+          error: parsedContent.message || 'Could not extract job details from the provided content.' 
         }, { status: 400 })
       }
 
@@ -267,7 +273,7 @@ export async function POST(request) {
       
       // Store the analysis with the generated ID
       analyzedJobs.set(analysisId, {
-        ...analysis,
+        ...parsedContent,
         jobContent: content,
         createdAt: new Date().toISOString()
       })
@@ -275,7 +281,7 @@ export async function POST(request) {
       // Return both the analysis and the ID
       return NextResponse.json({
         id: analysisId,
-        ...analysis,
+        ...parsedContent,
         jobContent: content
       })
     } catch (parseError) {

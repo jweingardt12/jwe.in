@@ -182,10 +182,10 @@ const TldrCard = ({ jobData, isLoading }) => {
           minSize={0.8}
           maxSize={1.4}
         />
-        <div className="relative p-6">
-          <div className="relative flex flex-col mb-4">
+        <div className="relative p-4">
+          <div className="relative flex flex-col mb-2">
             <div className="flex items-start justify-between">
-              <h3 className="text-xl font-bold text-purple-950 dark:text-purple-100 pr-8">
+              <h3 className="text-lg font-bold text-purple-950 dark:text-purple-100 pr-8">
                 ✨ TL;DR - Why I'm a Great Fit for {jobData.companyName || 'this role'}
               </h3>
               <div className="group relative">
@@ -196,23 +196,24 @@ const TldrCard = ({ jobData, isLoading }) => {
               </div>
             </div>
           </div>
-          <p className="text-base text-purple-950/90 dark:text-purple-100/90 mb-4 font-medium">
+          <p className="text-sm text-purple-950/90 dark:text-purple-100/90 mb-3">
             {jobData.introText}
           </p>
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {jobData.bulletPoints.map((point, index) => {
               const [headline, ...rest] = point.split('**').filter(Boolean);
+              const [emoji, title] = headline.split(' ');
               const content = rest.join('').replace(':', '');
               
               return (
                 <li 
                   key={index}
-                  className="flex items-start gap-2 text-base"
+                  className="flex items-start gap-1.5 text-sm"
                 >
-                  <span className="text-purple-500 dark:text-purple-400 mt-1.5 text-xs">■</span>
+                  <span className="text-purple-500 dark:text-purple-400 mt-1 text-xs">■</span>
                   <div>
                     <span className="font-bold text-purple-950 dark:text-purple-100">
-                      {headline}
+                      {emoji} {title}:
                     </span>
                     <span className="text-zinc-700 dark:text-zinc-300 ml-1">
                       {content}
@@ -223,12 +224,12 @@ const TldrCard = ({ jobData, isLoading }) => {
             })}
           </ul>
           {jobData.relevantSkills?.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-purple-200/30 dark:border-purple-500/30">
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-3 pt-3 border-t border-purple-200/30 dark:border-purple-500/30">
+              <div className="flex flex-wrap gap-1.5">
                 {jobData.relevantSkills.map((skill, index) => (
                   <span 
                     key={index}
-                    className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-purple-100/80 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
+                    className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-100/80 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
                   >
                     {skill}
                   </span>
