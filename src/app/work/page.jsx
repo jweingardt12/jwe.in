@@ -248,6 +248,22 @@ const WorkContent = () => {
   const searchParams = useSearchParams()
   const jobId = searchParams.get('job')
 
+  const handleFaqOpen = (value) => {
+    if (value) {
+      const questions = {
+        'item-1': 'What type of roles are you interested in?',
+        'item-2': 'What\'s your management style?',
+        'item-3': 'How do you approach product development?',
+        'item-4': 'What\'s your experience with remote teams?',
+        'item-5': 'What industries have you worked in?'
+      }
+      const event = new CustomEvent('openpanel', { 
+        detail: { question: questions[value] }
+      })
+      window.dispatchEvent(event)
+    }
+  }
+
   const timelineData = [
     {
       title: "2021 - Present",
