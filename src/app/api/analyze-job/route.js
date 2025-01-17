@@ -1,12 +1,55 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { Redis } from '@upstash/redis'
 import { SYSTEM_PROMPT } from './prompt.js'
 
 const openai = process.env.OPENAI_API_KEY 
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null
 
-const analyzedJobs = new Map();
+// Initialize Redis client with proper environment variables
+const redis = new Redis({
+  url: process.env.STORAGE_KV_REST_API_URL,
+  token: process.env.STORAGE_KV_REST_API_TOKEN,
+})
+
+// Helper function to store job analysis in Redis
+async function storeAnalysis(id, analysis) {
+  try {
+    // Store with 7 day expiration
+    await redis.set(`job:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
+    return true
+  } catch (error) {
+    console.error('Error storing analysis in Redis:', error)
+    return false
+  }
+}
+
+// Helper function to retrieve job analysis from Redis
+async function getAnalysis(id) {
+  try {
+    console.log('Attempting to get analysis for ID:', id)
+    const analysis = await redis.get(`job:${id}`)
+    console.log('Raw Redis response:', analysis)
+    
+    if (!analysis) {
+      console.log('No analysis found for ID:', id)
+      return null
+    }
+    
+    // Handle case where data might already be parsed
+    const parsedData = typeof analysis === 'string' ? JSON.parse(analysis) : analysis
+    console.log('Parsed analysis data:', parsedData)
+    
+    return {
+      id,
+      ...parsedData
+    }
+  } catch (error) {
+    console.error('Error retrieving analysis from Redis:', error)
+    return null
+  }
+}
 
 function cleanHtmlContent(html) {
   // Remove script and style tags and their contents
@@ -156,6 +199,9 @@ function validateAnalysis(analysis) {
   return true;
 }
 
+// Set longer timeout for this route
+export const maxDuration = 30 // 30 seconds
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
@@ -165,8 +211,12 @@ export async function GET(request) {
   }
 
   try {
-    // Try to get the analysis from our storage
-    const analysis = analyzedJobs.get(id)
+    console.log('GET request for job ID:', id)
+    console.log('Redis URL configured:', !!process.env.STORAGE_KV_REST_API_URL)
+    console.log('Redis token configured:', !!process.env.STORAGE_KV_REST_API_TOKEN)
+    
+    // Try to get the analysis from Redis
+    const analysis = await getAnalysis(id)
     
     if (!analysis) {
       return NextResponse.json({ 
@@ -225,70 +275,95 @@ export async function POST(request) {
 
     console.log('Making OpenAI request with content length:', content.length)
 
-    // Use OpenAI to analyze the job posting
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT
-        },
-        {
-          role: "user",
-          content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1000
-    })
-
-    console.log('OpenAI response received')
-    console.log('Raw OpenAI response:', completion.choices[0].message.content)
+    // Create AbortController for timeout
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 25000) // 25 second timeout
 
     try {
-      const cleanContent = completion.choices[0].message.content
-        .replace(/```json\n/, '')
-        .replace(/\n```$/, '')
-        .trim()
+      // Use OpenAI to analyze the job posting
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: SYSTEM_PROMPT
+          },
+          {
+            role: "user",
+            content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      }, {
+        signal: controller.signal
+      })
 
-      let parsedContent;
+      clearTimeout(timeoutId)
+      console.log('OpenAI response received')
+      console.log('Raw OpenAI response:', completion.choices[0].message.content)
+
       try {
-        parsedContent = JSON.parse(cleanContent);
+        const cleanContent = completion.choices[0].message.content
+          .replace(/```json\n/, '')
+          .replace(/\n```$/, '')
+          .trim()
+
+        let parsedContent;
+        try {
+          parsedContent = JSON.parse(cleanContent);
+        } catch (parseError) {
+          console.error('Error parsing OpenAI response:', parseError)
+          return NextResponse.json({ 
+            error: 'Could not extract job details. Please ensure the URL points to a specific job posting.' 
+          }, { status: 400 })
+        }
+
+        // Check if the response indicates an error
+        if (parsedContent.error) {
+          return NextResponse.json({ 
+            error: parsedContent.message || 'Could not extract job details from the provided content.' 
+          }, { status: 400 })
+        }
+
+        // Generate a unique ID for this analysis
+        const analysisId = Math.random().toString(36).substring(2, 15)
+        
+        // Store the analysis in Redis
+        const analysisData = {
+          ...parsedContent,
+          jobContent: content,
+          createdAt: new Date().toISOString()
+        }
+        
+        const stored = await storeAnalysis(analysisId, analysisData)
+        if (!stored) {
+          return NextResponse.json({ 
+            error: 'Failed to store job analysis. Please try again.' 
+          }, { status: 500 })
+        }
+
+        // Return both the analysis and the ID
+        return NextResponse.json({
+          id: analysisId,
+          ...parsedContent,
+          jobContent: content
+        })
       } catch (parseError) {
         console.error('Error parsing OpenAI response:', parseError)
         return NextResponse.json({ 
-          error: 'Could not extract job details. Please ensure the URL points to a specific job posting.' 
-        }, { status: 400 })
+          error: 'Failed to parse AI response. Please try again.' 
+        }, { status: 500 })
       }
-
-      // Check if the response indicates an error
-      if (parsedContent.error) {
+    } catch (error) {
+      clearTimeout(timeoutId)
+      if (error.name === 'AbortError') {
+        console.error('OpenAI request timed out')
         return NextResponse.json({ 
-          error: parsedContent.message || 'Could not extract job details from the provided content.' 
-        }, { status: 400 })
+          error: 'The analysis is taking longer than expected. Please try again with a shorter job description.' 
+        }, { status: 408 })
       }
-
-      // Generate a unique ID for this analysis
-      const analysisId = Math.random().toString(36).substring(2, 15)
-      
-      // Store the analysis with the generated ID
-      analyzedJobs.set(analysisId, {
-        ...parsedContent,
-        jobContent: content,
-        createdAt: new Date().toISOString()
-      })
-
-      // Return both the analysis and the ID
-      return NextResponse.json({
-        id: analysisId,
-        ...parsedContent,
-        jobContent: content
-      })
-    } catch (parseError) {
-      console.error('Error parsing OpenAI response:', parseError)
-      return NextResponse.json({ 
-        error: 'Failed to parse AI response. Please try again.' 
-      }, { status: 500 })
+      throw error // Re-throw other errors to be caught by outer catch block
     }
   } catch (error) {
     console.error('Error in POST handler:', error)

@@ -32,44 +32,11 @@ function CloseIcon(props) {
 }
 
 function MobileNavItem({ href, children }) {
-  const isWork = href === '/work'
   return (
     <li>
-      {isWork ? (
-        <div className="py-3">
-          <span className="block text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-2">Work</span>
-          <ul className="space-y-2 pl-4 border-l border-zinc-100 dark:border-zinc-800">
-            <li>
-              <Popover.Button as={Link} href="/work" className="block py-1 group">
-                <div className="text-base text-zinc-800 dark:text-zinc-200 group-hover:text-sky-500 dark:group-hover:text-sky-400">
-                  Overview
-                </div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-500">Curious? Start here.</p>
-              </Popover.Button>
-            </li>
-            <li>
-              <div className="block py-1">
-                <div className="text-base text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                  Process
-                </div>
-                <p className="text-sm text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-              </div>
-            </li>
-            <li>
-              <div className="block py-1">
-                <div className="text-base text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                  Projects
-                </div>
-                <p className="text-sm text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      ) : (
-        <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
-          {children}
-        </Popover.Button>
-      )}
+      <Popover.Button as={Link} href={href} className="block w-full py-3 text-lg font-semibold text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400">
+        {children}
+      </Popover.Button>
     </li>
   )
 }
@@ -79,53 +46,6 @@ function NavItem({ href, children }) {
   let isActive = href === '/work' 
     ? pathname.startsWith('/work')
     : pathname === href
-  const isWork = href === '/work'
-
-  if (isWork) {
-    return (
-      <li className="relative">
-        <div className={clsx(
-          "relative px-3 py-2 text-sm font-medium transition flex items-center gap-1 group",
-          pathname.startsWith('/work')
-            ? "text-sky-500 dark:text-sky-400"
-            : "text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400"
-        )}>
-          <Link href="/work">Work</Link>
-          <ChevronDownIcon className="h-3 w-3 transition-transform duration-300 group-hover:rotate-180" />
-          <div className="absolute left-1/2 top-full z-10 mt-1.5 w-72 -translate-x-1/2 transform opacity-0 invisible group-hover:opacity-100 group-hover:visible hover:opacity-100 hover:visible transition-all duration-300 delay-75 ease-out">
-            <div className="relative grid gap-1 bg-white p-3 dark:bg-zinc-800 transform origin-top scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-100 hover:opacity-100 transition-all duration-300 delay-75 ease-out rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
-              <Link 
-                href="/work" 
-                className="block rounded-lg transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 text-zinc-800 dark:text-zinc-200 hover:text-sky-500 dark:hover:text-sky-400"
-              >
-                <div className="p-2">
-                  <div className="text-sm font-medium">
-                    Overview
-                  </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-500">Curious? Start here.</p>
-                </div>
-              </Link>
-              <div className="block rounded-lg p-2 text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                <div className="text-sm font-medium">
-                  Process
-                </div>
-                <p className="text-xs text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-              </div>
-              <div className="block rounded-lg p-2 text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                <div className="text-sm font-medium">
-                  Projects
-                </div>
-                <p className="text-xs text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {pathname.startsWith('/work') && (
-          <span className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-sky-500/0 via-sky-500/40 to-sky-500/0 dark:from-sky-400/0 dark:via-sky-400/40 dark:to-sky-400/0" />
-        )}
-      </li>
-    )
-  }
 
   return (
     <li>
@@ -152,47 +72,7 @@ function DesktopNavigation(props) {
     <nav {...props}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
         <NavItem href="/about">About</NavItem>
-        <li className="relative">
-          <div className={clsx(
-            "relative px-3 py-2 text-sm font-medium transition flex items-center gap-1 group",
-            usePathname().startsWith('/work')
-              ? "text-sky-500 dark:text-sky-400"
-              : "text-zinc-800 hover:text-sky-500 dark:text-zinc-200 dark:hover:text-sky-400"
-          )}>
-            <Link href="/work">Work</Link>
-            <ChevronDownIcon className="h-3 w-3 transition-transform duration-300 group-hover:rotate-180" />
-            <div className="absolute left-1/2 top-full z-10 mt-1.5 w-72 -translate-x-1/2 transform opacity-0 invisible group-hover:opacity-100 group-hover:visible hover:opacity-100 hover:visible transition-all duration-300 delay-75 ease-out">
-              <div className="relative grid gap-1 bg-white p-3 dark:bg-zinc-800 transform origin-top scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-100 hover:opacity-100 transition-all duration-300 delay-75 ease-out rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
-                <Link 
-                  href="/work" 
-                  className="block rounded-lg transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 text-zinc-800 dark:text-zinc-200 hover:text-sky-500 dark:hover:text-sky-400"
-                >
-                  <div className="p-2">
-                    <div className="text-sm font-medium">
-                      Overview
-                    </div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-500">Curious? Start here.</p>
-                  </div>
-                </Link>
-                <div className="block rounded-lg p-2 text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                  <div className="text-sm font-medium">
-                    Process
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-                </div>
-                <div className="block rounded-lg p-2 text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
-                  <div className="text-sm font-medium">
-                    Projects
-                  </div>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">Coming soon...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          {usePathname().startsWith('/work') && (
-            <span className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-sky-500/0 via-sky-500/40 to-sky-500/0 dark:from-sky-400/0 dark:via-sky-400/40 dark:to-sky-400/0" />
-          )}
-        </li>
+        <NavItem href="/work">Work</NavItem>
         <NavItem href="/notes">Notes</NavItem>
         <NavItem href="/reading">Reading</NavItem>
       </ul>
