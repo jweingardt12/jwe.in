@@ -28,8 +28,23 @@ async function storeAnalysis(id, analysis) {
 // Helper function to retrieve job analysis from Redis
 async function getAnalysis(id) {
   try {
+    console.log('Attempting to get analysis for ID:', id)
     const analysis = await redis.get(`job:${id}`)
-    return analysis ? JSON.parse(analysis) : null
+    console.log('Raw Redis response:', analysis)
+    
+    if (!analysis) {
+      console.log('No analysis found for ID:', id)
+      return null
+    }
+    
+    // Handle case where data might already be parsed
+    const parsedData = typeof analysis === 'string' ? JSON.parse(analysis) : analysis
+    console.log('Parsed analysis data:', parsedData)
+    
+    return {
+      id,
+      ...parsedData
+    }
   } catch (error) {
     console.error('Error retrieving analysis from Redis:', error)
     return null
@@ -196,6 +211,10 @@ export async function GET(request) {
   }
 
   try {
+    console.log('GET request for job ID:', id)
+    console.log('Redis URL configured:', !!process.env.STORAGE_KV_REST_API_URL)
+    console.log('Redis token configured:', !!process.env.STORAGE_KV_REST_API_TOKEN)
+    
     // Try to get the analysis from Redis
     const analysis = await getAnalysis(id)
     

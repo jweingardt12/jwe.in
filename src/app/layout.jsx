@@ -3,6 +3,7 @@ import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
 import dynamic from 'next/dynamic'
 import { HighlightInit } from '@highlight-run/next/client'
+import { Toaster as SonnerToaster } from 'sonner'
 import './globals.css'
 import '@radix-ui/themes/styles.css'
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
             </div>
             <CommandPalette />
             <Toaster />
+            <SonnerToaster position="bottom-right" theme="system" />
             <Analytics />
             <SpeedInsights />
             <OpenPanelWrapper />

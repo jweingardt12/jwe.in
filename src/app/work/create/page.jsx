@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import { nanoid } from 'nanoid'
-import { ClipboardIcon as ClipboardIconOutline, CheckIcon, PencilIcon } from '@heroicons/react/24/outline'
+import { TldrCard } from '@/components/ui/tldr-card'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export default function CreatePage() {
   const [jobUrl, setJobUrl] = useState('')
@@ -14,47 +15,137 @@ export default function CreatePage() {
   const [selectedCard, setSelectedCard] = useState(null)
   const [copiedId, setCopiedId] = useState(null)
   const [editingCard, setEditingCard] = useState(null)
-  const [editForm, setEditForm] = useState(null)
-  const [isRegenerating, setIsRegenerating] = useState(null)
+  const [editedContent, setEditedContent] = useState({
+    introText: '',
+    bulletPoints: [],
+    relevantSkills: []
+  })
 
-  useEffect(() => {
-    // Load saved cards from localStorage
-    const loadSavedCards = () => {
-      const cards = Object.entries(localStorage)
-        .filter(([key]) => key.startsWith('job-analysis-'))
-        .map(([key, value]) => {
-          try {
-            const data = JSON.parse(value)
-            return {
-              id: key.replace('job-analysis-', ''),
-              ...data
+  const loadSavedCards = async () => {
+    try {
+      const response = await fetch('/api/job-analysis')
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Loaded cards from Redis:', data.map(card => ({ id: card.id, key: `job-analysis:${card.id}` })))
+        
+        // Create a Map to ensure unique entries by ID
+        const uniqueCards = new Map()
+        data.forEach(card => {
+          // Only include cards that have all required data
+          if (card && 
+              card.id && 
+              card.jobTitle && 
+              card.companyName && 
+              card.introText && 
+              card.bulletPoints && 
+              card.relevantSkills) {
+            // If we have multiple entries for the same ID, keep the most recent one
+            const existingCard = uniqueCards.get(card.id)
+            if (!existingCard || new Date(card.createdAt) > new Date(existingCard.createdAt)) {
+              uniqueCards.set(card.id, card)
             }
-          } catch (e) {
-            return null
           }
         })
-        .filter(Boolean)
-      setSavedCards(cards)
-    }
 
+        // Convert Map back to array and sort
+        const validCards = Array.from(uniqueCards.values())
+        const sortedData = validCards.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        )
+        
+        console.log('Filtered to unique cards:', sortedData.length)
+        setSavedCards(sortedData)
+      }
+    } catch (error) {
+      console.error('Error loading saved cards:', error)
+      setSavedCards([])
+    }
+  }
+
+  useEffect(() => {
     loadSavedCards()
   }, [])
+
+  const handleEdit = (card) => {
+    setEditingCard(card)
+    // Strip formatting from bullet points for editing
+    const strippedBulletPoints = card.bulletPoints.map(point => {
+      return point.split('**').pop().trim();
+    });
+    
+    setEditedContent({
+      introText: card.introText,
+      bulletPoints: strippedBulletPoints,
+      relevantSkills: [...card.relevantSkills]
+    })
+  }
+
+  const handleSaveEdit = async () => {
+    setIsLoading(true)
+    try {
+      // Format bullet points to include titles
+      const formattedBulletPoints = editedContent.bulletPoints.map((point, index) => {
+        const titles = ['📱 Mobile:', '🧠 AI/ML:', '📈 Growth:'];
+        return `**${titles[index]}** ${point}`;
+      });
+
+      // Save to Redis
+      const saveResponse = await fetch('/api/job-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jobId: editingCard.id,
+          data: {
+            id: editingCard.id,
+            jobTitle: editingCard.jobTitle,
+            companyName: editingCard.companyName,
+            introText: editedContent.introText,
+            bulletPoints: formattedBulletPoints,
+            relevantSkills: editedContent.relevantSkills,
+            jobContent: editingCard.jobContent,
+            createdAt: editingCard.createdAt,
+          },
+        }),
+      })
+
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save changes')
+      }
+
+      setEditingCard(null)
+      setEditedContent({
+        introText: '',
+        bulletPoints: [],
+        relevantSkills: []
+      })
+      toast.success('Changes saved successfully!')
+      
+      // Refresh the saved cards list
+      await loadSavedCards()
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setError(null)
+    setError('')
 
     try {
-      // Make API call to analyze job
       const response = await fetch('/api/analyze-job', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          jobUrl: jobUrl,
-          jobContent: jobDescription
+          jobUrl: jobUrl.trim(),
+          jobContent: jobDescription.trim(),
         }),
       })
 
@@ -64,163 +155,154 @@ export default function CreatePage() {
         throw new Error(data.error || 'Failed to analyze job')
       }
 
-      // Generate a short ID for the job
-      const jobId = Math.random().toString(36).substring(2, 8)
+      // If we're editing, use the existing ID
+      const jobId = editingCard ? editingCard.id : data.id
 
-      // Store the analysis data
-      const storeResponse = await fetch('/api/job-analysis', {
+      // Save to Redis
+      const saveResponse = await fetch('/api/job-analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           jobId,
-          data
+          data: {
+            id: jobId,
+            jobTitle: data.jobTitle,
+            companyName: data.companyName,
+            introText: data.introText,
+            bulletPoints: data.bulletPoints,
+            relevantSkills: data.relevantSkills,
+            jobContent: jobDescription.trim(),
+            createdAt: editingCard ? editingCard.createdAt : new Date().toISOString(),
+          },
         }),
       })
 
-      if (!storeResponse.ok) {
+      if (!saveResponse.ok) {
         throw new Error('Failed to save job analysis')
       }
 
-      // Add to saved cards
-      const newCard = {
-        id: jobId,
-        ...data
-      }
-      setSavedCards(prev => [newCard, ...prev])
-
-      // Clear form
+      // Update local state and refresh saved cards
+      setSelectedCard(data)
       setJobUrl('')
       setJobDescription('')
-      setIsLoading(false)
+      setEditingCard(null)
+      toast.success(editingCard ? 'Job analysis updated successfully!' : 'Job analysis created successfully!')
+      
+      // Refresh the saved cards list
+      await loadSavedCards()
     } catch (error) {
       console.error('Error:', error)
       setError(error.message)
+      toast.error(error.message)
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleDelete = (id) => {
-    localStorage.removeItem(`job-analysis-${id}`)
-    setSavedCards(prev => prev.filter(card => card.id !== id))
+  const handleCopyLink = async (id) => {
+    const shareUrl = `${window.location.origin}/work?job=${id}`
+    await navigator.clipboard.writeText(shareUrl)
+    setCopiedId(id)
+    setTimeout(() => setCopiedId(null), 2000)
+    toast.success('Share link copied to clipboard!')
   }
 
-  const handleCopy = async (id) => {
-    const shareUrl = `https://jwe.in/work?job=${id}`
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      setCopiedId(id)
-      setTimeout(() => setCopiedId(null), 2000) // Reset after 2 seconds
-    } catch (err) {
-      console.error('Failed to copy:', err)
+  const handleDelete = async (card) => {
+    if (!confirm('Are you sure you want to delete this analysis?')) {
+      return
     }
-  }
-
-  const handleEdit = (card) => {
-    setEditingCard(card.id)
-    setEditForm({
-      jobTitle: card.jobTitle,
-      companyName: card.companyName,
-      introText: card.introText,
-      bulletPoints: [...card.bulletPoints],
-      relevantSkills: [...card.relevantSkills]
-    })
-  }
-
-  const handleSaveEdit = (id) => {
-    // Update localStorage
-    const updatedCard = {
-      ...savedCards.find(card => card.id === id),
-      ...editForm,
-      lastEdited: new Date().toISOString()
-    }
-    localStorage.setItem(`job-analysis-${id}`, JSON.stringify(updatedCard))
-
-    // Update state
-    setSavedCards(prev => prev.map(card => 
-      card.id === id ? updatedCard : card
-    ))
-
-    // Reset edit state
-    setEditingCard(null)
-    setEditForm(null)
-  }
-
-  const handleCancelEdit = () => {
-    setEditingCard(null)
-    setEditForm(null)
-  }
-
-  const handleBulletPointChange = (index, value) => {
-    setEditForm(prev => ({
-      ...prev,
-      bulletPoints: prev.bulletPoints.map((point, i) => 
-        i === index ? value : point
-      )
-    }))
-  }
-
-  const handleSkillChange = (index, value) => {
-    setEditForm(prev => ({
-      ...prev,
-      relevantSkills: prev.relevantSkills.map((skill, i) => 
-        i === index ? value : skill
-      )
-    }))
-  }
-
-  const handleRegenerate = async (card) => {
-    setIsRegenerating(card.id)
-    setError('')
 
     try {
-      const response = await fetch('/api/analyze-job', {
-        method: 'POST',
+      console.log('Attempting to delete card with ID:', card.id)
+      // Attempt to delete the card
+      const deleteResponse = await fetch(`/api/job-analysis?id=${card.id}`, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          jobUrl: card.originalUrl,
-          jobContent: card.jobContent
-        }),
+        }
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to regenerate analysis')
-      }
+      const responseData = await deleteResponse.json()
+      console.log('Delete response:', { status: deleteResponse.status, data: responseData })
 
-      const data = await response.json()
-      
-      // Save to localStorage with the existing ID
-      const updatedCard = {
-        ...data,
-        id: card.id,
-        originalUrl: card.originalUrl,
-        jobContent: card.jobContent,
-        createdAt: card.createdAt,
-        lastEdited: new Date().toISOString()
+      // If we get a 404 or success, remove from UI
+      if (deleteResponse.status === 404 || deleteResponse.ok) {
+        setSavedCards(prev => prev.filter(c => c.id !== card.id))
+        toast.success('Analysis deleted successfully!')
+        // Refresh the list to ensure we're in sync with Redis
+        await loadSavedCards()
+      } else {
+        throw new Error(responseData.error || 'Failed to delete job analysis')
       }
-      
-      localStorage.setItem(`job-analysis-${card.id}`, JSON.stringify(updatedCard))
-
-      // Update state
-      setSavedCards(prev => prev.map(c => 
-        c.id === card.id ? updatedCard : c
-      ))
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setIsRegenerating(null)
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error(error.message)
+      // Refresh the list to ensure UI is in sync
+      await loadSavedCards()
     }
+  }
+
+  const renderCard = (card) => {
+    const isEditing = editingCard?.id === card.id
+
+    if (isEditing) {
+      return (
+        <div className="relative bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Intro Text</label>
+              <textarea
+                value={editedContent.introText}
+                onChange={(e) => setEditedContent(prev => ({ ...prev, introText: e.target.value }))}
+                className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
+                rows={2}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Bullet Points</label>
+              {editedContent.bulletPoints.map((point, index) => (
+                <textarea
+                  key={index}
+                  value={point}
+                  onChange={(e) => {
+                    const newPoints = [...editedContent.bulletPoints]
+                    newPoints[index] = e.target.value
+                    setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
+                  }}
+                  className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 mb-2"
+                  rows={2}
+                />
+              ))}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Skills</label>
+              <textarea
+                value={editedContent.relevantSkills.join(', ')}
+                onChange={(e) => {
+                  const skills = e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                  setEditedContent(prev => ({ ...prev, relevantSkills: skills }))
+                }}
+                className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
+                rows={2}
+                placeholder="Separate skills with commas"
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <TldrCard data={card} />
   }
 
   return (
     <SimpleLayout>
-      <div className="space-y-10">
+      <div className="space-y-10 max-w-5xl mx-auto">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100">
-            Create Job Card
+            {editingCard ? 'Edit Job Card' : 'Create Job Card'}
           </h2>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
@@ -249,233 +331,121 @@ export default function CreatePage() {
                 placeholder="Paste the job description here..."
               />
             </div>
-            {error && (
-              <div className="text-red-500 text-sm">
-                {error}
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={isLoading || (!jobUrl && !jobDescription)}
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-sky-600 dark:bg-sky-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 dark:hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:opacity-50"
-            >
-              {isLoading ? (
-                <span className="inline-flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Analyzing...
-                </span>
-              ) : (
-                'Create Card'
+            <div className="flex justify-end gap-4">
+              {editingCard && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingCard(null)
+                    setJobUrl('')
+                    setJobDescription('')
+                  }}
+                >
+                  Cancel Edit
+                </Button>
               )}
-            </button>
+              <Button
+                type="submit"
+                disabled={isLoading || (!jobUrl && !jobDescription)}
+                className="inline-flex justify-center"
+              >
+                {isLoading ? 'Analyzing...' : editingCard ? 'Update Analysis' : 'Create Analysis'}
+              </Button>
+            </div>
           </form>
+          {error && (
+            <div className="mt-4 text-sm text-red-600 dark:text-red-400">
+              {error}
+            </div>
+          )}
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 mb-6">
-            Saved Cards
-          </h2>
-          <div className="space-y-4">
-            {savedCards.map((card) => (
-              <div
-                key={card.id}
-                className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
-              >
-                <div className="flex justify-between items-start">
-                  {editingCard === card.id ? (
-                    <div className="w-full space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                          Company Name
-                        </label>
-                        <input
-                          type="text"
-                          value={editForm.companyName}
-                          onChange={(e) => setEditForm(prev => ({ ...prev, companyName: e.target.value }))}
-                          className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                          Job Title
-                        </label>
-                        <input
-                          type="text"
-                          value={editForm.jobTitle}
-                          onChange={(e) => setEditForm(prev => ({ ...prev, jobTitle: e.target.value }))}
-                          className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                          Intro Text
-                        </label>
-                        <textarea
-                          value={editForm.introText}
-                          onChange={(e) => setEditForm(prev => ({ ...prev, introText: e.target.value }))}
-                          rows={3}
-                          className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                          Bullet Points
-                        </label>
-                        {editForm.bulletPoints.map((point, index) => (
-                          <textarea
-                            key={index}
-                            value={point}
-                            onChange={(e) => handleBulletPointChange(index, e.target.value)}
-                            rows={3}
-                            className="mt-1 mb-2 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
-                          />
-                        ))}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                          Relevant Skills
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {editForm.relevantSkills.map((skill, index) => (
-                            <input
-                              key={index}
-                              type="text"
-                              value={skill}
-                              onChange={(e) => handleSkillChange(index, e.target.value)}
-                              className="mt-1 block flex-1 min-w-[150px] rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleSaveEdit(card.id)}
-                          className="inline-flex justify-center rounded-md border border-transparent bg-sky-600 dark:bg-sky-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 dark:hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                        >
-                          Save Changes
-                        </button>
-                        <button
-                          onClick={handleCancelEdit}
-                          className="inline-flex justify-center rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 py-2 px-4 text-sm font-medium text-zinc-700 dark:text-zinc-300 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+        {selectedCard && (
+          <div className="mt-8">
+            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4">
+              Preview
+            </h3>
+            <div className="relative pb-16">
+              <TldrCard data={selectedCard} />
+              <div className="absolute -bottom-4 right-0">
+                <Button
+                  onClick={() => handleCopyLink(selectedCard.id)}
+                  className="inline-flex items-center"
+                >
+                  {copiedId === selectedCard.id ? 'Copied!' : 'Copy Share Link'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {savedCards.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4">
+              Recent Analyses
+            </h3>
+            <div className="space-y-16 w-full">
+              {savedCards.map((card) => (
+                <div key={card.id} className="relative pb-16">
+                  <div className="mb-8">
+                    {renderCard(card)}
+                  </div>
+                  <div className="absolute bottom-0 right-0 flex gap-2">
+                    {editingCard?.id === card.id ? (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setEditingCard(null)
+                            setEditedContent({
+                              introText: '',
+                              bulletPoints: [],
+                              relevantSkills: []
+                            })
+                          }}
+                          className="inline-flex items-center"
+                          variant="outline"
                         >
                           Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
-                        {card.companyName} - {card.jobTitle}
-                      </h3>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-                        Created: {new Date(card.createdAt).toLocaleDateString()}
-                        {card.lastEdited && ` • Edited: ${new Date(card.lastEdited).toLocaleDateString()}`}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                          Share URL: jwe.in/work?job={card.id}
-                        </p>
-                        <button
-                          onClick={() => handleCopy(card.id)}
-                          className="inline-flex items-center p-1 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
-                          title="Copy share URL"
+                        </Button>
+                        <Button
+                          onClick={handleSaveEdit}
+                          className="inline-flex items-center"
+                          disabled={isLoading}
                         >
-                          {copiedId === card.id ? (
-                            <CheckIcon className="h-5 w-5 text-green-500" />
-                          ) : (
-                            <ClipboardIconOutline className="h-5 w-5" />
-                          )}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  {!editingCard && (
-                    <>
-                      <button
-                        onClick={() => handleEdit(card)}
-                        className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-                        title="Edit card"
-                      >
-                        <PencilIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleRegenerate(card)}
-                        disabled={isRegenerating === card.id}
-                        className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 disabled:opacity-50 text-sm"
-                        title="Regenerate AI analysis"
-                      >
-                        {isRegenerating === card.id ? (
-                          <span className="inline-flex items-center">
-                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Regenerating...
-                          </span>
-                        ) : (
-                          'Regenerate'
-                        )}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDelete(card.id)}
-                    className="text-red-500 hover:text-red-700 text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-                {!editingCard && (
-                  <div className="mt-2">
-                    <button
-                      onClick={() => setSelectedCard(selectedCard === card.id ? null : card.id)}
-                      className="text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300"
-                    >
-                      {selectedCard === card.id ? 'Hide details' : 'Show details'}
-                    </button>
-                    {selectedCard === card.id && (
-                      <div className="mt-4 space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
-                        <p><strong>Original URL:</strong> {card.originalUrl}</p>
-                        <p><strong>Intro:</strong> {card.introText}</p>
-                        <div>
-                          <strong>Bullet Points:</strong>
-                          <ul className="list-disc pl-4 mt-1">
-                            {card.bulletPoints.map((point, i) => (
-                              <li key={i}>{point}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <strong>Relevant Skills:</strong>
-                          <div className="flex flex-wrap gap-2 mt-1">
-                            {card.relevantSkills.map((skill, i) => (
-                              <span
-                                key={i}
-                                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                          {isLoading ? 'Saving...' : 'Save Changes'}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={() => handleDelete(card)}
+                          className="inline-flex items-center"
+                          variant="outline"
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          onClick={() => handleEdit(card)}
+                          className="inline-flex items-center"
+                          variant="outline"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => handleCopyLink(card.id)}
+                          className="inline-flex items-center"
+                        >
+                          {copiedId === card.id ? 'Copied!' : 'Copy Share Link'}
+                        </Button>
+                      </>
                     )}
                   </div>
-                )}
-              </div>
-            ))}
-            {savedCards.length === 0 && (
-              <p className="text-zinc-500 dark:text-zinc-400 text-center py-4">
-                No saved cards yet
-              </p>
-            )}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </SimpleLayout>
   )

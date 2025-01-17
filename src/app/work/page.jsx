@@ -132,8 +132,8 @@ const TldrCard = ({ jobData, isLoading }) => {
   // Loading state
   if (isLoading) {
     return (
-      <BackgroundGradient className="overflow-hidden rounded-xl" containerClassName="w-full">
-        <div className="relative bg-white/5 dark:bg-white/10">
+      <BackgroundGradient className="overflow-hidden rounded-2xl" containerClassName="w-full">
+        <div className="relative bg-white/5 dark:bg-white/10 rounded-2xl">
           <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-[shimmer_3s_linear_infinite]" />
           <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-transparent to-transparent dark:from-purple-900/20 dark:via-transparent dark:to-transparent" />
           <SparklesCore
@@ -144,8 +144,29 @@ const TldrCard = ({ jobData, isLoading }) => {
             minSize={0.8}
             maxSize={1.4}
           />
-          <div className="relative p-4">
-            <LoadingSkeleton />
+          <div className="relative p-6">
+            <div className="animate-pulse space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="h-6 w-64 bg-purple-100/20 dark:bg-purple-900/20 rounded" />
+                <div className="h-5 w-5 bg-purple-100/20 dark:bg-purple-900/20 rounded-full" />
+              </div>
+              <div className="h-4 w-3/4 bg-purple-100/20 dark:bg-purple-900/20 rounded" />
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <div className="h-3 w-3 mt-1 bg-purple-100/20 dark:bg-purple-900/20 rounded" />
+                    <div className="flex-1 h-4 bg-purple-100/20 dark:bg-purple-900/20 rounded" />
+                  </div>
+                ))}
+              </div>
+              <div className="pt-4 mt-2 border-t border-purple-200/30 dark:border-purple-500/30">
+                <div className="flex flex-wrap gap-1.5">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="h-5 w-16 bg-purple-100/20 dark:bg-purple-900/20 rounded" />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </BackgroundGradient>
@@ -155,8 +176,8 @@ const TldrCard = ({ jobData, isLoading }) => {
   // Success state - only show if we have valid data
   if (jobData && !jobData.error) {
     return (
-      <BackgroundGradient className="overflow-hidden rounded-xl" containerClassName="w-full">
-        <div className="relative bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm">
+      <BackgroundGradient className="overflow-hidden rounded-2xl" containerClassName="w-full">
+        <div className="relative bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl">
           <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.3)_50%,transparent_75%,transparent_100%)] dark:bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.15)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-[shimmer_3s_linear_infinite]" />
           <SparklesCore
             className="absolute inset-0 h-full w-full"
@@ -166,20 +187,20 @@ const TldrCard = ({ jobData, isLoading }) => {
             minSize={0.8}
             maxSize={1.4}
           />
-          <div className="relative p-4">
+          <div className="relative p-6">
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="relative flex flex-col mb-2"
+              className="relative flex flex-col"
             >
               <div className="flex items-start justify-between">
                 <h3 className="text-lg font-bold text-purple-950 dark:text-purple-100 pr-8">
                   ✨ TL;DR - Why I'm a Great Fit for {jobData.companyName || 'this role'}
                 </h3>
-                <div className="group relative">
-                  <div className="text-sm text-purple-500 dark:text-purple-300 cursor-help">?</div>
-                  <div className="absolute right-0 w-48 px-2 py-1 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-sm rounded-lg shadow-xl text-xs text-zinc-600 dark:text-zinc-300 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-10">
+                <div className="relative">
+                  <div className="text-sm text-purple-500 dark:text-purple-300 cursor-help hover:text-purple-600 dark:hover:text-purple-200 peer">?</div>
+                  <div className="absolute right-0 w-48 px-2 py-1 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-sm rounded-lg shadow-xl text-xs text-zinc-600 dark:text-zinc-300 invisible peer-hover:visible opacity-0 peer-hover:opacity-100 transition-all duration-200 z-10">
                     This content is generated by AI based on your job posting
                   </div>
                 </div>
@@ -189,7 +210,7 @@ const TldrCard = ({ jobData, isLoading }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-sm text-purple-950/90 dark:text-purple-100/90 mb-3"
+              className="text-sm text-purple-950/90 dark:text-purple-100/90 mt-4 mb-4"
             >
               {jobData.introText}
             </motion.p>
@@ -322,14 +343,14 @@ const WorkContent = () => {
                   publication: "Food On Demand"
                 },
                 {
-                  title: "CloudKitchens Raises $850M at $15B Valuation",
-                  url: "https://www.wsj.com/articles/uber-co-founder-travis-kalanicks-cloudkitchens-valued-at-15-billion-in-new-funding-11636137601",
-                  publication: "Wall Street Journal"
+                  title: "Microsoft invests in Travis Kalanick's CloudKitchens start-up",
+                  url: "https://www.ft.com/content/5a768a67-1d0c-4c8a-9f14-de5ba06432ee",
+                  publication: "Financial Times"
                 },
                 {
-                  title: "The Rise of Ghost Kitchens",
-                  url: "https://www.nytimes.com/2019/08/14/technology/uber-ghost-kitchen.html",
-                  publication: "New York Times"
+                  title: "CloudKitchens has tripled its valuation to $15 billion",
+                  url: "https://archive.is/9pZ5f",
+                  publication: "Business Insider"
                 }
               ]}
             />
@@ -401,12 +422,11 @@ const WorkContent = () => {
           <CompanyDetails>
             <CompanyInfo 
               industry="Food Tech"
-              size="500+"
+              size="300+"
               location="Toronto, ON"
               website="https://www.ritual.co"
               tools={[
                 "SQL",
-                "Amplitude",
                 "Jira",
                 "Slack",
                 "Looker",
@@ -415,7 +435,7 @@ const WorkContent = () => {
               headlines={[
                 {
                   title: "Ritual Raises $70M Series C",
-                  url: "https://techcrunch.com/2018/06/07/ritual-raises-70m-to-add-social-element-to-take-out-ordering/",
+                  url: "https://techcrunch.com/2018/06/06/order-ahead-app-ritual-picks-up-70m-to-rethink-the-social-office-lunch-break/",
                   publication: "TechCrunch"
                 },
                 {
@@ -494,7 +514,7 @@ const WorkContent = () => {
             <CompanyInfo 
               industry="Civic Tech"
               size="50+"
-              location="Washington, DC"
+              location="San Francisco, CA"
               website="https://www.countable.us"
               tools={[
                 "SQL",
