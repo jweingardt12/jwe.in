@@ -209,7 +209,7 @@ const TldrCard = ({ jobData, isLoading }) => {
             <motion.p 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5 }}
               className="text-sm text-purple-950/90 dark:text-purple-100/90 mt-4 mb-4"
             >
               {jobData.introText}
@@ -225,7 +225,7 @@ const TldrCard = ({ jobData, isLoading }) => {
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
+                    transition={{ duration: 0.5 }}
                     className="flex items-start gap-1.5 text-sm"
                   >
                     <span className="text-purple-500 dark:text-purple-400 mt-1 text-xs">■</span>
@@ -245,7 +245,7 @@ const TldrCard = ({ jobData, isLoading }) => {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+                transition={{ duration: 0.5 }}
                 className="mt-3 pt-3 border-t border-purple-200/30 dark:border-purple-500/30"
               >
                 <div className="flex flex-wrap gap-1.5">
@@ -744,25 +744,25 @@ const WorkContent = () => {
                   <div className="space-y-1">
                     <motion.h1 
                       className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl lg:text-5xl"
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
                     >
                       What I've done.
                     </motion.h1>
                     <motion.h1 
                       className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl lg:text-5xl"
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 1, ease: [0.33, 1, 0.68, 1] }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
                     >
                       Where I've done it.
                     </motion.h1>
                     <motion.h1 
                       className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl lg:text-5xl"
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 2, ease: [0.33, 1, 0.68, 1] }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
                     >
                       Why it mattered.
                     </motion.h1>
@@ -772,7 +772,7 @@ const WorkContent = () => {
                       className="mt-6 text-base text-zinc-600 dark:text-zinc-400"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 3.5 }}
+                      transition={{ duration: 0.5 }}
                     >
                       I've built and scaled products at high-growth technology companies, focusing on product management, operations, and custom Slack emoji output.
                     </motion.p>
@@ -781,7 +781,7 @@ const WorkContent = () => {
                     className="mt-6 flex items-center gap-x-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 3.5 }}
+                    transition={{ duration: 0.5 }}
                   >
                     <button
                       type="button"
@@ -815,7 +815,7 @@ const WorkContent = () => {
                 className="relative w-full md:w-[500px] mt-8 md:mt-0"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 4 }}
+                transition={{ duration: 0.5 }}
               >
                 <CardStack items={cardItems} offset={10} scaleFactor={0.06} />
               </motion.div>
@@ -827,7 +827,7 @@ const WorkContent = () => {
             className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 3.5 }}
+            transition={{ duration: 0.5 }}
           />
 
           {/* Timeline */}
@@ -836,7 +836,7 @@ const WorkContent = () => {
             suppressHydrationWarning
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 3.5 }}
+            transition={{ duration: 0.5 }}
           >
             <Timeline data={timelineData} />
           </motion.div>
@@ -847,7 +847,7 @@ const WorkContent = () => {
             className="mt-24"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 3.5 }}
+            transition={{ duration: 0.5 }}
           >
             <div className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8" />
             <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-8">
@@ -902,7 +902,7 @@ const WorkContent = () => {
             className="mt-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 3.5 }}
+            transition={{ duration: 0.5 }}
           >
             <div className="relative overflow-hidden bg-black rounded-3xl">
               <SparklesCore
