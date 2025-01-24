@@ -2,6 +2,7 @@ import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
 import { Toaster } from '../components/ui/toaster'
 import dynamic from 'next/dynamic'
+import Script from 'next/script'
 import { HighlightInit } from '@highlight-run/next/client'
 import { Toaster as SonnerToaster } from 'sonner'
 import './globals.css'
@@ -47,6 +48,17 @@ export default function RootLayout({ children }) {
         }}
       />
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+        <head>
+          <Script
+            defer
+            data-domain="jwe.in"
+            src="https://plausible.jwein.me/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"
+            strategy="afterInteractive"
+          />
+          <Script id="plausible-setup" strategy="afterInteractive">
+            {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
+          </Script>
+        </head>
         <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
           <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
             <div className="relative flex w-full">
