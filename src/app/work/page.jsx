@@ -86,7 +86,7 @@ const cardItems = [
     content: "Jason is terrific. He brings an incredible amount of energy and creativity to his work. He is also incredibly talented, <highlight>a human Swiss army knife</highlight>, bringing an impressive and diverse variety of skills to his work, including: dev. skills, product marketing, GTM, and overall technical prowess.",
     name: "<a href='https://www.linkedin.com/in/bartmyers/' target='_blank' rel='noopener noreferrer'>Bart Myers</a>",
     designation: "CEO, Countable",
-    profileImage: "https://media.licdn.com/dms/image/v2/D5603AQFXNth9ysgJnA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715712288122?e=1742428800&v=beta&t=Da0IlNz1KO77SCyPRUENGzPBKKM3oYHIebbIMdWujw4"
+    profileImage: null
   },
   {
     id: 2,

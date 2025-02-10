@@ -196,12 +196,20 @@ export const CardStack = ({
                 <div className="flex items-center gap-3">
                   {card.profileImage && (
                     <div className="relative h-7 w-7 md:h-8 md:w-8 shrink-0">
-                      <Image
-                        src={card.profileImage}
-                        alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
-                        fill
-                        className="object-cover rounded-full"
-                      />
+                      {card.profileImage.includes('licdn.com') ? (
+                        <img
+                          src={card.profileImage}
+                          alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <Image
+                          src={card.profileImage}
+                          alt={`${card.name.replace(/<[^>]*>/g, '')} profile photo`}
+                          fill
+                          className="object-cover rounded-full"
+                        />
+                      )}
                     </div>
                   )}
                   <div className="flex-1">

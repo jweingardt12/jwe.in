@@ -9,9 +9,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'media.licdn.com'
+      },
+      {
+        protocol: 'https',
         hostname: '*'
       }
-    ]
+    ],
+    minimumCacheTTL: 60
   },
   swcMinify: true,
   experimental: {
@@ -29,7 +34,7 @@ const nextConfig = {
         net: false,
         tls: false,
         crypto: false
-        crypto: false
+
       };
     }
     
