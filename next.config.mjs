@@ -23,7 +23,8 @@ const nextConfig = {
     optimizePackageImports: ['@radix-ui/themes'],
     turbotrace: {
       memoryLimit: 4096
-    }
+    },
+    serverComponentsExternalPackages: ['ws']
   },
   webpack: (config, { isServer }) => {
     // Client-side configuration
@@ -33,8 +34,8 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-        crypto: false
-
+        crypto: false,
+        ws: false
       };
     }
     
@@ -43,7 +44,12 @@ const nextConfig = {
       ...config.resolve.alias,
       'next/dist/compiled/ws': require.resolve('ws')
     };
-    
+      };
+    }
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'ws']
+    }
+>>>>>>> f5d675b629f1b56d4ae7c1f82ed6b258c66b53cb
     return config;
   },
   typescript: {

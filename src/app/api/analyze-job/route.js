@@ -33,7 +33,7 @@ async function storeAnalysis(id, analysis) {
       return false;
     }
     // Store with 7 day expiration
-    await redis.set(`job:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
+    await redis.set(`job-analysis:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
     return true
   } catch (error) {
     console.error('Error storing analysis in Redis:', error)
@@ -50,7 +50,7 @@ async function getAnalysis(id) {
       return null;
     }
     console.log('Attempting to get analysis for ID:', id)
-    const analysis = await redis.get(`job:${id}`)
+    const analysis = await redis.get(`job-analysis:${id}`)
     console.log('Raw Redis response:', analysis)
     
     if (!analysis) {
@@ -295,6 +295,16 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No content available for analysis' }, { status: 400 })
     }
 
+    // Validate content has enough information
+    const minWords = 50; // Minimum words needed for a reasonable job posting
+    const words = content.trim().split(/\s+/).length;
+    if (words < minWords) {
+      console.error('Insufficient job details provided')
+      return NextResponse.json({ 
+        error: 'Please provide more details from the job posting. The provided content seems incomplete.' 
+      }, { status: 400 })
+    }
+
     console.log('Making OpenAI request with content length:', content.length)
 
     // Create AbortController for timeout
@@ -320,7 +330,7 @@ export async function POST(request) {
             },
             {
               role: "user",
-              content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
+              content: `Analyze this job posting content and create a response following the format specified in the system prompt: ${content}`
             }
           ],
           temperature: 0.7,
