@@ -5,7 +5,6 @@ import createMDX from '@next/mdx'
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
-    domains: ['*'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -26,16 +25,12 @@ const nextConfig = {
     }
     return config
   },
-  output: 'export',
-  distDir: '.next',
   typescript: {
     ignoreBuildErrors: true
   },
   eslint: {
     ignoreDuringBuilds: true
   },
-  generateBuildId: () => 'build',
-  trailingSlash: true,
   poweredByHeader: false
 }
 

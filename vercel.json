@@ -1,8 +1,7 @@
 {
   "framework": "nextjs",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "rm -f pnpm-lock.yaml && pnpm install && next build",
-  "outputDirectory": ".next/export",
+  "buildCommand": "pnpm install --no-frozen-lockfile && pnpm run build",
   "regions": ["iad1"],
   "git": {
     "deploymentEnabled": {

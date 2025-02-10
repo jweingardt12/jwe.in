@@ -38,6 +38,7 @@
     "@vercel/analytics": "^1.5.0",
     "@vercel/kv": "^3.0.0",
     "@vercel/speed-insights": "^1.2.0",
+    "autoprefixer": "^10.4.12",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -59,6 +60,7 @@
     "open-graph-scraper": "^6.8.3",
     "openai": "^4.28.0",
     "pg": "^8.11.3",
+    "postcss": "^8.4.12",
     "prismjs": "^1.29.0",
     "property-information": "^6.0.0",
     "qs": "^6.11.2",
@@ -74,15 +76,16 @@
     "sharp": "^0.33.5",
     "sonner": "^1.7.2",
     "space-separated-tokens": "^2.0.0",
+    "tailwindcss": "^3.4.1",
+    "@tailwindcss/typography": "^0.5.4",
     "tailwind-merge": "^2.6.0",
+    "tailwindcss-motion": "^1.0.0",
     "vaul": "^1.1.2",
     "xml2js": "^0.6.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@swc/helpers": "^0.5.15",
-    "@tailwindcss/typography": "^0.5.4",
-    "autoprefixer": "^10.4.12",
     "critters": "^0.0.20",
     "css-loader": "^7.1.2",
     "eslint": "^8.56.0",
@@ -91,8 +94,6 @@
     "postcss-loader": "^8.1.1",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "style-loader": "^4.0.0",
-    "tailwindcss": "^3.4.1",
-    "tailwindcss-motion": "^1.0.0"
+    "style-loader": "^4.0.0"
   }
 }
