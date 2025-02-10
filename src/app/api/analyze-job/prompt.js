@@ -137,4 +137,4 @@ Responsibilities:
 • Led marketing initiatives and demand generation in North Carolina
 • Executed creative campaigns including Uber Ice Cream and Uber Kittens
 
-You can also include that I built this website, using Next.js and Tailwind CSS, OpenAI API, and various complicated developer tools proving that I'm technical enough for any role.'
+You can also include that I built this website, using Next.js, Tailwind CSS, OpenAI API, and various complicated developer tools, proving that I'm technical enough for any role.`
