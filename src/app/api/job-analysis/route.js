@@ -1,39 +1,75 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
 
-// Log Redis configuration (without exposing sensitive data)
-console.log('Initializing Redis with URL:', process.env.STORAGE_KV_REST_API_URL ? 'configured' : 'missing')
+// Validate Redis configuration
+if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+  console.error('Redis configuration is missing. Please check environment variables STORAGE_KV_REST_API_URL and STORAGE_KV_REST_API_TOKEN');
+}
 
-const redis = new Redis({
-  url: process.env.STORAGE_KV_REST_API_URL,
-  token: process.env.STORAGE_KV_REST_API_TOKEN,
-})
+// Initialize Redis with error handling
+let redis;
+try {
+  redis = new Redis({
+    url: process.env.STORAGE_KV_REST_API_URL,
+    token: process.env.STORAGE_KV_REST_API_TOKEN,
+  });
+  console.log('Redis initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize Redis:', error);
+  // Don't throw here - we'll handle connection issues in the route handlers
+}
 
 // Get job analysis data
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const jobId = searchParams.get('id')
+    if (!redis) {
+      console.error('Redis client not initialized');
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const jobId = searchParams.get('id');
     
     // If no ID is provided, return all job analyses
     if (!jobId) {
-      console.log('Fetching all job analyses')
-      const keys = await redis.keys('job-analysis:*')
-      console.log('Found keys:', keys)
+      console.log('Fetching all job analyses');
+      let keys;
+      try {
+        keys = await redis.keys('job-analysis:*');
+      } catch (error) {
+        console.error('Failed to fetch keys:', error);
+        return NextResponse.json({ error: 'Failed to fetch job analyses' }, { status: 500 });
+      }
+      console.log('Found keys:', keys);
       
-      const analyses = await Promise.all(
-        keys.map(async (key) => {
-          const data = await redis.get(key)
-          const id = key.replace('job-analysis:', '')
-          const parsedData = typeof data === 'string' ? JSON.parse(data) : data
-          return {
-            id,
-            ...parsedData,
-          }
-        })
-      )
-      console.log('Returning analyses count:', analyses.length)
-      return NextResponse.json(analyses)
+      try {
+        const analyses = await Promise.all(
+          keys.map(async (key) => {
+            try {
+              const data = await redis.get(key);
+              if (!data) return null;
+              
+              const id = key.replace('job-analysis:', '');
+              const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+              return {
+                id,
+                ...parsedData,
+              };
+            } catch (error) {
+              console.error(`Failed to process key ${key}:`, error);
+              return null;
+            }
+          })
+        );
+        
+        // Filter out any null entries from failed processing
+        const validAnalyses = analyses.filter(Boolean);
+        console.log('Returning analyses count:', validAnalyses.length);
+        return NextResponse.json(validAnalyses);
+      } catch (error) {
+        console.error('Failed to process analyses:', error);
+        return NextResponse.json({ error: 'Failed to process job analyses' }, { status: 500 });
+      }
     }
 
     console.log('Fetching job analysis for ID:', jobId)
@@ -61,18 +97,40 @@ export async function GET(request) {
 // Store job analysis data
 export async function POST(request) {
   try {
-    const { jobId, data } = await request.json()
-    
-    if (!jobId || !data) {
-      return NextResponse.json({ error: 'Job ID and data are required' }, { status: 400 })
+    if (!redis) {
+      console.error('Redis client not initialized');
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
     }
 
-    // Store without expiration
-    await redis.set(`job-analysis:${jobId}`, JSON.stringify(data))
-    return NextResponse.json({ success: true })
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      console.error('Failed to parse request body:', error);
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+
+    const { jobId, data } = body;
+    
+    if (!jobId || !data) {
+      return NextResponse.json({ error: 'Job ID and data are required' }, { status: 400 });
+    }
+
+    try {
+      // Validate that data can be stringified
+      const jsonString = JSON.stringify(data);
+      
+      // Store without expiration
+      await redis.set(`job-analysis:${jobId}`, jsonString);
+      console.log('Successfully stored job analysis for ID:', jobId);
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Failed to store job analysis:', error);
+      return NextResponse.json({ error: 'Failed to store job analysis' }, { status: 500 });
+    }
   } catch (error) {
-    console.error('Error storing job analysis:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Unexpected error in POST handler:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
