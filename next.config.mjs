@@ -8,10 +8,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.ctfassets.net',
-      },
-      {
-        protocol: 'https',
         hostname: '*',
       },
       {
@@ -23,8 +19,7 @@ const nextConfig = {
   },
   swcMinify: true,
   experimental: {
-    optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons', 'lucide-react'],
-    optimizeCss: true
+    optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons', 'lucide-react']
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -44,7 +39,6 @@ const nextConfig = {
     }
     return config
   },
-  // Add output configuration to reduce build trace complexity
   output: 'standalone',
   typescript: {
     ignoreBuildErrors: true
@@ -52,6 +46,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true
   },
+  generateBuildId: () => 'build',
   poweredByHeader: false,
   compress: true
 }
