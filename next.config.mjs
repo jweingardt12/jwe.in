@@ -24,44 +24,32 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons', 'lucide-react'],
-    optimizeCss: true,
-    serverActions: true,
-    mdxRs: true
+    optimizeCss: true
   },
   webpack: (config, { isServer }) => {
     config.watchOptions = {
       followSymlinks: false,
       ignored: ['**/node_modules', '**/.git', '**/.next']
     }
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      moduleIds: 'deterministic',
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          commons: {
-            name: 'commons',
-            chunks: 'all',
-            minChunks: 2,
-            reuseExistingChunk: true
-          },
-          lib: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const packageName = module.context.match(/[\\/]node_modules[\\/]([^@\\/]+)/)?.[1] || '';
-              return `npm.${packageName.replace(/[\\/@]/g, '_')}`;
-            },
-            chunks: 'all',
-            minChunks: 1,
-            reuseExistingChunk: true,
-            priority: -10
-          }
-        }
+
+    if (!isServer) {
+      // Don't bundle server-only modules on client-side
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
+        path: false,
+        os: false,
+        'redis-parser': false
       }
     }
+
     return config
   },
   typescript: {
