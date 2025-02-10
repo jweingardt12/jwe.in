@@ -5,41 +5,29 @@ import createMDX from '@next/mdx'
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
+    domains: ['*'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*',
-      },
-      {
-        protocol: 'http',
-        hostname: '*',
-      },
-    ],
-    unoptimized: false
+        hostname: '*'
+      }
+    ]
   },
   swcMinify: true,
   experimental: {
-    optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons', 'lucide-react']
+    optimizePackageImports: ['@radix-ui/themes']
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-        stream: false,
-        http: false,
-        https: false,
-        zlib: false,
-        path: false,
-        os: false,
-        'redis-parser': false
-      }
+  webpack: (config) => {
+    config.resolve.fallback = {
+      fs: false,
+      net: false,
+      tls: false,
+      crypto: false
     }
     return config
   },
-  output: 'standalone',
+  output: 'export',
+  distDir: '.next',
   typescript: {
     ignoreBuildErrors: true
   },
@@ -47,8 +35,8 @@ const nextConfig = {
     ignoreDuringBuilds: true
   },
   generateBuildId: () => 'build',
-  poweredByHeader: false,
-  compress: true
+  trailingSlash: true,
+  poweredByHeader: false
 }
 
 const withMDX = createMDX({
