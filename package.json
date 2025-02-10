@@ -81,6 +81,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-motion": "^1.0.0",
     "vaul": "^1.1.2",
+    "ws": "^8.16.0",
     "xml2js": "^0.6.2",
     "zod": "^3.24.1"
   },
@@ -94,7 +95,6 @@
     "postcss-loader": "^8.1.1",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "style-loader": "^4.0.0",
-    "ws": "^8.16.0"
+    "style-loader": "^4.0.0"
   }
 }
