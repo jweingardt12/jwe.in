@@ -1,22 +1,6 @@
 {
-  "version": 2,
-  "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "maxLambdaSize": "50mb",
-        "memory": 3008,
-        "maxDuration": 60,
-        "buildTraceIncrementalMode": false,
-        "nodeVersion": "18.x"
-      }
-    }
-  ],
   "git": {
     "deploymentEnabled": {
       "main": true
