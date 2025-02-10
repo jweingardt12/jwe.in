@@ -1,0 +1,29 @@
+{
+  "framework": "nextjs",
+  "installCommand": "CI=false pnpm install --no-frozen-lockfile --no-verify-store-integrity",
+  "buildCommand": "NODE_OPTIONS='--max_old_space_size=4096' pnpm run build",
+  "regions": ["iad1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/feed",
+      "schedule": "0 0 * * *"
+    }
+  ],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "memory": 4096,
+        "nodeVersion": "18.x",
+        "installCommand": "CI=false pnpm install --no-frozen-lockfile --no-verify-store-integrity"
+      }
+    }
+  ]
+}

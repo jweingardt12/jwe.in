@@ -1,0 +1,13 @@
+.git
+.env*
+.vercel
+node_modules
+.next
+.turbo
+.cache
+dist
+build
+out
+README.md
+CHANGELOG.md
+LICENSE*
