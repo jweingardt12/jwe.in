@@ -32,8 +32,8 @@ async function storeAnalysis(id, analysis) {
       console.error('Redis client not initialized');
       return false;
     }
-    // Store with 7 day expiration
-    await redis.set(`job-analysis:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
+    // Store with 90 day expiration
+    await redis.set(`job-analysis:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 90 })
     return true
   } catch (error) {
     console.error('Error storing analysis in Redis:', error)

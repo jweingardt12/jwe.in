@@ -122,6 +122,9 @@ export default function CreatePage() {
       })
       toast.success('Changes saved successfully!')
       
+      // Add a small delay before refreshing to ensure Redis replication
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
       // Refresh the saved cards list
       await loadSavedCards()
     } catch (error) {
@@ -196,6 +199,9 @@ export default function CreatePage() {
       setJobDescription('')
       setEditingCard(null)
       toast.success(editingCard ? 'Job analysis updated successfully!' : 'Job analysis created successfully!')
+      
+      // Add a small delay before refreshing to ensure Redis replication
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Refresh the saved cards list
       await loadSavedCards()

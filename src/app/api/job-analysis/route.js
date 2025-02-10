@@ -9,13 +9,17 @@ if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOK
 // Initialize Redis with error handling
 let redis;
 try {
+  if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+    throw new Error('Redis configuration is missing');
+  }
   redis = new Redis({
     url: process.env.STORAGE_KV_REST_API_URL,
     token: process.env.STORAGE_KV_REST_API_TOKEN,
   });
-  console.log('Redis initialized successfully');
+  console.log('Redis initialized successfully with URL:', process.env.STORAGE_KV_REST_API_URL);
 } catch (error) {
-  console.error('Failed to initialize Redis:', error);
+  console.error('Failed to initialize Redis:', error.message);
+  console.error('Stack trace:', error.stack);
   // Don't throw here - we'll handle connection issues in the route handlers
 }
 
@@ -120,8 +124,8 @@ export async function POST(request) {
       // Validate that data can be stringified
       const jsonString = JSON.stringify(data);
       
-      // Store without expiration
-      await redis.set(`job-analysis:${jobId}`, jsonString);
+      // Store with 90-day expiration to match analyze-job route
+      await redis.set(`job-analysis:${jobId}`, jsonString, { ex: 60 * 60 * 24 * 90 });
       console.log('Successfully stored job analysis for ID:', jobId);
       return NextResponse.json({ success: true });
     } catch (error) {
