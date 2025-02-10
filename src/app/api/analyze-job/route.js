@@ -308,14 +308,25 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  // Set CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  }
+
+  // Handle OPTIONS request for CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { status: 204, headers })
+  }
+
   // Handle invalid methods
   if (request.method !== 'POST') {
-    return new NextResponse(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return NextResponse.json(
+      { error: 'Method not allowed' },
+      { status: 405, headers }
+    )
   }
 
   try {
