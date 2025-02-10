@@ -7,7 +7,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import remarkGfm from 'remark-gfm'
-import rehypePrism from '@mapbox/rehype-prism'
+import rehypePrismPlus from 'rehype-prism-plus'
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -113,7 +113,7 @@ export default async function Article({ params }) {
     const options = {
       mdxOptions: {
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [[rehypePrism, { ignoreMissing: true }]],
+        rehypePlugins: [[rehypePrismPlus, { ignoreMissing: true, showLineNumbers: true }]],
         format: 'mdx',
       },
     }
