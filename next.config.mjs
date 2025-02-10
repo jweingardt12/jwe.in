@@ -27,15 +27,19 @@ const nextConfig = {
     optimizeCss: true
   },
   webpack: (config, { isServer }) => {
+    // Optimize file watching
     config.watchOptions = {
       followSymlinks: false,
-      ignored: ['**/node_modules', '**/.git', '**/.next']
+      ignored: ['**/node_modules/**', '**/.git/**', '**/.next/**']
     }
+
+    // Optimize module resolution
+    config.resolve.symlinks = false
+    config.resolve.preferRelative = true
 
     if (!isServer) {
       // Don't bundle server-only modules on client-side
       config.resolve.fallback = {
-        ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
@@ -50,8 +54,15 @@ const nextConfig = {
       }
     }
 
+    // Optimize build traces collection
+    if (isServer) {
+      config.optimization.moduleIds = 'named'
+    }
+
     return config
   },
+  // Add output configuration to reduce build trace complexity
+  output: 'standalone',
   typescript: {
     ignoreBuildErrors: true
   },
