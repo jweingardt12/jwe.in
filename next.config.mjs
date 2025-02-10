@@ -24,7 +24,15 @@ const nextConfig = {
       fs: false,
       net: false,
       tls: false,
-      crypto: false
+      crypto: false,
+      'ws': false
+    }
+
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'next/dist/compiled/ws': 'ws'
+      }
     }
 
     // Optimize trace collection
