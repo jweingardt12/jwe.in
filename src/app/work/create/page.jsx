@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import { TldrCard } from '@/components/ui/tldr-card'
+import { TldrCardV2 } from '@/components/ui/tldr-card-v2'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
@@ -294,7 +294,7 @@ export default function CreatePage() {
       )
     }
 
-    return <TldrCard data={card} />
+    return <TldrCardV2 data={card} />
   }
 
   return (
@@ -367,7 +367,7 @@ export default function CreatePage() {
               Preview
             </h3>
             <div className="relative pb-16">
-              <TldrCard data={selectedCard} />
+              <TldrCardV2 data={selectedCard} />
               <div className="absolute -bottom-4 right-0">
                 <Button
                   onClick={() => handleCopyLink(selectedCard.id)}
