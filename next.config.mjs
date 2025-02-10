@@ -16,11 +16,20 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@radix-ui/themes'],
     turbotrace: {
-      memoryLimit: 4096
+      memoryLimit: 4096,
+      contextDirectory: __dirname,
+      processCwd: __dirname
     }
   },
   webpack: (config, { isServer }) => {
-    // Handle WebSocket module
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        ws: false
+      };
+    }
+    return config;
+  },
     if (isServer) {
       config.externals = [...config.externals, 'ws']
     }

@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
   "installCommand": "CI=false pnpm install --no-frozen-lockfile --no-verify-store-integrity",
-  "buildCommand": "NODE_OPTIONS='--max_old_space_size=4096' pnpm run build",
+  "buildCommand": "NODE_OPTIONS='--max_old_space_size=4096 --experimental-modules' pnpm run build",
   "regions": ["iad1"],
   "git": {
     "deploymentEnabled": {
