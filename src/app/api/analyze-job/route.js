@@ -310,8 +310,9 @@ export async function POST(request) {
         const models = await openai.models.list();
         console.log('Available models:', models.data.map(m => m.id));
 
+        const abortSignal = controller.signal;
         completion = await openai.chat.completions.create({
-          model: "gpt-4o-mini-2024-07-18",  // Using GPT-4o mini model
+          model: "gpt-4o-mini-2024-07-18",
           messages: [
             {
               role: "system",
@@ -324,7 +325,7 @@ export async function POST(request) {
           ],
           temperature: 0.7,
           max_tokens: 1000
-        });
+        }, { signal: abortSignal });
       } catch (apiError) {
         console.error('OpenAI API error:', apiError);
         if (apiError.response) {
@@ -341,15 +342,9 @@ export async function POST(request) {
         console.error('Invalid completion response:', completion);
         throw new Error('Failed to get valid response from OpenAI');
       }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
-      }, {
-        signal: controller.signal
-      })
 
-      clearTimeout(timeoutId)
-      console.log('OpenAI response received')
+      clearTimeout(timeoutId);
+      console.log('OpenAI response received');
       console.log('Raw OpenAI response:', completion.choices[0].message.content)
 
       try {
