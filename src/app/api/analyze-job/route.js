@@ -223,7 +223,26 @@ function validateAnalysis(analysis) {
 // Set longer timeout for this route
 export const maxDuration = 30 // 30 seconds
 
+// Configure allowed methods
+export const dynamic = 'force-dynamic' // Disable static optimization
+export async function OPTIONS(request) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Allow': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
+}
+
 export async function GET(request) {
+  // Add CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
   
@@ -281,7 +300,7 @@ export async function GET(request) {
     }
 
     // Return the analysis (original or enhanced)
-    return NextResponse.json(analysis)
+    return NextResponse.json(analysis, { headers })
   } catch (error) {
     console.error('Error in GET handler:', error)
     return NextResponse.json({ error: 'Failed to retrieve job analysis' }, { status: 500 })
@@ -289,6 +308,18 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    })
+  }
+
   try {
     const openai = getOpenAI();
     if (!openai) {

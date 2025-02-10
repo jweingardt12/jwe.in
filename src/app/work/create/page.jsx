@@ -142,12 +142,19 @@ export default function CreatePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           jobUrl: jobUrl.trim(),
           jobContent: jobDescription.trim(),
         }),
       })
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('API Error:', response.status, errorText)
+        throw new Error(`API Error: ${response.status} ${errorText}`)
+      }
 
       const data = await response.json()
 
