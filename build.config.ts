@@ -15,6 +15,8 @@ export default defineConfig({
     memory: 3008, // 3GB RAM
     maxDuration: 60, // 60 seconds max build time
     nodeVersion: '18.x',
+    buildTraceTimeout: 30, // 30 seconds timeout for trace collection
+    buildTraceIncrementalMode: true,
   },
   functions: {
     'api/**/*.js': {

@@ -26,7 +26,22 @@ const nextConfig = {
     optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons', 'lucide-react'],
     optimizeCss: true
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    // Optimize build trace collection
+    if (!dev) {
+      config.optimization.moduleIds = 'deterministic'
+      config.optimization.chunkIds = 'deterministic'
+    }
+    // Strict file watching and pattern matching
+    config.snapshot = {
+      managedPaths: [/^(.+?[\\/]node_modules[\\/])/, /^(.+?[\\/]src[\\/])/],
+      immutablePaths: [],
+      buildDependencies: {
+        hash: true,
+        timestamp: true
+      }
+    }
+
     // Optimize file watching
     config.watchOptions = {
       followSymlinks: false,
