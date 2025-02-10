@@ -25,24 +25,14 @@ const nextConfig = {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        ws: false
+        ws: false,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false
       };
-    }
-    return config;
-  },
-    if (isServer) {
-      config.externals = [...config.externals, 'ws']
-    }
 
-    config.resolve.fallback = {
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false
-    }
-
-    // Optimize trace collection
-    if (!isServer) {
+      // Optimize trace collection
       config.optimization.splitChunks = {
         chunks: 'all',
         minSize: 20000,
@@ -54,10 +44,14 @@ const nextConfig = {
           default: false,
           vendors: false
         }
-      }
+      };
     }
 
-    return config
+    if (isServer) {
+      config.externals = [...config.externals, 'ws'];
+    }
+
+    return config;
   },
   typescript: {
     ignoreBuildErrors: true

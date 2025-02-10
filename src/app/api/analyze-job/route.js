@@ -304,7 +304,7 @@ export async function POST(request) {
     try {
       // Use OpenAI to analyze the job posting
       const completion = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
