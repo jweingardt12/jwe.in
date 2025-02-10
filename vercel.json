@@ -12,7 +12,8 @@
         "maxLambdaSize": "50mb",
         "memory": 3008,
         "maxDuration": 60,
-        "buildTraceIncrementalMode": true
+        "buildTraceIncrementalMode": false,
+        "nodeVersion": "18.x"
       }
     }
   ],
