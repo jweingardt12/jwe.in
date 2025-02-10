@@ -20,19 +20,16 @@ const nextConfig = {
     }
   },
   webpack: (config, { isServer }) => {
+    // Handle WebSocket module
+    if (isServer) {
+      config.externals = [...config.externals, 'ws']
+    }
+
     config.resolve.fallback = {
       fs: false,
       net: false,
       tls: false,
-      crypto: false,
-      'ws': false
-    }
-
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'next/dist/compiled/ws': 'ws'
-      }
+      crypto: false
     }
 
     // Optimize trace collection

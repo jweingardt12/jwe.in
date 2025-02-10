@@ -367,7 +367,7 @@ export default function CreatePage() {
               Preview
             </h3>
             <div className="relative pb-16">
-              <TldrCardV2 data={selectedCard} />
+              <TldrCard data={selectedCard} />
               <div className="absolute -bottom-4 right-0">
                 <Button
                   onClick={() => handleCopyLink(selectedCard.id)}

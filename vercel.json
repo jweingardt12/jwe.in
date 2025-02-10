@@ -19,6 +19,7 @@
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
+        "includeFiles": ["node_modules/ws/**"],
         "maxLambdaSize": "50mb",
         "memory": 4096,
         "nodeVersion": "18.x",
