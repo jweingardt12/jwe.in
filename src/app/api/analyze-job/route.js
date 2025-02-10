@@ -3,19 +3,35 @@ import OpenAI from 'openai'
 import { Redis } from '@upstash/redis'
 import { SYSTEM_PROMPT } from './prompt.js'
 
-const openai = process.env.OPENAI_API_KEY 
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null
+// Initialize clients lazily to avoid issues during build time
+let openai = null;
+let redis = null;
 
-// Initialize Redis client with proper environment variables
-const redis = new Redis({
-  url: process.env.STORAGE_KV_REST_API_URL,
-  token: process.env.STORAGE_KV_REST_API_TOKEN,
-})
+function getOpenAI() {
+  if (!openai && process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return openai;
+}
+
+function getRedis() {
+  if (!redis) {
+    redis = new Redis({
+      url: process.env.STORAGE_KV_REST_API_URL,
+      token: process.env.STORAGE_KV_REST_API_TOKEN,
+    });
+  }
+  return redis;
+}
 
 // Helper function to store job analysis in Redis
 async function storeAnalysis(id, analysis) {
   try {
+    const redis = getRedis();
+    if (!redis) {
+      console.error('Redis client not initialized');
+      return false;
+    }
     // Store with 7 day expiration
     await redis.set(`job:${id}`, JSON.stringify(analysis), { ex: 60 * 60 * 24 * 7 })
     return true
@@ -28,6 +44,11 @@ async function storeAnalysis(id, analysis) {
 // Helper function to retrieve job analysis from Redis
 async function getAnalysis(id) {
   try {
+    const redis = getRedis();
+    if (!redis) {
+      console.error('Redis client not initialized');
+      return null;
+    }
     console.log('Attempting to get analysis for ID:', id)
     const analysis = await redis.get(`job:${id}`)
     console.log('Raw Redis response:', analysis)
@@ -234,6 +255,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const openai = getOpenAI();
     if (!openai) {
       console.error('OpenAI API key not configured')
       return NextResponse.json({ 

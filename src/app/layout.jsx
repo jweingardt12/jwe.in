@@ -4,14 +4,15 @@ import { Toaster } from '../components/ui/toaster'
 import dynamic from 'next/dynamic'
 import { HighlightInit } from '@highlight-run/next/client'
 import { Toaster as SonnerToaster } from 'sonner'
+import { MDXWrapper } from '../components/MDXWrapper'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import '@radix-ui/themes/styles.css'
 
-const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background').then(mod => mod.DotBackgroundDemo), { ssr: false })
+const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background'), { ssr: false })
 const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false })
-const Analytics = dynamic(() => import('@vercel/analytics/react').then(mod => mod.Analytics), { ssr: false })
-const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then(mod => mod.SpeedInsights), { ssr: false })
 
 export const viewport = {
   width: 'device-width',
@@ -49,20 +50,22 @@ export default function RootLayout({ children }) {
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
         <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
           <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
-            <div className="relative flex w-full">
-              <div className="fixed inset-0">
-                <DotBackgroundDemo />
+            <MDXWrapper>
+              <div className="relative flex w-full">
+                <div className="fixed inset-0">
+                  <DotBackgroundDemo />
+                </div>
+                <div className="relative flex w-full flex-col">
+                  <Layout>{children}</Layout>
+                </div>
               </div>
-              <div className="relative flex w-full flex-col">
-                <Layout>{children}</Layout>
-              </div>
-            </div>
-            <CommandPalette />
-            <Toaster />
-            <SonnerToaster position="bottom-right" theme="system" />
-            <Analytics />
-            <SpeedInsights />
-            <OpenPanelWrapper />
+              <CommandPalette />
+              <Toaster />
+              <SonnerToaster position="bottom-right" theme="system" />
+              <Analytics />
+              <SpeedInsights />
+              <OpenPanelWrapper />
+            </MDXWrapper>
           </ThemeProvider>
         </body>
       </html>

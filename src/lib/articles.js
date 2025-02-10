@@ -7,14 +7,29 @@ const postsDirectory = path.join(process.cwd(), 'src/app/notes')
 export async function getAllArticles() {
   try {
     console.log('Reading articles from filesystem...')
-    const fileNames = fs.readdirSync(postsDirectory)
-    const allPostsData = fileNames
-      .filter(fileName => (fileName.endsWith('.md') || fileName.endsWith('.mdx')) && !fileName.startsWith('.'))
-      .map(fileName => {
-        const slug = fileName.replace(/\.mdx?$/, '')
-        const fullPath = path.join(postsDirectory, fileName)
-        const fileContents = fs.readFileSync(fullPath, 'utf8')
-        const { data, content } = matter(fileContents)
+    const findMDXFiles = (dir) => {
+      const entries = fs.readdirSync(dir, { withFileTypes: true })
+      return entries.flatMap(entry => {
+        const fullPath = path.join(dir, entry.name)
+        // Skip the template directory
+        if (entry.isDirectory() && entry.name === 'template') {
+          return []
+        }
+        if (entry.isDirectory()) {
+          return findMDXFiles(fullPath)
+        } else if ((entry.name.endsWith('.md') || entry.name.endsWith('.mdx')) && !entry.name.startsWith('.')) {
+          return [{ path: fullPath, name: entry.name }]
+        }
+        return []
+      })
+    }
+
+    const mdxFiles = findMDXFiles(postsDirectory)
+    const allPostsData = mdxFiles.map(({ path: fullPath, name: fileName }) => {
+      const relativePath = path.relative(postsDirectory, fullPath)
+      const slug = relativePath.replace(/\.mdx?$/, '').replace(/\/?content$/, '')
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const { data, content } = matter(fileContents)
 
         return {
           slug,
@@ -38,12 +53,26 @@ export async function getAllArticles() {
 export async function getArticleBySlug(slug) {
   try {
     console.log('Reading article by slug:', slug)
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
-    const mdPath = path.join(postsDirectory, `${slug}.md`)
-    
-    let filePath = fs.existsSync(fullPath) ? fullPath : mdPath
-    
-    if (!fs.existsSync(filePath)) {
+    const findMDXFile = (dir, targetSlug) => {
+      const entries = fs.readdirSync(dir, { withFileTypes: true })
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name)
+        if (entry.isDirectory()) {
+          const found = findMDXFile(fullPath, targetSlug)
+          if (found) return found
+        } else if ((entry.name === 'content.mdx' || entry.name === `${targetSlug}.mdx` || entry.name === `${targetSlug}.md`) && !entry.name.startsWith('.')) {
+          const relativePath = path.relative(postsDirectory, fullPath)
+          const fileSlug = relativePath.replace(/\.mdx?$/, '').replace(/\/?content$/, '')
+          if (fileSlug === targetSlug) {
+            return fullPath
+          }
+        }
+      }
+      return null
+    }
+
+    const filePath = findMDXFile(postsDirectory, slug)
+    if (!filePath) {
       console.error('Article not found:', slug)
       return null
     }
