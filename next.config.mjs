@@ -52,6 +52,12 @@ const nextConfig = {
     config.resolve.symlinks = false
     config.resolve.preferRelative = true
 
+    // Handle OpenTelemetry warnings
+    config.module.rules.push({
+      test: /node_modules\/@opentelemetry/,
+      sideEffects: false
+    })
+
     if (!isServer) {
       // Don't bundle server-only modules on client-side
       config.resolve.fallback = {

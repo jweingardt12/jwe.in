@@ -17,6 +17,7 @@ export default defineConfig({
     nodeVersion: '18.x',
     buildTraceTimeout: 30, // 30 seconds timeout for trace collection
     buildTraceIncrementalMode: true,
+    ignorePackageErrors: ['shadcn-ui'], // Ignore shadcn-ui bin creation warning
   },
   functions: {
     'api/**/*.js': {
