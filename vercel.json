@@ -26,16 +26,5 @@
         "installCommand": "CI=false pnpm install --no-frozen-lockfile --no-verify-store-integrity"
       }
     }
-  ],
-  "functions": {
-    "src/app/api/**/*.js": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
-  "build": {
-    "env": {
-      "NEXT_PRIVATE_STANDALONE": "true"
-    }
-  }
+  ]
 }
