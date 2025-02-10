@@ -46,7 +46,24 @@ const nextConfig = {
     }
 
     if (isServer) {
-      config.externals = [...config.externals, 'ws'];
+      const originalExternals = [...config.externals];
+      config.externals = [
+        (context, request, callback) => {
+          if (request === 'ws') {
+            return callback(null, "commonjs " + request);
+          }
+          if (Array.isArray(originalExternals)) {
+            for (const external of originalExternals) {
+              if (typeof external === 'function') {
+                try {
+                  return external(context, request, callback);
+                } catch {}
+              }
+            }
+          }
+          callback();
+        }
+      ];
     }
 
     return config;
