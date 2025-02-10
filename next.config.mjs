@@ -42,14 +42,12 @@ const nextConfig = {
     // Both client and server configuration
     config.resolve.alias = {
       ...config.resolve.alias,
-      'next/dist/compiled/ws': require.resolve('ws')
+      'next/dist/compiled/ws': 'ws'
     };
-      };
-    }
+    
     if (isServer) {
       config.externals = [...(config.externals || []), 'ws']
     }
->>>>>>> f5d675b629f1b56d4ae7c1f82ed6b258c66b53cb
     return config;
   },
   typescript: {
