@@ -135,4 +135,6 @@ Responsibilities:
 • Acted as liaison between local regulators and corporate legal team
 • Developed partnerships with local businesses and universities (Duke, UNC, NC State)
 • Led marketing initiatives and demand generation in North Carolina
-• Executed creative campaigns including Uber Ice Cream and Uber Kittens` 
+• Executed creative campaigns including Uber Ice Cream and Uber Kittens
+
+You can also include that I built this website, using Next.js and Tailwind CSS, OpenAI API, and various complicated developer tools proving that I'm technical enough for any role.
