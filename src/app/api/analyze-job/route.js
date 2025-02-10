@@ -303,17 +303,44 @@ export async function POST(request) {
 
     try {
       // Use OpenAI to analyze the job posting
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: SYSTEM_PROMPT
-          },
-          {
-            role: "user",
-            content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
-          }
+      console.log('Starting OpenAI analysis with model: gpt-4o-mini');
+      let completion;
+      try {
+        // List available models
+        const models = await openai.models.list();
+        console.log('Available models:', models.data.map(m => m.id));
+
+        completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini-2024-07-18",  // Using GPT-4o mini model
+          messages: [
+            {
+              role: "system",
+              content: SYSTEM_PROMPT
+            },
+            {
+              role: "user",
+              content: `First verify this is a valid job posting by checking for a job title and company name. If you cannot find these, return { "error": true, "message": "explanation of what's missing" }. Otherwise, analyze this job posting content: ${content}`
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1000
+        });
+      } catch (apiError) {
+        console.error('OpenAI API error:', apiError);
+        if (apiError.response) {
+          console.error('API error details:', {
+            status: apiError.response.status,
+            data: apiError.response.data
+          });
+          throw new Error(apiError.response.data.error.message || 'OpenAI API error');
+        }
+        throw apiError;
+      }
+
+      if (!completion || !completion.choices || !completion.choices[0]) {
+        console.error('Invalid completion response:', completion);
+        throw new Error('Failed to get valid response from OpenAI');
+      }
         ],
         temperature: 0.7,
         max_tokens: 1000
