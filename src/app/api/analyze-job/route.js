@@ -245,7 +245,42 @@ export async function GET(request) {
       }, { status: 404 })
     }
 
-    // Return the stored analysis
+    // If analysis is missing required fields, try to generate them using OpenAI
+    if (!analysis.introText || !analysis.bulletPoints) {
+      const openai = getOpenAI()
+      if (openai) {
+        try {
+          const completion = await openai.chat.completions.create({
+            model: 'gpt-4-turbo-preview',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are an expert at writing compelling job applications. Given a job posting, create a persuasive introduction and key bullet points highlighting relevant experience.'
+              },
+              {
+                role: 'user',
+                content: `Create an introduction and 3 bullet points for this ${analysis.jobTitle} role at ${analysis.companyName}. The intro should be one sentence starting with "I'm the right person for". Each bullet point should highlight specific achievements with metrics. Here's the job description: ${analysis.jobContent}`
+              }
+            ],
+            temperature: 0.7,
+          })
+
+          const response = completion.choices[0].message.content
+          const parts = response.split('\n\n')
+          
+          // Extract intro (first paragraph) and bullet points (remaining paragraphs)
+          analysis.introText = parts[0].replace(/^["']|["']$/g, '')
+          analysis.bulletPoints = parts.slice(1).map(p => p.trim()).filter(p => p.length > 0)
+
+          // Store the updated analysis
+          await storeAnalysis(id, analysis)
+        } catch (error) {
+          console.error('Error generating missing fields:', error)
+        }
+      }
+    }
+
+    // Return the analysis (original or enhanced)
     return NextResponse.json(analysis)
   } catch (error) {
     console.error('Error in GET handler:', error)

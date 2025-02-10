@@ -154,6 +154,47 @@ const WorkContent = () => {
   const searchParams = useSearchParams()
   const jobId = searchParams.get('job')
 
+  // Load job data
+  useEffect(() => {
+    const loadJobData = async () => {
+      if (!jobId) {
+        setIsValidJobId(false)
+        return
+      }
+
+      setIsLoading(true)
+      try {
+        // First try to load from the API
+        const apiResponse = await fetch(`/api/analyze-job?id=${jobId}`)
+        if (apiResponse.ok) {
+          const data = await apiResponse.json()
+          setJobData(data)
+          setIsValidJobId(true)
+          setIsLoading(false)
+          return
+        }
+
+        // If API fails, try to load from the static JSON file
+        const staticResponse = await fetch('/data/job-analysis.json')
+        if (staticResponse.ok) {
+          const data = await staticResponse.json()
+          if (data[jobId]) {
+            setJobData(data[jobId])
+            setIsValidJobId(true)
+          } else {
+            setIsValidJobId(false)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading job data:', error)
+        setIsValidJobId(false)
+      }
+      setIsLoading(false)
+    }
+
+    loadJobData()
+  }, [jobId])
+
   const handleFaqOpen = (value) => {
     if (value) {
       const questions = {
