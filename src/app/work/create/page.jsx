@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import { TldrCardV2 } from '@/components/ui/tldr-card-v2'
+import { TldrCard } from '@/components/ui/tldr-card'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
@@ -294,7 +294,7 @@ export default function CreatePage() {
       )
     }
 
-    return <TldrCardV2 data={card} />
+    return <TldrCard data={card} />
   }
 
   return (
