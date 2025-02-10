@@ -308,14 +308,12 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  // Handle CORS preflight
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, {
-      status: 204,
+  // Handle invalid methods
+  if (request.method !== 'POST') {
+    return new NextResponse(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json',
       },
     })
   }
