@@ -1,6 +1,7 @@
 {
   "framework": "nextjs",
   "regions": ["iad1"],
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "git": {
     "deploymentEnabled": {
       "main": true
