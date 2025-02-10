@@ -137,6 +137,9 @@ dependencies:
   next-themes:
     specifier: ^0.4.4
     version: 0.4.4(react-dom@18.2.0)(react@18.2.0)
+  next-ws:
+    specifier: ^2.0.0
+    version: 2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0)
   open-graph-scraper:
     specifier: ^6.8.3
     version: 6.9.0
@@ -206,6 +209,9 @@ dependencies:
   vaul:
     specifier: ^1.1.2
     version: 1.1.2(@types/react@19.0.8)(react-dom@18.2.0)(react@18.2.0)
+  ws:
+    specifier: ^8.18.0
+    version: 8.18.0
   xml2js:
     specifier: ^0.6.2
     version: 0.6.2
@@ -244,9 +250,6 @@ devDependencies:
   style-loader:
     specifier: ^4.0.0
     version: 4.0.0(webpack@5.97.1)
-  ws:
-    specifier: ^8.16.0
-    version: 8.18.0
 
 packages:
 
@@ -6217,6 +6220,19 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /next-ws@2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0):
+    resolution: {integrity: sha512-0ttM/pbDvhz6KoBeJ9qjVVWZUY5iJ4ooFJ5MVOt5lt1eTblxlPPYxde1ASJcAnvEhn7Z5QOWA1QTZZsClzEkqw==}
+    hasBin: true
+    peerDependencies:
+      next: '>=13.1.1'
+      react: '*'
+      ws: '*'
+    dependencies:
+      next: 14.0.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      ws: 8.18.0
+    dev: false
+
   /next@14.0.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-qbwypnM7327SadwFtxXnQdGiKpkuhaRLE2uq62/nRul9cj9KhQ5LhHmlziTNqUidZotw/Q1I9OjirBROdUJNgA==}
     engines: {node: '>=18.17.0'}
@@ -8342,6 +8358,7 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: false
 
   /xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}

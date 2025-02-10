@@ -18,7 +18,8 @@ const nextConfig = {
     optimizePackageImports: ['@radix-ui/themes'],
     turbotrace: {
       memoryLimit: 4096
-    }
+    },
+    serverComponentsExternalPackages: ['ws']
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -27,8 +28,12 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-        crypto: false
+        crypto: false,
+        ws: false
       };
+    }
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'ws']
     }
     return config;
   },
