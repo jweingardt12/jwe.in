@@ -16,9 +16,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@radix-ui/themes'],
     turbotrace: {
-      memoryLimit: 4096,
-      contextDirectory: __dirname,
-      processCwd: __dirname
+      memoryLimit: 4096
     }
   },
   webpack: (config, { isServer }) => {
