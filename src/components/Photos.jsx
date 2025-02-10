@@ -277,6 +277,7 @@ function Photo({
         <Image
           src={photo.image}
           alt={photo.hoverText}
+          fill
           sizes="(min-width: 640px) 224px, 224px"
           quality={95}
           className={clsx(

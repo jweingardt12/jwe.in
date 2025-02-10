@@ -1,8 +1,29 @@
 import { ArticleLayout } from '../../../components/ArticleLayout'
-import { getAllArticles, getArticleBySlug } from '../../../lib/articles'
+import { getAllArticles } from '../../../lib/articles'
 import { notFound } from 'next/navigation'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import Image from 'next/image'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+import remarkGfm from 'remark-gfm'
+import rehypePrism from '@mapbox/rehype-prism'
 
 export const revalidate = 60; // Revalidate every 60 seconds
+
+const components = {
+  Image: Image,
+  img: ({ src, alt }) => (
+    <Image
+      src={src}
+      alt={alt || ''}
+      width={1200}
+      height={600}
+      className="w-full rounded-lg my-8"
+      priority
+    />
+  ),
+}
 
 export async function generateStaticParams() {
   try {
@@ -18,7 +39,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   try {
-    const article = await getArticleBySlug(params.slug)
+    const article = await getArticle(params.slug)
 
     if (!article) {
       return {}
@@ -32,7 +53,7 @@ export async function generateMetadata({ params }) {
         description: article.description,
         type: 'article',
         publishedTime: article.date,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/notes/${article.slug}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/notes/${params.slug}`,
         ...(article.image && {
           images: [{
             url: article.image,
@@ -57,17 +78,55 @@ export async function generateMetadata({ params }) {
   }
 }
 
+async function getArticle(slug) {
+  const postsDirectory = path.join(process.cwd(), 'src/app/notes')
+  const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+  const mdPath = path.join(postsDirectory, `${slug}.md`)
+  
+  let filePath = fs.existsSync(fullPath) ? fullPath : mdPath
+  
+  if (!fs.existsSync(filePath)) {
+    return null
+  }
+
+  const fileContents = fs.readFileSync(filePath, 'utf8')
+  const { data, content } = matter(fileContents)
+
+  return {
+    slug,
+    content,
+    title: data.title,
+    date: data.date,
+    description: data.description,
+    ...data,
+  }
+}
+
 export default async function Article({ params }) {
   try {
-    const article = await getArticleBySlug(params.slug)
+    const article = await getArticle(params.slug)
 
     if (!article) {
       notFound()
     }
 
+    const options = {
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [[rehypePrism, { ignoreMissing: true }]],
+        format: 'mdx',
+      },
+    }
+
     return (
       <ArticleLayout article={article}>
-        {article.content}
+        <div className="prose dark:prose-invert max-w-none">
+          <MDXRemote 
+            source={article.content} 
+            options={options} 
+            components={components}
+          />
+        </div>
       </ArticleLayout>
     )
   } catch (error) {

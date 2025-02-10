@@ -1,38 +1,69 @@
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
-import { getAllPosts, getPostBySlug } from './contentful'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+
+const postsDirectory = path.join(process.cwd(), 'src/app/notes')
 
 export async function getAllArticles() {
   try {
-    const posts = await getAllPosts()
-    if (!posts || posts.length === 0) {
-      console.log('No posts found in getAllArticles');
-      return [];
-    }
-    return posts.map(post => ({
-      ...post,
-      // Ensure content is passed through as is for rich text rendering
-      content: post.content
-    }));
+    console.log('Reading articles from filesystem...')
+    const fileNames = fs.readdirSync(postsDirectory)
+    const allPostsData = fileNames
+      .filter(fileName => (fileName.endsWith('.md') || fileName.endsWith('.mdx')) && !fileName.startsWith('.'))
+      .map(fileName => {
+        const slug = fileName.replace(/\.mdx?$/, '')
+        const fullPath = path.join(postsDirectory, fileName)
+        const fileContents = fs.readFileSync(fullPath, 'utf8')
+        const { data, content } = matter(fileContents)
+
+        return {
+          slug,
+          title: data.title,
+          date: data.date,
+          description: data.description,
+          content,
+          ...data,
+        }
+      })
+      .sort((a, b) => (a.date > b.date ? -1 : 1))
+
+    console.log('Found articles:', allPostsData)
+    return allPostsData
   } catch (error) {
-    console.error('Error in getAllArticles:', error);
-    return [];
+    console.error('Error reading articles:', error)
+    return []
   }
 }
 
 export async function getArticleBySlug(slug) {
   try {
-    const post = await getPostBySlug(slug)
-    if (!post) {
-      console.log(`No post found for slug: ${slug}`);
-      return null;
+    console.log('Reading article by slug:', slug)
+    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+    const mdPath = path.join(postsDirectory, `${slug}.md`)
+    
+    let filePath = fs.existsSync(fullPath) ? fullPath : mdPath
+    
+    if (!fs.existsSync(filePath)) {
+      console.error('Article not found:', slug)
+      return null
     }
-    return {
-      ...post,
-      // Ensure content is passed through as is for rich text rendering
-      content: post.content
-    };
+
+    const fileContents = fs.readFileSync(filePath, 'utf8')
+    const { data, content } = matter(fileContents)
+
+    const article = {
+      slug,
+      content,
+      title: data.title,
+      date: data.date,
+      description: data.description,
+      ...data,
+    }
+
+    console.log('Found article:', article)
+    return article
   } catch (error) {
-    console.error('Error in getArticleBySlug:', error);
-    return null;
+    console.error('Error reading article:', error)
+    return null
   }
 }

@@ -8,7 +8,7 @@ import {
   LinkedInIcon,
   ThreadsIcon,
 } from './SocialIcons'
-import { ContainerInner, ContainerOuter } from './Container'
+import { InnerContainer, OuterContainer } from './Container'
 
 function MailIcon(props) {
   return (
@@ -49,48 +49,46 @@ function NavLink({ href, children }) {
 
 export function Footer() {
   return (
-    <footer className="mt-32 flex-none">
-      <ContainerOuter>
-        <div className="border-t border-zinc-100 pb-16 pt-10 dark:border-zinc-700/40">
-          <ContainerInner>
-            <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-              <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                <NavLink href="/about">About</NavLink>
-                <NavLink href="/work">Work</NavLink>
-                <NavLink href="/notes">Notes</NavLink>
-                <NavLink href="/reading">Reading</NavLink>
-              </div>
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
-                  <SocialLink 
-                    href="https://www.threads.net/@jweingardt" 
-                    icon={ThreadsIcon}
-                  />
-                  <SocialLink 
-                    href="https://instagram.com/jweingardt" 
-                    icon={InstagramIcon}
-                  />
-                  <SocialLink 
-                    href="https://github.com/jweingardt12" 
-                    icon={GitHubIcon}
-                  />
-                  <SocialLink 
-                    href="https://linkedin.com/in/jasonweingardt" 
-                    icon={LinkedInIcon}
-                  />
-                  <SocialLink
-                    href="mailto:hi@jwe.in"
-                    icon={MailIcon}
-                  />
-                </ul>
-                <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                  &copy; {new Date().getFullYear()} Jason Weingardt
-                </p>
-              </div>
+    <OuterContainer>
+      <div className="border-t border-zinc-100 pb-16 pt-12 px-4 sm:px-6 lg:px-8 dark:border-zinc-700/40">
+        <InnerContainer>
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <NavLink href="/about">About</NavLink>
+              <NavLink href="/work">Work</NavLink>
+              <NavLink href="/notes">Notes</NavLink>
+              <NavLink href="/reading">Reading</NavLink>
             </div>
-          </ContainerInner>
-        </div>
-      </ContainerOuter>
-    </footer>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
+                <SocialLink 
+                  href="https://www.threads.net/@jweingardt" 
+                  icon={ThreadsIcon}
+                />
+                <SocialLink 
+                  href="https://instagram.com/jweingardt" 
+                  icon={InstagramIcon}
+                />
+                <SocialLink 
+                  href="https://github.com/jweingardt12" 
+                  icon={GitHubIcon}
+                />
+                <SocialLink 
+                  href="https://linkedin.com/in/jasonweingardt" 
+                  icon={LinkedInIcon}
+                />
+                <SocialLink
+                  href="mailto:hi@jwe.in"
+                  icon={MailIcon}
+                />
+              </ul>
+              <p className="text-sm text-zinc-400 dark:text-zinc-500">
+                &copy; {new Date().getFullYear()} Jason Weingardt
+              </p>
+            </div>
+          </div>
+        </InnerContainer>
+      </div>
+    </OuterContainer>
   )
 }

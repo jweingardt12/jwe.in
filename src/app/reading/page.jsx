@@ -5,7 +5,7 @@ import { FeedContent } from '../../components/FeedContent'
 import { ShareFeed } from '../../components/ShareFeed'
 import { DrawerComponent } from '../../components/Drawer'
 
-const FEED_URL = 'https://reederapp.net/9QMh31cCQtuxnR8Np2_N5g.json'
+const FEED_URL = 'https://bg.raindrop.io/rss/public/51518726'
 
 export default function ReadingPage() {
   return (

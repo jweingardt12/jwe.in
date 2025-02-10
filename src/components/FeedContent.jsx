@@ -29,39 +29,39 @@ export function FeedContent() {
         console.log('Raw feed items:', items)
         
         const processedArticles = items.map(item => {
-          console.log('Processing item:', item)
+          // Extract image URL from description if present
+          const imgMatch = item.content_text?.match(/<img[^>]+src="([^">]+)"/)
+          const descriptionImage = imgMatch ? imgMatch[1] : null
 
-          // Get and clean publication name from _reeder.feed.title if available
-          let publicationName = item._reeder?.feed?.title || 'Unknown Source'
-          // Truncate "The Verge - All Posts" to just "The Verge"
-          if (publicationName === 'The Verge - All Posts') {
-            publicationName = 'The Verge'
-          }
-          console.log('Publication name:', publicationName)
-          
-          // Get image from multiple possible sources
-          const imageUrl = item.image || // Direct image URL
-                         item.attachments?.[0]?.url || // First attachment URL
-                         item._reeder?.media?.[0]?.url || // Media from _reeder
-                         null // Fallback to null if no image found
-          console.log('Image URL:', imageUrl)
+          // Get the best available image URL
+          const imageUrl = item._reeder?.media?.[0]?.url || descriptionImage || null
 
-          const processed = {
+          console.log('Processing item:', {
+            title: item.title,
+            url: item.url,
+            imageUrl,
+            mediaUrls: item._reeder?.media?.map(m => m.url),
+            descriptionImage,
+            content: item.content_text?.slice(0, 100)
+          })
+
+          return {
+            ...item,
             id: item.id || Math.random().toString(),
             title: item.title || 'Untitled',
-            href: item.url || '#',
-            description: item.content_text?.slice(0, 200) + '...' || 'No description available',
-            publicationName,
-            dateDisplay: item.date_published ? new Date(item.date_published).toLocaleDateString('en-US', {
+            url: item.url || '#',
+            content_text: item.content_text || 'No description available',
+            dateDisplay: item.dateDisplay || (item.date_published ? new Date(item.date_published).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
               day: 'numeric',
-            }) : '',
-            dateISO: item.date_published ? new Date(item.date_published).toISOString().split('T')[0] : '',
-            imageUrl
+            }) : ''),
+            dateISO: item.dateISO || (item.date_published ? new Date(item.date_published).toISOString().split('T')[0] : ''),
+            _reeder: {
+              ...item._reeder,
+              media: imageUrl ? [{ url: imageUrl }] : []
+            }
           }
-          console.log('Processed article:', processed)
-          return processed
         })
 
         console.log('All processed articles:', processedArticles)
@@ -83,11 +83,11 @@ export function FeedContent() {
           setArticles([{
             id: 'error',
             title: 'Unable to load articles',
-            description: `Error: ${error.message}. Please try again later.`,
-            href: '#',
-            publicationName: 'Error',
+            content_text: `Error: ${error.message}. Please try again later.`,
+            url: '#',
             dateDisplay: new Date().toLocaleDateString(),
-            dateISO: new Date().toISOString().split('T')[0]
+            dateISO: new Date().toISOString().split('T')[0],
+            _reeder: { media: [] }
           }])
           setIsLoading(false)
         }, 2000)

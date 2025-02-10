@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../styles/prism.css';
+
 @keyframes overlay-in {
   from { opacity: 0; }
   to { opacity: 1; }

@@ -30,15 +30,15 @@ export function DrawerComponent() {
               </p>
               <ul>
                 <li>I use <a 
-                    href="https://reeder.app" 
+                    href="https://raindrop.io" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     onClick={() => window.umami?.track('external_link_click', { 
-                      domain: 'reeder.app',
-                      url: 'https://reeder.app',
+                      domain: 'raindrop.io',
+                      url: 'https://raindrop.io',
                       type: 'tool'
                     })}
-                  >Reeder app</a> to save and organize articles I read across the web</li>
+                  >Raindrop.io</a> to save and organize articles I read across the web</li>
                 <li>The app generates a public RSS feed URL that contains articles I've added to a specific collection.</li>
                 <li>This page fetches and displays that feed in semi-realtime via this <a 
                     href="https://github.com/jweingardt12/jwe.in/blob/main/src/components/FeedContent.jsx"

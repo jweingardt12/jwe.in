@@ -3,49 +3,29 @@
 import { forwardRef, useState, useEffect } from 'react'
 import clsx from 'clsx'
 
-export const ContainerOuter = forwardRef(function OuterContainer(
-  { className, children, ...props },
-  ref,
-) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
-
+export function OuterContainer({ className, children, ...props }) {
   return (
-    <div ref={ref} className={clsx('sm:px-8', className)} {...props}>
-      <div className="mx-auto w-full max-w-7xl lg:px-8">{children}</div>
+    <div className={clsx('sm:px-8 py-4', className)} {...props}>
+      <div className="mx-auto max-w-7xl lg:px-8">{children}</div>
     </div>
   )
-})
+}
 
-export const ContainerInner = forwardRef(function InnerContainer(
-  { className, children, ...props },
-  ref,
-) {
+export function InnerContainer({ className, children, ...props }) {
   return (
     <div
-      ref={ref}
-      className={clsx('relative px-4 sm:px-8 lg:px-12', className)}
+      className={clsx('relative px-4 sm:px-8 lg:px-12 py-4', className)}
       {...props}
     >
       <div className="mx-auto max-w-2xl lg:max-w-5xl">{children}</div>
     </div>
   )
-})
+}
 
-export const Container = forwardRef(function Container(
-  { children, ...props },
-  ref,
-) {
+export function Container({ children, ...props }) {
   return (
-    <ContainerOuter ref={ref} {...props}>
-      <ContainerInner>{children}</ContainerInner>
-    </ContainerOuter>
+    <OuterContainer {...props}>
+      <InnerContainer>{children}</InnerContainer>
+    </OuterContainer>
   )
-})
+}
