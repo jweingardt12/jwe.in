@@ -28,7 +28,8 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-        crypto: false
+        crypto: false,
+        ws: false
       };
     }
     if (isServer) {
