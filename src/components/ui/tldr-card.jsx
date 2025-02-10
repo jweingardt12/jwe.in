@@ -13,8 +13,8 @@ export function TldrCard({ data, isLoading }) {
       if (!glowRef.current) return
       const rect = glowRef.current.getBoundingClientRect()
       setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: ((e.clientX - rect.left) / rect.width) * 100,
+        y: ((e.clientY - rect.top) / rect.height) * 100,
       })
     }
 
@@ -24,6 +24,7 @@ export function TldrCard({ data, isLoading }) {
       return () => element.removeEventListener('mousemove', handleMouseMove)
     }
   }, [])
+
   if (isLoading) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-zinc-100 dark:border-zinc-700/40 bg-white/50 dark:bg-zinc-800/50 backdrop-blur p-6 max-w-2xl mx-auto">
@@ -45,10 +46,10 @@ export function TldrCard({ data, isLoading }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       style={{
-        '--mouse-x': `${mousePosition.x}px`,
-        '--mouse-y': `${mousePosition.y}px`,
+        '--mouse-x': `${mousePosition.x}%`,
+        '--mouse-y': `${mousePosition.y}%`,
       }}
-      className="group relative overflow-hidden rounded-2xl border border-zinc-100 dark:border-zinc-700/40 bg-white/50 dark:bg-zinc-800/50 backdrop-blur p-6 max-w-2xl mx-auto before:absolute before:w-80 before:h-80 before:-left-40 before:-top-40 before:bg-purple-500 before:rounded-full before:opacity-0 before:pointer-events-none before:transition-opacity before:duration-500 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:group-hover:opacity-20 before:blur-[100px] after:absolute after:w-96 after:h-96 after:-left-48 after:-top-48 after:bg-indigo-500 after:rounded-full after:opacity-0 after:pointer-events-none after:transition-opacity after:duration-500 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:group-hover:opacity-20 after:blur-[100px] hover:border-zinc-200 dark:hover:border-zinc-600/50"
+      className="group relative overflow-hidden rounded-2xl border border-zinc-100 dark:border-zinc-700/40 bg-white/50 dark:bg-zinc-800/50 backdrop-blur p-6 max-w-2xl mx-auto before:absolute before:inset-0 before:opacity-0 before:transition-opacity before:duration-500 before:bg-[radial-gradient(circle_at_var(--mouse-x)%_var(--mouse-y)%,theme(colors.purple.400/0.15),transparent_50%)] group-hover:before:opacity-100"
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between">
