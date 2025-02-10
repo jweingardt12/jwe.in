@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export function DotBackgroundDemo() {
+export default function DotBackgroundDemo() {
   return (
     <motion.div 
       className="w-full h-full"
