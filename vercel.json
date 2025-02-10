@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "NODE_OPTIONS='--max_old_space_size=4096' pnpm install --no-frozen-lockfile && pnpm run build",
+  "installCommand": "rm -f pnpm-lock.yaml && pnpm install --prefer-offline=false",
+  "buildCommand": "NODE_OPTIONS='--max_old_space_size=4096' pnpm run build",
   "regions": ["iad1"],
   "git": {
     "deploymentEnabled": {
@@ -20,7 +20,8 @@
       "use": "@vercel/next",
       "config": {
         "maxLambdaSize": "50mb",
-        "memory": 4096
+        "memory": 4096,
+        "nodeVersion": "18.x"
       }
     }
   ]
