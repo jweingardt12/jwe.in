@@ -14,15 +14,35 @@ const nextConfig = {
   },
   swcMinify: true,
   experimental: {
-    optimizePackageImports: ['@radix-ui/themes']
+    optimizePackageImports: ['@radix-ui/themes'],
+    turbotrace: {
+      memoryLimit: 4096
+    }
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       fs: false,
       net: false,
       tls: false,
       crypto: false
     }
+
+    // Optimize trace collection
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          default: false,
+          vendors: false
+        }
+      }
+    }
+
     return config
   },
   typescript: {
@@ -31,7 +51,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true
   },
-  poweredByHeader: false
+  poweredByHeader: false,
+  productionBrowserSourceMaps: false,
+  optimizeFonts: false
 }
 
 const withMDX = createMDX({
