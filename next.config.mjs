@@ -21,6 +21,7 @@ const nextConfig = {
     }
   },
   webpack: (config, { isServer }) => {
+    // Client-side configuration
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -28,8 +29,16 @@ const nextConfig = {
         net: false,
         tls: false,
         crypto: false
+        crypto: false
       };
     }
+    
+    // Both client and server configuration
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'next/dist/compiled/ws': require.resolve('ws')
+    };
+    
     return config;
   },
   typescript: {
