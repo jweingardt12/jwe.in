@@ -5,11 +5,5 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ],
-  "functions": {
-    "src/app/api/analyze-job/route.js": {
-      "memory": 1024,
-      "maxDuration": 30
-    }
-  }
+  ]
 }
