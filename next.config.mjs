@@ -3,6 +3,7 @@ import createMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['ws'],
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
     remotePatterns: [
@@ -23,49 +24,12 @@ const nextConfig = {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        ws: false,
         fs: false,
         net: false,
         tls: false,
         crypto: false
       };
-
-      // Optimize trace collection
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        minSize: 20000,
-        maxSize: 244000,
-        minChunks: 1,
-        maxAsyncRequests: 30,
-        maxInitialRequests: 30,
-        cacheGroups: {
-          default: false,
-          vendors: false
-        }
-      };
     }
-
-    if (isServer) {
-      const originalExternals = [...config.externals];
-      config.externals = [
-        (context, request, callback) => {
-          if (request === 'ws') {
-            return callback(null, "commonjs " + request);
-          }
-          if (Array.isArray(originalExternals)) {
-            for (const external of originalExternals) {
-              if (typeof external === 'function') {
-                try {
-                  return external(context, request, callback);
-                } catch {}
-              }
-            }
-          }
-          callback();
-        }
-      ];
-    }
-
     return config;
   },
   typescript: {
