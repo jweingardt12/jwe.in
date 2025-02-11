@@ -13,8 +13,15 @@ const nextConfig = {
     ],
   },
   swcMinify: true,
+  output: 'standalone',
   experimental: {
-    optimizePackageImports: ['@radix-ui/themes']
+    optimizePackageImports: ['@radix-ui/themes'],
+    // Optimize build traces
+    turbotrace: {
+      logLevel: 'error',
+      contextDirectory: process.cwd(),
+      processCwd: process.cwd(),
+    },
   },
   typescript: {
     ignoreBuildErrors: true
