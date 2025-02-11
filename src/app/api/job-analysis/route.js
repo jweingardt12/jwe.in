@@ -1,48 +1,22 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
-// Initialize Redis lazily
-let redis = null;
-let redisError = null;
-
-async function getRedis() {
-  if (redisError) {
-    console.error('Redis previously failed to initialize:', redisError);
-    return null;
-  }
-
-  if (!redis) {
-    try {
-      if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
-        throw new Error('Redis configuration is missing - STORAGE_KV_REST_API_URL and STORAGE_KV_REST_API_TOKEN are required');
-      }
-
-      console.log('Initializing Redis with URL:', process.env.STORAGE_KV_REST_API_URL);
-      redis = new Redis({
-        url: process.env.STORAGE_KV_REST_API_URL,
-        token: process.env.STORAGE_KV_REST_API_TOKEN,
-      });
-
-      // Test the connection
-      await redis.ping();
-      console.log('Redis initialized and connected successfully');
-    } catch (error) {
-      redisError = error;
-      console.error('Failed to initialize Redis:', error.message);
-      console.error('Stack trace:', error.stack);
-      return null;
-    }
-  }
-  return redis;
-}
+// Initialize Redis
+const redis = new Redis({
+  url: process.env.STORAGE_KV_REST_API_URL,
+  token: process.env.STORAGE_KV_REST_API_TOKEN,
+});
 
 // CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With'
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+  'Access-Control-Allow-Credentials': 'true',
+  'Content-Type': 'application/json'
 };
 
 // Options handler for CORS
@@ -58,10 +32,9 @@ export async function GET(request) {
   console.log('GET request received for job-analysis');
   
   try {
-    const redis = await getRedis();
-    if (!redis) {
-      console.error('Redis client not initialized');
-      return NextResponse.json({ error: 'Storage service unavailable' }, { 
+    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+      console.error('Redis configuration is missing');
+      return NextResponse.json({ error: 'Storage service configuration missing' }, { 
         status: 503,
         headers: corsHeaders
       });
@@ -172,10 +145,9 @@ export async function GET(request) {
 // Store job analysis data
 export async function POST(request) {
   try {
-    const redis = getRedis();
-    if (!redis) {
-      console.error('Redis client not initialized');
-      return NextResponse.json({ error: 'Storage service unavailable' }, { 
+    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+      console.error('Redis configuration is missing');
+      return NextResponse.json({ error: 'Storage service configuration missing' }, { 
         status: 503,
         headers: corsHeaders
       });
@@ -228,10 +200,9 @@ export async function POST(request) {
 // Delete job analysis data
 export async function DELETE(request) {
   try {
-    const redis = getRedis();
-    if (!redis) {
-      console.error('Redis client not initialized');
-      return NextResponse.json({ error: 'Storage service unavailable' }, { 
+    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+      console.error('Redis configuration is missing');
+      return NextResponse.json({ error: 'Storage service configuration missing' }, { 
         status: 503,
         headers: corsHeaders
       });
