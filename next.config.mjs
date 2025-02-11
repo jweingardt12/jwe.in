@@ -16,8 +16,9 @@ const nextConfig = {
         '**/*.map'
       ]
     },
-    optimizeCss: true,
-    legacyBrowsers: false,
+    optimizeCss: {
+      enabled: true
+    },
     turbotrace: {
       memoryLimit: 4096
     },
