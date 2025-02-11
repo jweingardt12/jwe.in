@@ -10,8 +10,11 @@ const corsHeaders = {
   'Access-Control-Max-Age': '86400'
 };
 
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 // Handle OPTIONS request for CORS
-export async function OPTIONS() {
+export async function OPTIONS(request) {
   return new NextResponse(null, {
     status: 204,
     headers: corsHeaders
@@ -19,6 +22,12 @@ export async function OPTIONS() {
 }
 
 export async function POST(request) {
+  // Set response headers for all responses
+  const baseHeaders = {
+    ...corsHeaders,
+    'Content-Type': 'application/json'
+  };
+
   try {
     const body = await request.json().catch(() => ({}));
     const { password } = body;
@@ -26,7 +35,7 @@ export async function POST(request) {
     if (!password) {
       return NextResponse.json(
         { error: 'Password is required' },
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: baseHeaders }
       );
     }
     
@@ -35,7 +44,7 @@ export async function POST(request) {
       // Create response with success
       const response = NextResponse.json(
         { success: true },
-        { status: 200, headers: corsHeaders }
+        { status: 200, headers: baseHeaders }
       );
 
       // Set auth cookie on the response
@@ -51,13 +60,13 @@ export async function POST(request) {
     
     return NextResponse.json(
       { error: 'Invalid password' },
-      { status: 401, headers: corsHeaders }
+      { status: 401, headers: baseHeaders }
     );
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: baseHeaders }
     );
   }
 } 
