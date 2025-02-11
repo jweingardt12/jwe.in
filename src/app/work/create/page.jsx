@@ -42,18 +42,23 @@ export default function CreatePage() {
             // If we have multiple entries for the same ID, keep the most recent one
             const existingCard = uniqueCards.get(card.id)
             if (!existingCard || new Date(card.createdAt) > new Date(existingCard.createdAt)) {
-              uniqueCards.set(card.id, card)
+              uniqueCards.set(card.id, {
+                ...card,
+                createdAt: card.createdAt || new Date().toISOString() // Ensure createdAt exists
+              })
             }
           }
         })
 
-        // Convert Map back to array and sort
+        // Convert Map back to array and sort by createdAt
         const validCards = Array.from(uniqueCards.values())
-        const sortedData = validCards.sort((a, b) => 
-          new Date(b.createdAt) - new Date(a.createdAt)
-        )
+        const sortedData = validCards.sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0)
+          const dateB = new Date(b.createdAt || 0)
+          return dateB - dateA // Sort newest to oldest
+        })
         
-        console.log('Filtered to unique cards:', sortedData.length)
+        console.log('Filtered and sorted cards:', sortedData.map(card => ({ id: card.id, createdAt: card.createdAt })))
         setSavedCards(sortedData)
       }
     } catch (error) {
@@ -68,26 +73,47 @@ export default function CreatePage() {
 
   const handleEdit = (card) => {
     setEditingCard(card)
-    // Strip formatting from bullet points for editing
-    const strippedBulletPoints = card.bulletPoints.map(point => {
-      return point.split('**').pop().trim();
+    // Parse both title and content from bullet points
+    const parsedBulletPoints = card.bulletPoints.map(point => {
+      const match = point.match(/^\*\*([^*]+):\*\*\s*(.+)$/);
+      return match ? {
+        title: match[1].trim(),
+        content: match[2].trim()
+      } : {
+        title: '',
+        content: point.trim()
+      };
     });
     
     setEditedContent({
       introText: card.introText,
-      bulletPoints: strippedBulletPoints,
+      bulletPoints: parsedBulletPoints,
       relevantSkills: [...card.relevantSkills]
     })
+    
+    // Set the job content in the form for editing
+    setJobDescription(card.jobContent || '')
+    setJobUrl('') // Clear URL since we're editing existing content
   }
 
   const handleSaveEdit = async () => {
     setIsLoading(true)
     try {
-      // Format bullet points to include titles
-      const formattedBulletPoints = editedContent.bulletPoints.map((point, index) => {
-        const titles = ['📱 Mobile:', '🧠 AI/ML:', '📈 Growth:'];
-        return `**${titles[index]}** ${point}`;
+      // Format bullet points combining titles and content
+      const formattedBulletPoints = editedContent.bulletPoints.map(point => {
+        return `**${point.title}:** ${point.content}`;
       });
+
+      const updatedData = {
+        id: editingCard.id,
+        jobTitle: editingCard.jobTitle,
+        companyName: editingCard.companyName,
+        introText: editedContent.introText,
+        bulletPoints: formattedBulletPoints,
+        relevantSkills: editedContent.relevantSkills,
+        jobContent: jobDescription.trim() || editingCard.jobContent,
+        createdAt: editingCard.createdAt
+      };
 
       // Save to Redis
       const saveResponse = await fetch('/api/job-analysis', {
@@ -97,16 +123,7 @@ export default function CreatePage() {
         },
         body: JSON.stringify({
           jobId: editingCard.id,
-          data: {
-            id: editingCard.id,
-            jobTitle: editingCard.jobTitle,
-            companyName: editingCard.companyName,
-            introText: editedContent.introText,
-            bulletPoints: formattedBulletPoints,
-            relevantSkills: editedContent.relevantSkills,
-            jobContent: editingCard.jobContent,
-            createdAt: editingCard.createdAt,
-          },
+          data: updatedData
         }),
       })
 
@@ -114,12 +131,20 @@ export default function CreatePage() {
         throw new Error('Failed to save changes')
       }
 
+      // Update the card in the local state
+      setSavedCards(prev => prev.map(card => 
+        card.id === editingCard.id ? updatedData : card
+      ))
+
       setEditingCard(null)
       setEditedContent({
         introText: '',
         bulletPoints: [],
         relevantSkills: []
       })
+      setJobDescription('')
+      setJobUrl('')
+      
       toast.success('Changes saved successfully!')
       
       // Add a small delay before refreshing to ensure Redis replication
@@ -165,6 +190,14 @@ export default function CreatePage() {
         throw new Error(data.error || 'Failed to analyze job')
       }
 
+      // Format bullet points to use single colon
+      const formattedBulletPoints = data.bulletPoints.map((point, index) => {
+        const titles = ['📱 Mobile', '🧠 AI/ML', '📈 Growth'];
+        const title = point.match(/^\*\*([^*]+):+\*\*/)?.[1] || titles[index];
+        const content = point.replace(/^\*\*[^*]+:+\*\*\s*/, '').trim();
+        return `**${title}:** ${content}`;
+      });
+
       // If we're editing, use the existing ID
       const jobId = editingCard ? editingCard.id : data.id
 
@@ -181,7 +214,7 @@ export default function CreatePage() {
             jobTitle: data.jobTitle,
             companyName: data.companyName,
             introText: data.introText,
-            bulletPoints: data.bulletPoints,
+            bulletPoints: formattedBulletPoints,
             relevantSkills: data.relevantSkills,
             jobContent: jobDescription.trim(),
             createdAt: editingCard ? editingCard.createdAt : new Date().toISOString(),
@@ -276,17 +309,29 @@ export default function CreatePage() {
             <div>
               <label className="block text-sm font-medium mb-1">Bullet Points</label>
               {editedContent.bulletPoints.map((point, index) => (
-                <textarea
-                  key={index}
-                  value={point}
-                  onChange={(e) => {
-                    const newPoints = [...editedContent.bulletPoints]
-                    newPoints[index] = e.target.value
-                    setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
-                  }}
-                  className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 mb-2"
-                  rows={2}
-                />
+                <div key={index} className="mb-4 space-y-2">
+                  <input
+                    value={point.title}
+                    onChange={(e) => {
+                      const newPoints = [...editedContent.bulletPoints]
+                      newPoints[index] = { ...point, title: e.target.value }
+                      setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
+                    }}
+                    className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 mb-2"
+                    placeholder={`Bullet point ${index + 1} title`}
+                  />
+                  <textarea
+                    value={point.content}
+                    onChange={(e) => {
+                      const newPoints = [...editedContent.bulletPoints]
+                      newPoints[index] = { ...point, content: e.target.value }
+                      setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
+                    }}
+                    className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
+                    rows={2}
+                    placeholder={`Bullet point ${index + 1} content`}
+                  />
+                </div>
               ))}
             </div>
             <div>
