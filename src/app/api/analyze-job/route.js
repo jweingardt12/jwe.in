@@ -316,18 +316,8 @@ export async function POST(request) {
     'Content-Type': 'application/json',
   }
 
-  // Handle OPTIONS request for CORS preflight
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, { status: 204, headers })
-  }
-
-  // Handle invalid methods
-  if (request.method !== 'POST') {
-    return NextResponse.json(
-      { error: 'Method not allowed' },
-      { status: 405, headers }
-    )
-  }
+  // Note: Next.js route handlers automatically handle method routing
+  // We just need to ensure CORS headers are set
 
   try {
     const openai = getOpenAI();

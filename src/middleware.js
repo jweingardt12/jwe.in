@@ -1,23 +1,43 @@
 const { NextResponse } = require('next/server');
 
 function middleware(request) {
-  // Skip CORS handling for non-API routes
-  if (!request.nextUrl.pathname.startsWith('/api/')) {
-    // Protect /work/create route
-    if (request.nextUrl.pathname.startsWith('/work/create')) {
-      const authCookie = request.cookies.get('admin_auth');
+  // Handle API routes
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    // Handle CORS preflight requests
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Max-Age': '86400'
+        }
+      });
+    }
 
-      // If no auth cookie, redirect to login
-      if (!authCookie?.value) {
-        const loginUrl = new URL('/work/login', request.url);
-        return NextResponse.redirect(loginUrl);
-      }
+    // Add CORS headers for actual requests
+    const response = NextResponse.next();
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    return response;
+  }
 
-      // Verify the auth cookie value matches our env var
-      if (authCookie.value !== process.env.ADMIN_PASSWORD) {
-        const loginUrl = new URL('/work/login', request.url);
-        return NextResponse.redirect(loginUrl);
-      }
+  // Protect /work/create route
+  if (request.nextUrl.pathname.startsWith('/work/create')) {
+    const authCookie = request.cookies.get('admin_auth');
+
+    // If no auth cookie, redirect to login
+    if (!authCookie?.value) {
+      const loginUrl = new URL('/work/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Verify the auth cookie value matches our env var
+    if (authCookie.value !== process.env.ADMIN_PASSWORD) {
+      const loginUrl = new URL('/work/login', request.url);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
