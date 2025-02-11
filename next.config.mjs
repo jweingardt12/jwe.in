@@ -3,7 +3,6 @@ import createMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure output and tracing options
   output: 'standalone',
   experimental: {
     outputFileTracingExcludes: {
@@ -17,21 +16,18 @@ const nextConfig = {
         '**/*.map'
       ]
     },
-    // Reduce memory usage during build
     optimizeCss: true,
     legacyBrowsers: false,
     turbotrace: {
       memoryLimit: 4096
-    }
+    },
+    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis']
   },
   swcMinify: true,
   compress: true,
   generateBuildId: () => 'build',
   typescript: {
     ignoreBuildErrors: true
-  },
-  experimental: {
-    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis']
   },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
@@ -42,24 +38,10 @@ const nextConfig = {
       }
     ],
   },
-  swcMinify: true,
-  output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis']
-  },
   eslint: {
     ignoreDuringBuilds: true
   },
-  typescript: {
-    ignoreBuildErrors: true
-  },
-  staticPageGenerationTimeout: 120,
-  typescript: {
-    ignoreBuildErrors: true
-  },
-  eslint: {
-    ignoreDuringBuilds: true
-  },
+  staticPageGenerationTimeout: 180,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   optimizeFonts: false
