@@ -20,13 +20,18 @@ const nextConfig = {
       enabled: true
     },
     turbotrace: {
-      memoryLimit: 4096
+      memoryLimit: 4096,
+      includeNodeModules: true
     },
-    serverComponentsExternalPackages: ['ws', '@upstash/redis']
+    serverComponentsExternalPackages: ['@upstash/redis']
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push('ws');
+      const originalExternals = config.externals;
+      config.externals = originalExternals.filter(external => {
+        if (typeof external !== 'string') return true;
+        return !['ws'].includes(external);
+      });
     }
     return config;
   },
