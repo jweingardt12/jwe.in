@@ -14,6 +14,15 @@ const nextConfig = {
   },
   swcMinify: true,
   output: 'standalone',
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push({
+        'next-ws': 'next-ws',
+        'ws': 'ws'
+      });
+    }
+    return config;
+  },
   experimental: {
     optimizePackageImports: ['@radix-ui/themes'],
     // Optimize build traces
