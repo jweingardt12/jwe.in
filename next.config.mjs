@@ -10,13 +10,22 @@ const nextConfig = {
       '*': [
         'node_modules/@swc/core-linux-x64-gnu',
         'node_modules/@swc/core-linux-x64-musl',
-        'node_modules/@esbuild/linux-x64'
+        'node_modules/@esbuild/linux-x64',
+        '.git',
+        'node_modules/sharp',
+        '**/*.md',
+        '**/*.map'
       ]
     },
     // Reduce memory usage during build
     optimizeCss: true,
-    legacyBrowsers: false
+    legacyBrowsers: false,
+    turbotrace: {
+      memoryLimit: 4096
+    }
   },
+  swcMinify: true,
+  compress: true,
   generateBuildId: () => 'build',
   typescript: {
     ignoreBuildErrors: true

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "NODE_OPTIONS='--max-old-space-size=4096 --optimize-for-size' next build",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=4096' next build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
