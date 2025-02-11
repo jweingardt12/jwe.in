@@ -3,6 +3,12 @@ import createMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Disable static page optimization to prevent stack overflow
+  staticPageGenerationTimeout: 120,
+  experimental: {
+    optimizeCss: false,
+    optimizePackageImports: ['@radix-ui/themes'],
+  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
     remotePatterns: [
@@ -14,6 +20,9 @@ const nextConfig = {
   },
   swcMinify: true,
   output: 'standalone',
+  poweredByHeader: false,
+  reactStrictMode: true,
+  compress: true,
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = [
@@ -25,10 +34,7 @@ const nextConfig = {
     }
     return config;
   },
-  experimental: {
-    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis'],
-    optimizePackageImports: ['@radix-ui/themes'],
-  },
+  serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis'],
   eslint: {
     ignoreDuringBuilds: true
   },
