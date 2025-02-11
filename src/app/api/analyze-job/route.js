@@ -310,7 +310,10 @@ export async function GET(request) {
 
 export async function POST(request) {
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
   }
 
   try {
@@ -319,7 +322,7 @@ export async function POST(request) {
       console.error('OpenAI API key not configured')
       return NextResponse.json({ 
         error: 'OpenAI API key not configured. Please contact the site administrator.' 
-      }, { status: 500 })
+      }, { status: 500, headers })
     }
 
     const body = await request.json()
@@ -329,7 +332,7 @@ export async function POST(request) {
 
     if (!jobUrl && !jobContent) {
       console.error('No job URL or content provided')
-      return NextResponse.json({ error: 'No job URL or content provided' }, { status: 400 })
+      return NextResponse.json({ error: 'No job URL or content provided' }, { status: 400, headers })
     }
 
     // If we have a URL but no content, fetch the content
@@ -338,20 +341,20 @@ export async function POST(request) {
       console.log('Fetching content from URL:', jobUrl)
       if (!jobUrl.startsWith('http')) {
         console.error('Invalid URL format:', jobUrl)
-        return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
+        return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers })
       }
       try {
         content = await fetchJobContent(jobUrl)
         console.log('Successfully fetched content, length:', content.length)
       } catch (fetchError) {
         console.error('Error fetching content:', fetchError)
-        return NextResponse.json({ error: fetchError.message }, { status: 500 })
+        return NextResponse.json({ error: fetchError.message }, { status: 500, headers })
       }
     }
 
     if (!content) {
       console.error('No content available for analysis')
-      return NextResponse.json({ error: 'No content available for analysis' }, { status: 400 })
+      return NextResponse.json({ error: 'No content available for analysis' }, { status: 400, headers })
     }
 
     // Validate content has enough information
@@ -361,7 +364,7 @@ export async function POST(request) {
       console.error('Insufficient job details provided')
       return NextResponse.json({ 
         error: 'Please provide more details from the job posting. The provided content seems incomplete.' 
-      }, { status: 400 })
+      }, { status: 400, headers })
     }
 
     console.log('Making OpenAI request with content length:', content.length)
@@ -429,14 +432,14 @@ export async function POST(request) {
           console.error('Error parsing OpenAI response:', parseError)
           return NextResponse.json({ 
             error: 'Could not extract job details. Please ensure the URL points to a specific job posting.' 
-          }, { status: 400 })
+          }, { status: 400, headers })
         }
 
         // Check if the response indicates an error
         if (parsedContent.error) {
           return NextResponse.json({ 
             error: parsedContent.message || 'Could not extract job details from the provided content.' 
-          }, { status: 400 })
+          }, { status: 400, headers })
         }
 
         // Generate a unique ID for this analysis
@@ -453,7 +456,7 @@ export async function POST(request) {
         if (!stored) {
           return NextResponse.json({ 
             error: 'Failed to store job analysis. Please try again.' 
-          }, { status: 500 })
+          }, { status: 500, headers })
         }
 
         // Return both the analysis and the ID
@@ -461,12 +464,12 @@ export async function POST(request) {
           id: analysisId,
           ...parsedContent,
           jobContent: content
-        })
+        }, { headers })
       } catch (parseError) {
         console.error('Error parsing OpenAI response:', parseError)
         return NextResponse.json({ 
           error: 'Failed to parse AI response. Please try again.' 
-        }, { status: 500 })
+        }, { status: 500, headers })
       }
     } catch (error) {
       clearTimeout(timeoutId)
@@ -474,7 +477,7 @@ export async function POST(request) {
         console.error('OpenAI request timed out')
         return NextResponse.json({ 
           error: 'The analysis is taking longer than expected. Please try again with a shorter job description.' 
-        }, { status: 408 })
+        }, { status: 408, headers })
       }
       throw error // Re-throw other errors to be caught by outer catch block
     }
@@ -482,7 +485,7 @@ export async function POST(request) {
     console.error('Error in POST handler:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to analyze job posting. Please try again.' },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 } 
