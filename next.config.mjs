@@ -22,7 +22,13 @@ const nextConfig = {
     turbotrace: {
       memoryLimit: 4096
     },
-    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis']
+    serverComponentsExternalPackages: ['ws', '@upstash/redis']
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('ws');
+    }
+    return config;
   },
   swcMinify: true,
   compress: true,
