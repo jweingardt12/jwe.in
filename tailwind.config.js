@@ -1,3 +1,9 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -12,6 +18,9 @@ module.exports = {
         'dot-pattern': 'radial-gradient(circle at center, currentColor 1px, transparent 1px)',
         'dot-black': 'radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px)',
         'dot-white': 'radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       backgroundSize: {
         'dot-pattern': '24px 24px',
@@ -41,11 +50,23 @@ module.exports = {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        shine: {
+          "0%": {
+            "background-position": "0% 0%",
+          },
+          "50%": {
+            "background-position": "100% 100%",
+          },
+          to: {
+            "background-position": "0% 0%",
+          },
+        },
       },
       animation: {
         'zoom-in': 'zoom-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
         "shooting-star": "shooting-star linear infinite",
         shimmer: 'shimmer 2s infinite',
+        shine: "shine var(--duration) infinite linear",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -161,5 +182,18 @@ module.exports = {
       }
     }),
     require('tailwindcss-motion'),
+    addVariablesForColors,
   ],
+}
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+ 
+  addBase({
+    ":root": newVars,
+  });
 }

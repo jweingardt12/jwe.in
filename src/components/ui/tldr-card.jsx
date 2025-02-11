@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { GlowEffect } from '@/components/core/glow-effect'
+import { ShineBorder } from '@/components/ui/shine-border'
 
 const CardContainer = ({ children }) => (
   <div className="relative max-w-4xl mx-auto mt-4">
@@ -14,10 +15,17 @@ const CardContainer = ({ children }) => (
         scale={1.02}
       />
       
-      {/* Content container */}
-      <div className="relative rounded-[15px] bg-white dark:bg-black/60 p-6 transition-all duration-300">
-        {children}
-      </div>
+      <ShineBorder
+        borderRadius={16}
+        duration={8}
+        color={['#9333EA', '#3B82F6']}
+        className="!min-w-0 !w-full !min-h-0 !p-0 !bg-transparent"
+      >
+        {/* Content container */}
+        <div className="relative rounded-[15px] bg-white dark:bg-black/60 p-6 transition-all duration-300">
+          {children}
+        </div>
+      </ShineBorder>
     </div>
   </div>
 )

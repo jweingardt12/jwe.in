@@ -47,7 +47,7 @@
     "critters": "^0.0.25",
     "fast-glob": "^3.2.11",
     "feed": "^4.2.2",
-    "framer-motion": "^11.16.0",
+    "framer-motion": "^11.18.2",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "html-to-image": "^1.11.11",
@@ -89,9 +89,12 @@
   },
   "devDependencies": {
     "@swc/helpers": "^0.5.15",
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.0.8",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
     "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.5"
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "typescript": "^5.7.3"
   }
 }
