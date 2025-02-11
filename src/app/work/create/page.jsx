@@ -26,7 +26,7 @@ export default function CreatePage() {
       const response = await fetch('/api/job-analysis')
       if (response.ok) {
         const data = await response.json()
-        console.log('Loaded cards from Redis:', data.map(card => ({ id: card.id, key: `job-analysis:${card.id}` })))
+        console.log('Loaded cards from Redis:', data.map(card => ({ id: card.id, createdAt: card.createdAt })))
         
         // Create a Map to ensure unique entries by ID
         const uniqueCards = new Map()
@@ -39,26 +39,30 @@ export default function CreatePage() {
               card.introText && 
               card.bulletPoints && 
               card.relevantSkills) {
-            // If we have multiple entries for the same ID, keep the most recent one
-            const existingCard = uniqueCards.get(card.id)
-            if (!existingCard || new Date(card.createdAt) > new Date(existingCard.createdAt)) {
-              uniqueCards.set(card.id, {
-                ...card,
-                createdAt: card.createdAt || new Date().toISOString() // Ensure createdAt exists
-              })
-            }
+            // Ensure createdAt exists and is valid
+            const createdAt = card.createdAt || new Date().toISOString()
+            uniqueCards.set(card.id, {
+              ...card,
+              createdAt // Ensure createdAt exists
+            })
           }
         })
 
         // Convert Map back to array and sort by createdAt
         const validCards = Array.from(uniqueCards.values())
         const sortedData = validCards.sort((a, b) => {
-          const dateA = new Date(a.createdAt || 0)
-          const dateB = new Date(b.createdAt || 0)
+          // Parse dates, fallback to 0 if invalid
+          const dateA = new Date(a.createdAt || 0).getTime()
+          const dateB = new Date(b.createdAt || 0).getTime()
           return dateB - dateA // Sort newest to oldest
         })
         
-        console.log('Filtered and sorted cards:', sortedData.map(card => ({ id: card.id, createdAt: card.createdAt })))
+        console.log('Sorted cards by date:', sortedData.map(card => ({
+          id: card.id,
+          createdAt: card.createdAt,
+          date: new Date(card.createdAt).toLocaleString()
+        })))
+        
         setSavedCards(sortedData)
       }
     } catch (error) {
