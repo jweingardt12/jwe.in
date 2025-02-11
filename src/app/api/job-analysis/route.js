@@ -19,6 +19,7 @@ async function getRedis() {
         throw new Error('Redis configuration is missing - STORAGE_KV_REST_API_URL and STORAGE_KV_REST_API_TOKEN are required');
       }
 
+      console.log('Initializing Redis with URL:', process.env.STORAGE_KV_REST_API_URL);
       redis = new Redis({
         url: process.env.STORAGE_KV_REST_API_URL,
         token: process.env.STORAGE_KV_REST_API_TOKEN,
@@ -54,8 +55,10 @@ export async function OPTIONS(request) {
 
 // Get job analysis data
 export async function GET(request) {
+  console.log('GET request received for job-analysis');
+  
   try {
-    const redis = getRedis();
+    const redis = await getRedis();
     if (!redis) {
       console.error('Redis client not initialized');
       return NextResponse.json({ error: 'Storage service unavailable' }, { 
@@ -73,6 +76,7 @@ export async function GET(request) {
       let keys;
       try {
         keys = await redis.keys('job-analysis:*');
+        console.log('Found keys:', keys);
       } catch (error) {
         console.error('Failed to fetch keys:', error);
         return NextResponse.json({ error: 'Failed to fetch job analyses' }, { 
@@ -80,7 +84,11 @@ export async function GET(request) {
           headers: corsHeaders
         });
       }
-      console.log('Found keys:', keys);
+      
+      if (!keys || keys.length === 0) {
+        console.log('No job analyses found');
+        return NextResponse.json([], { headers: corsHeaders });
+      }
       
       try {
         const analyses = await Promise.all(
@@ -117,7 +125,17 @@ export async function GET(request) {
 
     console.log('Fetching job analysis for ID:', jobId);
     const key = `job-analysis:${jobId}`;
-    const jobData = await redis.get(key);
+    let jobData;
+    try {
+      jobData = await redis.get(key);
+      console.log('Raw Redis response:', jobData);
+    } catch (error) {
+      console.error('Failed to fetch data from Redis:', error);
+      return NextResponse.json({ error: 'Failed to fetch job analysis' }, {
+        status: 500,
+        headers: corsHeaders
+      });
+    }
     
     if (!jobData) {
       console.log('No data found for key:', key);
@@ -127,15 +145,23 @@ export async function GET(request) {
       });
     }
     
-    // Handle case where data might already be parsed
-    const parsedData = typeof jobData === 'string' ? JSON.parse(jobData) : jobData;
-    console.log('Successfully retrieved job analysis');
-    return NextResponse.json({
-      id: jobId,
-      ...parsedData
-    }, { headers: corsHeaders });
+    try {
+      // Handle case where data might already be parsed
+      const parsedData = typeof jobData === 'string' ? JSON.parse(jobData) : jobData;
+      console.log('Successfully retrieved and parsed job analysis');
+      return NextResponse.json({
+        id: jobId,
+        ...parsedData
+      }, { headers: corsHeaders });
+    } catch (error) {
+      console.error('Failed to parse job data:', error);
+      return NextResponse.json({ error: 'Invalid job analysis data' }, {
+        status: 500,
+        headers: corsHeaders
+      });
+    }
   } catch (error) {
-    console.error('Error getting job analysis:', error);
+    console.error('Error in GET handler:', error);
     return NextResponse.json({ error: 'Internal server error' }, { 
       status: 500,
       headers: corsHeaders
