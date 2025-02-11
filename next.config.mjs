@@ -3,8 +3,20 @@ import createMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable file tracing to avoid micromatch issues
+  // Configure output and tracing options
   output: 'standalone',
+  experimental: {
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@swc/core-linux-x64-gnu',
+        'node_modules/@swc/core-linux-x64-musl',
+        'node_modules/@esbuild/linux-x64'
+      ]
+    },
+    // Reduce memory usage during build
+    optimizeCss: true,
+    legacyBrowsers: false
+  },
   generateBuildId: () => 'build',
   typescript: {
     ignoreBuildErrors: true
