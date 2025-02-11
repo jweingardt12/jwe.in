@@ -308,16 +308,9 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  // Set CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   }
-
-  // Note: Next.js route handlers automatically handle method routing
-  // We just need to ensure CORS headers are set
 
   try {
     const openai = getOpenAI();
