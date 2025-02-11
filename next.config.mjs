@@ -22,6 +22,13 @@ const nextConfig = {
         'next-ws',
         '@upstash/redis'
       ];
+    } else {
+      // Client-side Node.js polyfills
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        buffer: require.resolve('buffer/'),
+        async_hooks: false,
+      };
     }
     return config;
   },
