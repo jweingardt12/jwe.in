@@ -20,25 +20,31 @@ export default function LoginPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ password }),
-        credentials: 'include'
+        credentials: 'include',
+        mode: 'cors',
+        cache: 'no-cache'
       })
 
-      const data = await res.json()
-
-      if (res.ok) {
-        // Add a small delay to ensure cookie is set
-        await new Promise(resolve => setTimeout(resolve, 100));
-        router.push('/work/create')
-        router.refresh() // Refresh to update auth state
-      } else {
-        setError(data.error || 'Invalid password')
-        setPassword('') // Clear password on error
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: 'Failed to login' }))
+        throw new Error(errorData.error || 'Failed to login')
       }
+
+      const data = await res.json().catch(() => null)
+      if (!data?.success) {
+        throw new Error('Invalid response from server')
+      }
+
+      // Add a small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100))
+      router.push('/work/create')
+      router.refresh() // Refresh to update auth state
     } catch (err) {
       console.error('Login error:', err)
-      setError('Failed to login. Please try again.')
+      setError(err.message || 'Failed to login. Please try again.')
       setPassword('') // Clear password on error
     } finally {
       setIsLoading(false)
