@@ -140,6 +140,9 @@ dependencies:
   next-themes:
     specifier: ^0.4.4
     version: 0.4.4(react-dom@18.2.0)(react@18.2.0)
+  next-transpile-modules:
+    specifier: ^10.0.1
+    version: 10.0.1
   next-ws:
     specifier: ^2.0.0
     version: 2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0)
@@ -3773,7 +3776,6 @@ packages:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
-    dev: true
 
   /entities@2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
@@ -5967,6 +5969,12 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /next-transpile-modules@10.0.1:
+    resolution: {integrity: sha512-4VX/LCMofxIYAVV58UmD+kr8jQflpLWvas/BQ4Co0qWLWzVh06FoZkECkrX5eEZT6oJFqie6+kfbTA3EZCVtdQ==}
+    dependencies:
+      enhanced-resolve: 5.18.1
+    dev: false
+
   /next-ws@2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0):
     resolution: {integrity: sha512-0ttM/pbDvhz6KoBeJ9qjVVWZUY5iJ4ooFJ5MVOt5lt1eTblxlPPYxde1ASJcAnvEhn7Z5QOWA1QTZZsClzEkqw==}
     hasBin: true
@@ -7436,7 +7444,6 @@ packages:
   /tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
-    dev: true
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

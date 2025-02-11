@@ -1,5 +1,6 @@
 import remarkGfm from 'remark-gfm'
 import createMDX from '@next/mdx'
+import withTM from 'next-transpile-modules';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -23,11 +24,20 @@ const nextConfig = {
         '@upstash/redis'
       ];
     } else {
-      // Client-side Node.js polyfills
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        buffer: require.resolve('buffer/'),
+        fs: false,
+        net: false,
+        tls: false,
         async_hooks: false,
+        buffer: false,
+        stream: false,
+        crypto: false,
+        http: false,
+        https: false,
+        zlib: false,
+        path: false,
+        os: false,
       };
     }
     return config;
@@ -61,4 +71,5 @@ const withMDX = createMDX({
   }
 })
 
-export default withMDX(nextConfig)
+const withConfig = withTM(['ws', 'next-ws']);
+export default withMDX(withConfig(nextConfig));
