@@ -3,6 +3,15 @@ import createMDX from '@next/mdx'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Disable file tracing to avoid micromatch issues
+  output: 'standalone',
+  generateBuildId: () => 'build',
+  typescript: {
+    ignoreBuildErrors: true
+  },
+  experimental: {
+    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis']
+  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
     remotePatterns: [

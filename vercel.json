@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "next build",
-  "devCommand": "next dev",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=3072' next build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
   "env": {
     "NEXT_RUNTIME": "nodejs",
-    "NODE_OPTIONS": "--max-old-space-size=3072"
+    "NEXT_TELEMETRY_DISABLED": "1"
   }
 }
