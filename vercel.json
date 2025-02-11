@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
   "env": {
-    "NEXT_RUNTIME": "nodejs"
+    "NEXT_RUNTIME": "nodejs",
+    "NODE_OPTIONS": "--max-old-space-size=3072"
   }
 }
