@@ -11,3 +11,9 @@ out
 README.md
 CHANGELOG.md
 LICENSE*
+**/*.test.*
+**/__tests__
+**/*.spec.*
+**/*.stories.*
+.vscode
+.idea
