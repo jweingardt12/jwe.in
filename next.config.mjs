@@ -4,7 +4,6 @@ import createMDX from '@next/mdx'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 
-  transpilePackages: ['ws'],
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx', 'md'],
   images: {
     remotePatterns: [
@@ -25,7 +24,7 @@ const nextConfig = {
     turbotrace: {
       memoryLimit: 4096
     },
-    serverComponentsExternalPackages: ['ws']
+    serverComponentsExternalPackages: []
   },
   webpack: (config, { isServer }) => {
     // Client-side configuration
@@ -35,19 +34,8 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-        crypto: false,
-        ws: false
+        crypto: false
       };
-    }
-    
-    // Both client and server configuration
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'next/dist/compiled/ws': 'ws'
-    };
-    
-    if (isServer) {
-      config.externals = [...(config.externals || []), 'ws']
     }
     return config;
   },

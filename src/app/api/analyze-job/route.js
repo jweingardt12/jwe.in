@@ -223,7 +223,8 @@ function validateAnalysis(analysis) {
 // Set longer timeout for this route
 export const maxDuration = 30 // 30 seconds
 
-// Configure allowed methods
+// Configure runtime and dynamic behavior
+export const runtime = 'nodejs' // Use Node.js runtime instead of Edge
 export const dynamic = 'force-dynamic' // Disable static optimization
 export async function OPTIONS(request) {
   return new NextResponse(null, {
