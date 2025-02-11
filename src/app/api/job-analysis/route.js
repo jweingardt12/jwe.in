@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
 
+export const runtime = 'nodejs'
+
 // Validate Redis configuration
 if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
   console.error('Redis configuration is missing. Please check environment variables STORAGE_KV_REST_API_URL and STORAGE_KV_REST_API_TOKEN');

@@ -15,22 +15,15 @@ const nextConfig = {
   swcMinify: true,
   output: 'standalone',
   webpack: (config, { isServer }) => {
+    // Handle WebSocket and other server-side modules
     if (isServer) {
-      config.externals.push({
-        'next-ws': 'next-ws',
-        'ws': 'ws'
-      });
+      config.externals = [...config.externals, 'ws', 'next-ws'];
     }
     return config;
   },
   experimental: {
+    serverComponentsExternalPackages: ['ws', 'next-ws', '@upstash/redis'],
     optimizePackageImports: ['@radix-ui/themes'],
-    // Optimize build traces
-    turbotrace: {
-      logLevel: 'error',
-      contextDirectory: process.cwd(),
-      processCwd: process.cwd(),
-    },
   },
   typescript: {
     ignoreBuildErrors: true
