@@ -137,15 +137,12 @@ dependencies:
   next-themes:
     specifier: ^0.4.4
     version: 0.4.4(react-dom@18.2.0)(react@18.2.0)
-  next-ws:
-    specifier: ^2.0.0
-    version: 2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0)
   open-graph-scraper:
     specifier: ^6.8.3
     version: 6.9.0
   openai:
     specifier: ^4.28.0
-    version: 4.83.0(ws@8.18.0)(zod@3.24.1)
+    version: 4.83.0(zod@3.24.1)
   pg:
     specifier: ^8.11.3
     version: 8.13.1
@@ -209,9 +206,6 @@ dependencies:
   vaul:
     specifier: ^1.1.2
     version: 1.1.2(@types/react@19.0.8)(react-dom@18.2.0)(react@18.2.0)
-  ws:
-    specifier: ^8.18.0
-    version: 8.18.0
   xml2js:
     specifier: ^0.6.2
     version: 0.6.2
@@ -6220,19 +6214,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /next-ws@2.0.0(next@14.0.4)(react@18.2.0)(ws@8.18.0):
-    resolution: {integrity: sha512-0ttM/pbDvhz6KoBeJ9qjVVWZUY5iJ4ooFJ5MVOt5lt1eTblxlPPYxde1ASJcAnvEhn7Z5QOWA1QTZZsClzEkqw==}
-    hasBin: true
-    peerDependencies:
-      next: '>=13.1.1'
-      react: '*'
-      ws: '*'
-    dependencies:
-      next: 14.0.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      ws: 8.18.0
-    dev: false
-
   /next@14.0.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-qbwypnM7327SadwFtxXnQdGiKpkuhaRLE2uq62/nRul9cj9KhQ5LhHmlziTNqUidZotw/Q1I9OjirBROdUJNgA==}
     engines: {node: '>=18.17.0'}
@@ -6393,7 +6374,7 @@ packages:
       undici: 6.21.1
     dev: false
 
-  /openai@4.83.0(ws@8.18.0)(zod@3.24.1):
+  /openai@4.83.0(zod@3.24.1):
     resolution: {integrity: sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==}
     hasBin: true
     peerDependencies:
@@ -6412,7 +6393,6 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
-      ws: 8.18.0
       zod: 3.24.1
     transitivePeerDependencies:
       - encoding
@@ -8346,19 +8326,6 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
-
-  /ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
 
   /xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
