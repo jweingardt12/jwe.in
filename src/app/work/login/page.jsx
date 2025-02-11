@@ -7,10 +7,13 @@ import { SimpleLayout } from '@/components/SimpleLayout'
 export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+    setIsLoading(true)
     
     try {
       const res = await fetch('/api/auth/login', {
@@ -19,15 +22,22 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ password }),
+        credentials: 'same-origin'
       })
+
+      const data = await res.json()
 
       if (res.ok) {
         router.push('/work/create')
+        router.refresh() // Refresh to update auth state
       } else {
-        setError('Invalid password')
+        setError(data.error || 'Invalid password')
       }
     } catch (err) {
-      setError('Something went wrong')
+      console.error('Login error:', err)
+      setError('Failed to login. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -54,6 +64,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
                   className="block w-full rounded-md border-0 py-1.5 text-zinc-900 dark:text-zinc-100 shadow-sm ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 dark:focus:ring-sky-500 sm:text-sm sm:leading-6 bg-white/5 dark:bg-zinc-800/50"
                 />
               </div>
@@ -68,9 +79,10 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-sky-600 dark:bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-sky-500 dark:hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:focus-visible:outline-sky-500"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-sky-600 dark:bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-sky-500 dark:hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:focus-visible:outline-sky-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign in
+                {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
           </form>
