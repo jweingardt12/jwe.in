@@ -22,20 +22,24 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ password }),
-        credentials: 'same-origin'
+        credentials: 'include'
       })
 
       const data = await res.json()
 
       if (res.ok) {
+        // Add a small delay to ensure cookie is set
+        await new Promise(resolve => setTimeout(resolve, 100));
         router.push('/work/create')
         router.refresh() // Refresh to update auth state
       } else {
         setError(data.error || 'Invalid password')
+        setPassword('') // Clear password on error
       }
     } catch (err) {
       console.error('Login error:', err)
       setError('Failed to login. Please try again.')
+      setPassword('') // Clear password on error
     } finally {
       setIsLoading(false)
     }
@@ -65,6 +69,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  autoComplete="current-password"
                   className="block w-full rounded-md border-0 py-1.5 text-zinc-900 dark:text-zinc-100 shadow-sm ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 dark:focus:ring-sky-500 sm:text-sm sm:leading-6 bg-white/5 dark:bg-zinc-800/50"
                 />
               </div>

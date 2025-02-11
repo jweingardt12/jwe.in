@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
-// CORS headers
+// CORS headers with credentials
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://www.jwe.in',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Credentials': 'true',
   'Access-Control-Max-Age': '86400'
 };
 
@@ -21,17 +22,30 @@ export async function POST(request) {
   try {
     const { password } = await request.json()
     
+    // Log for debugging (remove in production)
+    console.log('Received password:', password);
+    console.log('Expected password:', process.env.ADMIN_PASSWORD);
+    
     // Check if password matches environment variable
     if (password === process.env.ADMIN_PASSWORD) {
-      // Set auth cookie
-      cookies().set('admin_auth', password, {
+      // Create response with success
+      const response = NextResponse.json(
+        { success: true },
+        { 
+          status: 200,
+          headers: corsHeaders
+        }
+      );
+
+      // Set auth cookie on the response
+      response.cookies.set('admin_auth', password, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
-      })
+      });
       
-      return NextResponse.json({ success: true }, { headers: corsHeaders })
+      return response;
     }
     
     return NextResponse.json(
