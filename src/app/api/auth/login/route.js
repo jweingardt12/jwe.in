@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
-const origin = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:3000' 
-  : 'https://www.jwe.in';
-
-// CORS headers with credentials
+// Most permissive CORS headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': origin,
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': '*',
+  'Access-Control-Allow-Headers': '*',
   'Access-Control-Allow-Credentials': 'true',
   'Access-Control-Max-Age': '86400'
 };
@@ -23,16 +19,6 @@ export async function OPTIONS() {
 }
 
 export async function POST(request) {
-  // Early return if not the correct origin
-  const requestOrigin = request.headers.get('origin');
-  if (requestOrigin !== origin) {
-    console.error('Invalid origin:', requestOrigin);
-    return NextResponse.json(
-      { error: 'Invalid origin' },
-      { status: 403, headers: corsHeaders }
-    );
-  }
-
   try {
     const body = await request.json().catch(() => ({}));
     const { password } = body;
@@ -46,13 +32,6 @@ export async function POST(request) {
     
     // Check if password matches environment variable
     if (password === process.env.ADMIN_PASSWORD) {
-      const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-      };
-
       // Create response with success
       const response = NextResponse.json(
         { success: true },
@@ -60,7 +39,12 @@ export async function POST(request) {
       );
 
       // Set auth cookie on the response
-      response.cookies.set('admin_auth', password, cookieOptions);
+      response.cookies.set('admin_auth', password, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/'
+      });
       
       return response;
     }
