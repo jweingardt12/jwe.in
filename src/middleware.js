@@ -1,6 +1,8 @@
 const { NextResponse } = require('next/server');
 
 function middleware(request) {
+  const origin = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://www.jwe.in';
+
   // Handle API routes
   if (request.nextUrl.pathname.startsWith('/api/')) {
     // For preflight requests
@@ -8,10 +10,12 @@ function middleware(request) {
       return new NextResponse(null, {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+          'Access-Control-Allow-Credentials': 'true',
           'Access-Control-Max-Age': '86400',
+          'Access-Control-Expose-Headers': 'Set-Cookie'
         },
       });
     }
@@ -20,9 +24,11 @@ function middleware(request) {
     const response = NextResponse.next();
     
     // Set CORS headers
-    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Origin', origin);
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+    response.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
     
     return response;
   }

@@ -23,15 +23,18 @@ const nextConfig = {
       memoryLimit: 4096,
       includeNodeModules: true
     },
-    serverComponentsExternalPackages: ['@upstash/redis']
+    serverComponentsExternalPackages: ['@upstash/redis', 'ws']
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      const originalExternals = config.externals;
-      config.externals = originalExternals.filter(external => {
-        if (typeof external !== 'string') return true;
-        return !['ws'].includes(external);
-      });
+      const originalExternals = [...config.externals];
+      config.externals = [
+        'ws',
+        ...originalExternals.filter(external => {
+          if (typeof external !== 'string') return true;
+          return !['ws'].includes(external);
+        })
+      ];
     }
     return config;
   },
