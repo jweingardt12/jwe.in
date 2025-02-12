@@ -23,7 +23,7 @@ const BulletPoint = ({ emoji, title, content }) => (
     <span className="text-purple-500 dark:text-purple-400 mt-1 text-xs">■</span>
     <div className="text-xs">
       <span className="font-bold text-purple-950 dark:text-purple-100">
-        {emoji} {title}:
+        {title}
       </span>
       <span className="text-zinc-700 dark:text-zinc-300 ml-1">
         {content?.trim()}
@@ -65,10 +65,10 @@ export function TldrCard({ data, children }) {
 
         <div className="space-y-2">
           {bulletPoints?.map((point, index) => {
-            const [headline, ...rest] = point.split('**').filter(Boolean);
-            const [emoji, title] = headline.split(' ');
-            const content = rest.join('').replace(':', '');
-            return <BulletPoint key={index} emoji={emoji} title={title} content={content} />
+            const match = point.match(/^\*\*([^*]+)\*\*\s*(.+)$/);
+            if (!match) return null;
+            const [, title, content] = match;
+            return <BulletPoint key={index} title={title.trim()} content={content.trim()} />;
           })}
         </div>
 

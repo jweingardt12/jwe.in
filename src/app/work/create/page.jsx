@@ -100,11 +100,11 @@ export default function CreatePage() {
     setEditingCard(card)
     // Parse both title and content from bullet points
     const parsedBulletPoints = card.bulletPoints.map(point => {
-      // Updated regex to capture the entire title part including emoji
-      const match = point.match(/^\*\*([^:]+):\*\*\s*(.+)$/);
+      // Updated regex to handle emoji and full title
+      const match = point.match(/^\*\*([^*]+)\*\*\s*(.+)$/);
       return match ? {
         title: match[1].trim(),
-        content: match[2].trim()
+        content: match[2].replace(/^:\s*/, '').trim() // Remove leading colon if present
       } : {
         title: '',
         content: point.trim()
@@ -131,7 +131,8 @@ export default function CreatePage() {
     try {
       // Format bullet points combining titles and content
       const formattedBulletPoints = editedContent.bulletPoints.map(point => {
-        return `**${point.title}:** ${point.content}`;
+        // Ensure the title is preserved exactly as is, including emoji
+        return `**${point.title}** ${point.content}`;
       });
 
       const updatedData = {
@@ -222,12 +223,14 @@ export default function CreatePage() {
         throw new Error(data.error || 'Failed to analyze job')
       }
 
-      // Format bullet points to use single colon
+      // Format bullet points preserving full titles with emojis
       const formattedBulletPoints = data.bulletPoints.map((point, index) => {
-        const titles = ['📱 Mobile', '🧠 AI/ML', '📈 Growth'];
-        const title = point.match(/^\*\*([^*]+):+\*\*/)?.[1] || titles[index];
-        const content = point.replace(/^\*\*[^*]+:+\*\*\s*/, '').trim();
-        return `**${title}:** ${content}`;
+        const defaultTitles = ['🔍 User-Centric Design', '📊 Data Wizard', '🤖 AI Enthusiast'];
+        // Try to extract the title and content, fallback to default if not found
+        const match = point.match(/^\*\*([^*]+):*\*\*\s*(.+)$/);
+        const title = match ? match[1].trim() : defaultTitles[index];
+        const content = match ? match[2].trim() : point.trim();
+        return `**${title}** ${content}`;
       });
 
       // If we're editing, use the existing ID and createdAt
@@ -294,20 +297,26 @@ export default function CreatePage() {
   const handleDelete = async (card, silent = false) => {
     try {
       console.log('Attempting to delete card with ID:', card.id)
-      // Use relative path instead of full URL
-      const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
+      
+      // Get the current origin
+      const origin = window.location.origin
+      const apiUrl = `${origin}/api/job-analysis?id=${encodeURIComponent(card.id)}`
+      
+      const deleteResponse = await fetch(apiUrl, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         }
       })
 
-      // Check the response status before updating UI
-      if (!deleteResponse.ok && deleteResponse.status !== 404) {
-        throw new Error('Failed to delete analysis')
+      // Check if the request was successful
+      if (!deleteResponse.ok) {
+        const errorData = await deleteResponse.text()
+        console.error('Delete failed:', deleteResponse.status, errorData)
+        throw new Error(`Failed to delete analysis (${deleteResponse.status})`)
       }
 
-      // Update UI
+      // Update UI state
       setSavedCards(prev => prev.filter(c => c.id !== card.id))
       setFilteredCards(prev => prev.filter(c => c.id !== card.id))
       
