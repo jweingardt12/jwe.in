@@ -202,7 +202,7 @@ export async function DELETE(request) {
   try {
     if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
       console.error('Redis configuration is missing');
-      return NextResponse.json({ error: 'Storage service configuration missing' }, { 
+      return new NextResponse(JSON.stringify({ error: 'Storage service configuration missing' }), { 
         status: 503,
         headers: corsHeaders
       });
@@ -213,39 +213,44 @@ export async function DELETE(request) {
 
     if (!jobId) {
       console.log('No jobId provided in query params');
-      return NextResponse.json({ error: 'Job ID is required' }, { 
+      return new NextResponse(JSON.stringify({ error: 'Job ID is required' }), { 
         status: 400,
         headers: corsHeaders
       });
     }
 
-    console.log('Checking if job analysis exists:', jobId);
+    console.log('Attempting to delete job analysis:', jobId);
     const key = `job-analysis:${jobId}`;
     
-    // Get all keys to check what we have
-    const allKeys = await redis.keys('job-analysis:*');
-    console.log('All Redis keys:', allKeys);
-    
-    // First check if the key exists
-    const exists = await redis.exists(key);
-    console.log('Key exists check:', { key, exists });
-
-    if (!exists) {
-      console.log('Key not found in Redis:', key);
-      return NextResponse.json({ error: 'Job analysis not found' }, { 
-        status: 404,
+    try {
+      // Attempt to delete the key directly
+      const result = await redis.del(key);
+      console.log('Delete operation result:', result);
+      
+      // Redis del returns the number of keys that were removed
+      if (result === 0) {
+        console.log('Key not found in Redis:', key);
+        return new NextResponse(JSON.stringify({ error: 'Job analysis not found' }), { 
+          status: 404,
+          headers: corsHeaders
+        });
+      }
+      
+      console.log('Successfully deleted job analysis:', jobId);
+      return new NextResponse(JSON.stringify({ success: true }), { 
+        status: 200,
+        headers: corsHeaders 
+      });
+    } catch (redisError) {
+      console.error('Redis error during deletion:', redisError);
+      return new NextResponse(JSON.stringify({ error: 'Failed to delete job analysis' }), { 
+        status: 500,
         headers: corsHeaders
       });
     }
-
-    console.log('Deleting job analysis with ID:', jobId);
-    await redis.del(key);
-    console.log('Successfully deleted job analysis:', jobId);
-    
-    return NextResponse.json({ success: true }, { headers: corsHeaders });
   } catch (error) {
-    console.error('Error deleting job analysis:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { 
+    console.error('Error in DELETE handler:', error);
+    return new NextResponse(JSON.stringify({ error: 'Internal server error' }), { 
       status: 500,
       headers: corsHeaders
     });

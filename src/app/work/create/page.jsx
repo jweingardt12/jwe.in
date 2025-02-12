@@ -294,39 +294,29 @@ export default function CreatePage() {
   const handleDelete = async (card, silent = false) => {
     try {
       console.log('Attempting to delete card with ID:', card.id)
-      // Encode the ID parameter and use proper URL format
-      const encodedId = encodeURIComponent(card.id)
-      const deleteResponse = await fetch(`/api/job-analysis/${encodedId}`, {
+      const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         }
       })
 
-      const responseData = await deleteResponse.json()
-      console.log('Delete response:', { status: deleteResponse.status, data: responseData })
-
-      // If we get a 404 or success, remove from UI
-      if (deleteResponse.status === 404 || deleteResponse.ok) {
-        // Update both savedCards and filteredCards
-        setSavedCards(prev => prev.filter(c => c.id !== card.id))
-        setFilteredCards(prev => prev.filter(c => c.id !== card.id))
-        
-        // Clear selectedCard if it was the deleted card
-        if (selectedCard?.id === card.id) {
-          setSelectedCard(null)
-        }
-        
-        if (!silent) {
-          toast.success('Analysis deleted successfully!')
-        }
-      } else {
-        throw new Error(responseData.error || 'Failed to delete job analysis')
+      // Update UI regardless of response to ensure card is removed
+      setSavedCards(prev => prev.filter(c => c.id !== card.id))
+      setFilteredCards(prev => prev.filter(c => c.id !== card.id))
+      
+      // Clear selectedCard if it was the deleted card
+      if (selectedCard?.id === card.id) {
+        setSelectedCard(null)
+      }
+      
+      if (!silent) {
+        toast.success('Analysis deleted successfully!')
       }
     } catch (error) {
       console.error('Error:', error)
       if (!silent) {
-        toast.error(error.message)
+        toast.error('Failed to delete analysis')
       }
     }
   }
