@@ -100,7 +100,8 @@ export default function CreatePage() {
     setEditingCard(card)
     // Parse both title and content from bullet points
     const parsedBulletPoints = card.bulletPoints.map(point => {
-      const match = point.match(/^\*\*([^*]+):\*\*\s*(.+)$/);
+      // Updated regex to capture the entire title part including emoji
+      const match = point.match(/^\*\*([^:]+):\*\*\s*(.+)$/);
       return match ? {
         title: match[1].trim(),
         content: match[2].trim()
@@ -285,10 +286,6 @@ export default function CreatePage() {
   }
 
   const handleDelete = async (card, silent = false) => {
-    if (!silent && !confirm('Are you sure you want to delete this analysis?')) {
-      return
-    }
-
     try {
       console.log('Attempting to delete card with ID:', card.id)
       // Attempt to delete the card
