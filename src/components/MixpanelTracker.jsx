@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { initMixpanel } from '@/lib/mixpanel'
+import { initMixpanel, track, EVENTS } from '@/lib/mixpanel'
 
 export default function MixpanelTracker() {
   const pathname = usePathname()
@@ -17,7 +17,7 @@ export default function MixpanelTracker() {
       page: pathname,
       url: window.location.href,
       referrer: document.referrer,
-      timestamp: new Date().toISOString(),
+      title: document.title,
       viewport: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -25,7 +25,7 @@ export default function MixpanelTracker() {
     };
 
     try {
-      initMixpanel().track('Page View', properties);
+      track(EVENTS.PAGE_VIEW, properties);
     } catch (error) {
       console.error('Error tracking page view:', error);
     }

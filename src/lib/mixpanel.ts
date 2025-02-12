@@ -33,9 +33,9 @@ export const initMixpanel = () => {
   if (typeof window !== 'undefined') {
     try {
       mixpanel.init(MIXPANEL_TOKEN, {
-        debug: process.env.NODE_ENV === 'development',
+        debug: false,
         api_host: 'https://api-js.mixpanel.com',
-        track_pageview: true,
+        track_pageview: false,
         ignore_dnt: true,
         persistence: 'localStorage'
       });
@@ -56,14 +56,6 @@ export const initMixpanel = () => {
         viewport_height: window.innerHeight,
         viewport_width: window.innerWidth,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      });
-
-      // Track initial page view
-      track(EVENTS.PAGE_VIEW, {
-        url: window.location.href,
-        path: window.location.pathname,
-        referrer: document.referrer,
-        title: document.title
       });
 
       // Set up click tracking
