@@ -294,8 +294,9 @@ export default function CreatePage() {
   const handleDelete = async (card, silent = false) => {
     try {
       console.log('Attempting to delete card with ID:', card.id)
-      // Attempt to delete the card
-      const deleteResponse = await fetch(`/api/job-analysis?id=${card.id}`, {
+      // Encode the ID parameter and use proper URL format
+      const encodedId = encodeURIComponent(card.id)
+      const deleteResponse = await fetch(`/api/job-analysis/${encodedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
