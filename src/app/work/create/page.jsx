@@ -27,52 +27,74 @@ export default function CreatePage() {
   const loadSavedCards = async () => {
     try {
       const response = await fetch('/api/job-analysis')
-      if (response.ok) {
-        const data = await response.json()
-        console.log('Loaded cards from Redis:', data.map(card => ({ id: card.id, createdAt: card.createdAt })))
-        
-        // Create a Map to ensure unique entries by ID
-        const uniqueCards = new Map()
-        const now = new Date()
-        const sixtyDaysAgo = new Date(now.getTime() - (60 * 24 * 60 * 60 * 1000))
-
-        data.forEach(card => {
-          // Only include cards that have all required data and are not older than 60 days
-          if (card && 
-              card.id && 
-              card.jobTitle && 
-              card.companyName && 
-              card.introText && 
-              card.bulletPoints && 
-              card.relevantSkills) {
-            // Ensure createdAt exists and is valid
-            const createdAt = card.createdAt || new Date().toISOString()
-            const cardDate = new Date(createdAt)
-            
-            // If card is older than 60 days, delete it
-            if (cardDate < sixtyDaysAgo) {
-              handleDelete(card, true) // true flag for silent delete
-              return
-            }
-
-            uniqueCards.set(card.id, {
-              ...card,
-              createdAt // Ensure createdAt exists
-            })
-          }
-        })
-
-        // Convert Map back to array and sort by createdAt
-        const validCards = Array.from(uniqueCards.values())
-        const sortedData = validCards.sort((a, b) => {
-          // Parse dates, fallback to 0 if invalid
-          const dateA = new Date(a.createdAt || 0).getTime()
-          const dateB = new Date(b.createdAt || 0).getTime()
-          return dateB - dateA // Sort newest to oldest
-        })
-        
-        setSavedCards(sortedData)
+      if (!response.ok) {
+        console.error('Failed to load cards:', response.status)
+        setSavedCards([])
+        return
       }
+
+      const data = await response.json()
+      console.log('Raw response from Redis:', data)
+      
+      // Create a Map to ensure unique entries by ID
+      const uniqueCards = new Map()
+      const now = new Date()
+      const sixtyDaysAgo = new Date(now.getTime() - (60 * 24 * 60 * 60 * 1000))
+
+      // Filter and validate cards
+      const validCards = data.filter(card => {
+        // Basic existence check
+        if (!card || !card.id) {
+          console.log('Skipping invalid card:', card)
+          return false
+        }
+
+        // Required fields check
+        const requiredFields = ['jobTitle', 'companyName', 'introText', 'bulletPoints', 'relevantSkills']
+        const hasAllFields = requiredFields.every(field => {
+          const hasField = card[field] !== undefined && card[field] !== null
+          if (!hasField) {
+            console.log(`Card ${card.id} missing required field: ${field}`)
+          }
+          return hasField
+        })
+
+        if (!hasAllFields) return false
+
+        // Validate date and handle expiration
+        try {
+          const createdAt = card.createdAt ? new Date(card.createdAt) : new Date()
+          if (isNaN(createdAt.getTime())) {
+            console.log(`Card ${card.id} has invalid date:`, card.createdAt)
+            return false
+          }
+
+          // If card is older than 60 days, delete it silently
+          if (createdAt < sixtyDaysAgo) {
+            console.log(`Card ${card.id} is expired, deleting...`)
+            handleDelete(card, true)
+            return false
+          }
+
+          // Store valid card with ensured createdAt
+          uniqueCards.set(card.id, {
+            ...card,
+            createdAt: createdAt.toISOString()
+          })
+          return true
+        } catch (error) {
+          console.error(`Error processing card ${card.id}:`, error)
+          return false
+        }
+      })
+
+      // Sort cards by creation date
+      const sortedCards = Array.from(uniqueCards.values()).sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      })
+
+      console.log('Processed valid cards:', sortedCards.length)
+      setSavedCards(sortedCards)
     } catch (error) {
       console.error('Error loading saved cards:', error)
       setSavedCards([])
@@ -295,21 +317,36 @@ export default function CreatePage() {
   }
 
   const handleDelete = async (card, silent = false) => {
+    if (!card || !card.id) {
+      console.error('Invalid card or missing ID:', card)
+      if (!silent) {
+        toast.error('Cannot delete: invalid card data')
+      }
+      return
+    }
+
     try {
       console.log('Attempting to delete card with ID:', card.id)
       
-      // Get the current origin
-      const origin = window.location.origin
-      const apiUrl = `${origin}/api/job-analysis?id=${encodeURIComponent(card.id)}`
-      
-      const deleteResponse = await fetch(apiUrl, {
+      const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         }
       })
 
-      // Check if the request was successful
+      // Handle different response statuses
+      if (deleteResponse.status === 404) {
+        console.log('Card already deleted or not found:', card.id)
+        // Remove from UI even if not found in backend
+        setSavedCards(prev => prev.filter(c => c.id !== card.id))
+        setFilteredCards(prev => prev.filter(c => c.id !== card.id))
+        if (!silent) {
+          toast.success('Card removed from view')
+        }
+        return
+      }
+
       if (!deleteResponse.ok) {
         const errorData = await deleteResponse.text()
         console.error('Delete failed:', deleteResponse.status, errorData)
