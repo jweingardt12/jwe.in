@@ -16,6 +16,7 @@ export default function CreatePage() {
   const [copiedId, setCopiedId] = useState(null)
   const [editingCard, setEditingCard] = useState(null)
   const [editedContent, setEditedContent] = useState({
+    title: '',
     introText: '',
     bulletPoints: [],
     relevantSkills: []
@@ -90,6 +91,7 @@ export default function CreatePage() {
     });
     
     setEditedContent({
+      title: card.title || `✨ TL;DR - Why I'm a Great Fit for ${card.companyName || 'this role'}`,
       introText: card.introText,
       bulletPoints: parsedBulletPoints,
       relevantSkills: [...card.relevantSkills]
@@ -112,6 +114,7 @@ export default function CreatePage() {
         id: editingCard.id,
         jobTitle: editingCard.jobTitle,
         companyName: editingCard.companyName,
+        title: editedContent.title,
         introText: editedContent.introText,
         bulletPoints: formattedBulletPoints,
         relevantSkills: editedContent.relevantSkills,
@@ -142,6 +145,7 @@ export default function CreatePage() {
 
       setEditingCard(null)
       setEditedContent({
+        title: '',
         introText: '',
         bulletPoints: [],
         relevantSkills: []
@@ -217,6 +221,7 @@ export default function CreatePage() {
             id: jobId,
             jobTitle: data.jobTitle,
             companyName: data.companyName,
+            title: data.title,
             introText: data.introText,
             bulletPoints: formattedBulletPoints,
             relevantSkills: data.relevantSkills,
@@ -299,58 +304,73 @@ export default function CreatePage() {
 
     if (isEditing) {
       return (
-        <div className="relative bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Intro Text</label>
-              <textarea
-                value={editedContent.introText}
-                onChange={(e) => setEditedContent(prev => ({ ...prev, introText: e.target.value }))}
-                className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
-                rows={2}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Bullet Points</label>
-              {editedContent.bulletPoints.map((point, index) => (
-                <div key={index} className="mb-4 space-y-2">
-                  <input
-                    value={point.title}
-                    onChange={(e) => {
-                      const newPoints = [...editedContent.bulletPoints]
-                      newPoints[index] = { ...point, title: e.target.value }
-                      setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
-                    }}
-                    className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 mb-2"
-                    placeholder={`Bullet point ${index + 1} title`}
-                  />
-                  <textarea
-                    value={point.content}
-                    onChange={(e) => {
-                      const newPoints = [...editedContent.bulletPoints]
-                      newPoints[index] = { ...point, content: e.target.value }
-                      setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
-                    }}
-                    className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
-                    rows={2}
-                    placeholder={`Bullet point ${index + 1} content`}
-                  />
-                </div>
-              ))}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Skills</label>
-              <textarea
-                value={editedContent.relevantSkills.join(', ')}
-                onChange={(e) => {
-                  const skills = e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                  setEditedContent(prev => ({ ...prev, relevantSkills: skills }))
-                }}
-                className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
-                rows={2}
-                placeholder="Separate skills with commas"
-              />
-            </div>
+        <div className="space-y-4 p-4 bg-white dark:bg-zinc-900 rounded-lg shadow">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              value={editedContent.title}
+              onChange={(e) => setEditedContent(prev => ({ ...prev, title: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 dark:bg-zinc-800 dark:text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Introduction
+            </label>
+            <textarea
+              value={editedContent.introText}
+              onChange={(e) => setEditedContent(prev => ({ ...prev, introText: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 dark:bg-zinc-800 dark:text-white"
+              rows={3}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Bullet Points
+            </label>
+            {editedContent.bulletPoints.map((point, index) => (
+              <div key={index} className="mb-4 space-y-2">
+                <input
+                  value={point.title}
+                  onChange={(e) => {
+                    const newPoints = [...editedContent.bulletPoints]
+                    newPoints[index] = { ...point, title: e.target.value }
+                    setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
+                  }}
+                  className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 mb-2"
+                  placeholder={`Bullet point ${index + 1} title`}
+                />
+                <textarea
+                  value={point.content}
+                  onChange={(e) => {
+                    const newPoints = [...editedContent.bulletPoints]
+                    newPoints[index] = { ...point, content: e.target.value }
+                    setEditedContent(prev => ({ ...prev, bulletPoints: newPoints }))
+                  }}
+                  className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
+                  rows={2}
+                  placeholder={`Bullet point ${index + 1} content`}
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Skills
+            </label>
+            <textarea
+              value={editedContent.relevantSkills.join(', ')}
+              onChange={(e) => {
+                const skills = e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                setEditedContent(prev => ({ ...prev, relevantSkills: skills }))
+              }}
+              className="w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50"
+              rows={2}
+              placeholder="Separate skills with commas"
+            />
           </div>
         </div>
       )
@@ -460,6 +480,7 @@ export default function CreatePage() {
                           onClick={() => {
                             setEditingCard(null)
                             setEditedContent({
+                              title: '',
                               introText: '',
                               bulletPoints: [],
                               relevantSkills: []

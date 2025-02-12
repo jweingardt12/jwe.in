@@ -44,14 +44,14 @@ export function TldrCard({ data, children }) {
   }
 
   if (!data) return null
-  const { companyName, introText, bulletPoints, relevantSkills } = data
+  const { companyName, introText, bulletPoints, relevantSkills, title } = data
 
   return (
     <CardContainer>
       <div className="space-y-4">
         <div className="flex items-start justify-between">
           <h3 className="text-base font-bold text-purple-950 dark:text-purple-100 pr-8">
-            ✨ TL;DR - Why I'm a Great Fit for {companyName || 'this role'}
+            {title || `✨ TL;DR - Why I'm a Great Fit for ${companyName || 'this role'}`}
           </h3>
           <div className="relative">
             <div className="text-sm text-purple-500 dark:text-purple-300 cursor-help hover:text-purple-600 dark:hover:text-purple-200 peer">?</div>
