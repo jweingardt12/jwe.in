@@ -294,6 +294,7 @@ export default function CreatePage() {
   const handleDelete = async (card, silent = false) => {
     try {
       console.log('Attempting to delete card with ID:', card.id)
+      // Use relative path instead of full URL
       const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
         method: 'DELETE',
         headers: {
@@ -301,7 +302,12 @@ export default function CreatePage() {
         }
       })
 
-      // Update UI regardless of response to ensure card is removed
+      // Check the response status before updating UI
+      if (!deleteResponse.ok && deleteResponse.status !== 404) {
+        throw new Error('Failed to delete analysis')
+      }
+
+      // Update UI
       setSavedCards(prev => prev.filter(c => c.id !== card.id))
       setFilteredCards(prev => prev.filter(c => c.id !== card.id))
       
@@ -316,7 +322,7 @@ export default function CreatePage() {
     } catch (error) {
       console.error('Error:', error)
       if (!silent) {
-        toast.error('Failed to delete analysis')
+        toast.error(error.message || 'Failed to delete analysis')
       }
     }
   }
