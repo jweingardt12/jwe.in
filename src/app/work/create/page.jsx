@@ -121,6 +121,9 @@ export default function CreatePage() {
     // Set the job content in the form for editing
     setJobDescription(card.jobContent || '')
     setJobUrl('') // Clear URL since we're editing existing content
+    
+    // Scroll to the top where the edit form is
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleSaveEdit = async () => {
@@ -140,7 +143,8 @@ export default function CreatePage() {
         bulletPoints: formattedBulletPoints,
         relevantSkills: editedContent.relevantSkills,
         jobContent: jobDescription.trim() || editingCard.jobContent,
-        createdAt: editingCard.createdAt
+        createdAt: editingCard.createdAt,
+        updatedAt: new Date().toISOString()
       };
 
       // Save to Redis
@@ -164,6 +168,11 @@ export default function CreatePage() {
         card.id === editingCard.id ? updatedData : card
       ))
 
+      // Update selectedCard if we're editing it
+      if (selectedCard?.id === editingCard.id) {
+        setSelectedCard(updatedData)
+      }
+
       setEditingCard(null)
       setEditedContent({
         title: '',
@@ -175,12 +184,6 @@ export default function CreatePage() {
       setJobUrl('')
       
       toast.success('Changes saved successfully!')
-      
-      // Add a small delay before refreshing to ensure Redis replication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Refresh the saved cards list
-      await loadSavedCards()
     } catch (error) {
       console.error('Error:', error)
       toast.error(error.message)
@@ -227,8 +230,22 @@ export default function CreatePage() {
         return `**${title}:** ${content}`;
       });
 
-      // If we're editing, use the existing ID
+      // If we're editing, use the existing ID and createdAt
       const jobId = editingCard ? editingCard.id : data.id
+      const now = new Date().toISOString()
+
+      const cardData = {
+        id: jobId,
+        jobTitle: data.jobTitle,
+        companyName: data.companyName,
+        title: data.title,
+        introText: data.introText,
+        bulletPoints: formattedBulletPoints,
+        relevantSkills: data.relevantSkills,
+        jobContent: jobDescription.trim(),
+        createdAt: editingCard ? editingCard.createdAt : now,
+        updatedAt: now
+      }
 
       // Save to Redis
       const saveResponse = await fetch('/api/job-analysis', {
@@ -238,17 +255,7 @@ export default function CreatePage() {
         },
         body: JSON.stringify({
           jobId,
-          data: {
-            id: jobId,
-            jobTitle: data.jobTitle,
-            companyName: data.companyName,
-            title: data.title,
-            introText: data.introText,
-            bulletPoints: formattedBulletPoints,
-            relevantSkills: data.relevantSkills,
-            jobContent: jobDescription.trim(),
-            createdAt: editingCard ? editingCard.createdAt : new Date().toISOString(),
-          },
+          data: cardData
         }),
       })
 
@@ -256,18 +263,17 @@ export default function CreatePage() {
         throw new Error('Failed to save job analysis')
       }
 
-      // Update local state and refresh saved cards
-      setSelectedCard(data)
+      // Update local state
+      setSelectedCard(cardData)
+      setSavedCards(prev => {
+        const newCards = prev.filter(c => c.id !== jobId)
+        return [cardData, ...newCards]
+      })
+      
       setJobUrl('')
       setJobDescription('')
       setEditingCard(null)
       toast.success(editingCard ? 'Job analysis updated successfully!' : 'Job analysis created successfully!')
-      
-      // Add a small delay before refreshing to ensure Redis replication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Refresh the saved cards list
-      await loadSavedCards()
     } catch (error) {
       console.error('Error:', error)
       setError(error.message)
@@ -301,13 +307,17 @@ export default function CreatePage() {
 
       // If we get a 404 or success, remove from UI
       if (deleteResponse.status === 404 || deleteResponse.ok) {
+        // Update both savedCards and filteredCards
         setSavedCards(prev => prev.filter(c => c.id !== card.id))
+        setFilteredCards(prev => prev.filter(c => c.id !== card.id))
+        
+        // Clear selectedCard if it was the deleted card
+        if (selectedCard?.id === card.id) {
+          setSelectedCard(null)
+        }
+        
         if (!silent) {
           toast.success('Analysis deleted successfully!')
-        }
-        // Refresh the list to ensure we're in sync with Redis
-        if (!silent) {
-          await loadSavedCards()
         }
       } else {
         throw new Error(responseData.error || 'Failed to delete job analysis')
@@ -316,8 +326,6 @@ export default function CreatePage() {
       console.error('Error:', error)
       if (!silent) {
         toast.error(error.message)
-        // Refresh the list to ensure UI is in sync
-        await loadSavedCards()
       }
     }
   }
@@ -501,12 +509,45 @@ export default function CreatePage() {
 
         {selectedCard && (
           <div className="mt-8">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4">
-              Preview
-            </h3>
-            <div className="relative pb-16">
-              <TldrCard data={selectedCard} />
-              <div className="absolute -bottom-4 right-0">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                Preview
+              </h3>
+              <div className="flex gap-2">
+                {editingCard?.id === selectedCard.id ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setEditingCard(null)
+                        setEditedContent({
+                          title: '',
+                          introText: '',
+                          bulletPoints: [],
+                          relevantSkills: []
+                        })
+                      }}
+                      className="inline-flex items-center"
+                      variant="outline"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleSaveEdit}
+                      className="inline-flex items-center"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => handleEdit(selectedCard)}
+                    className="inline-flex items-center"
+                    variant="outline"
+                  >
+                    Edit
+                  </Button>
+                )}
                 <Button
                   onClick={() => handleCopyLink(selectedCard.id)}
                   className="inline-flex items-center"
@@ -514,6 +555,9 @@ export default function CreatePage() {
                   {copiedId === selectedCard.id ? 'Copied!' : 'Copy Share Link'}
                 </Button>
               </div>
+            </div>
+            <div className="relative pb-4">
+              {editingCard?.id === selectedCard.id ? renderCard(selectedCard) : <TldrCard data={selectedCard} />}
             </div>
           </div>
         )}
@@ -555,6 +599,14 @@ export default function CreatePage() {
                       <span className="inline-block" title={formatDate(card.createdAt).relativeTime}>
                         Created on {formatDate(card.createdAt).formattedDate}
                       </span>
+                      {card.updatedAt && card.updatedAt !== card.createdAt && (
+                        <>
+                          <span className="text-zinc-300 dark:text-zinc-600">•</span>
+                          <span title={formatDate(card.updatedAt).relativeTime}>
+                            Updated {formatDate(card.updatedAt).formattedDate}
+                          </span>
+                        </>
+                      )}
                       {card.companyName && (
                         <>
                           <span className="text-zinc-300 dark:text-zinc-600">•</span>
