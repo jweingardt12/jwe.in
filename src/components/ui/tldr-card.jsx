@@ -1,32 +1,20 @@
 'use client'
 
 import React from 'react'
-import { GlowEffect } from '@/components/core/glow-effect'
 import { ShineBorder } from '@/components/ui/shine-border'
 
 const CardContainer = ({ children }) => (
   <div className="relative max-w-4xl mx-auto mt-4">
-    <div className="relative rounded-[16px] p-[1px] group isolate transform-gpu will-change-transform overflow-hidden bg-white dark:bg-zinc-900/80 shadow-xl ring-1 ring-zinc-100/10 dark:ring-white/20">
-      <GlowEffect
-        colors={['#9333EA', '#3B82F6', '#9333EA', '#3B82F6']}
-        mode='colorShift'
-        blur='soft'
-        duration={3}
-        scale={1.02}
-      />
-      
-      <ShineBorder
-        borderRadius={16}
-        duration={8}
-        color={['#9333EA', '#3B82F6']}
-        className="!min-w-0 !w-full !min-h-0 !p-0 !bg-transparent"
-      >
-        {/* Content container */}
-        <div className="relative rounded-[15px] bg-white dark:bg-black/60 p-6 transition-all duration-300">
-          {children}
-        </div>
-      </ShineBorder>
-    </div>
+    <ShineBorder
+      borderRadius={16}
+      duration={8}
+      color={['#9333EA', '#3B82F6']}
+      className="w-full"
+    >
+      <div className="p-6">
+        {children}
+      </div>
+    </ShineBorder>
   </div>
 )
 
@@ -94,4 +82,4 @@ export function TldrCard({ data, children }) {
       </div>
     </CardContainer>
   )
-}
+} 

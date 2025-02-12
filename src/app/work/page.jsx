@@ -3,8 +3,9 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChatBubbleOvalLeftEllipsisIcon, DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
+import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
+import portraitImage from '@/images/portrait.jpg'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { Timeline } from '@/components/ui/timeline'
@@ -22,6 +23,7 @@ import { BackgroundGradient } from '@/components/ui/background-gradient'
 import { TldrCard } from '@/components/ui/tldr-card'
 import { TldrLoadingSkeleton } from '@/components/ui/tldr-loading-skeleton'
 import { LoadingSkeleton } from '@/components/ArticleSkeleton'
+import { Button } from "@/components/ui/button"
 
 import { ExpandedContext } from '@/contexts/expanded'
 
@@ -131,19 +133,38 @@ const cardItems = [
 ]
 
 const TldrCardWrapper = ({ jobData, isLoading }) => {
+  const [showContent, setShowContent] = useState(false)
+
+  useEffect(() => {
+    if (!isLoading && jobData && !jobData.error) {
+      const timer = setTimeout(() => {
+        setShowContent(true)
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, jobData])
+
   // Loading state
-  if (isLoading) {
+  if (isLoading || !showContent) {
     return <TldrLoadingSkeleton />
   }
 
   // Success state - only show if we have valid data
   if (jobData && !jobData.error) {
-    return <TldrCard data={jobData} />
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <TldrCard data={jobData} />
+      </motion.div>
+    )
   }
 
   // Error state
-  return null;
-};
+  return null
+}
 
 const WorkContent = () => {
   const [mounted, setMounted] = useState(false)
@@ -646,7 +667,7 @@ const WorkContent = () => {
   return (
     <ExpandedContext.Provider value={{ isExpanded, setIsExpanded }}>
       <SimpleLayout>
-        <div className={`space-y-20 sm:space-y-32 ${(isValidJobId || (isLoading && !jobData?.error)) ? 'pt-4' : 'mt-16 sm:mt-32'}`}>
+        <div className={`space-y-12 sm:space-y-24 ${(isValidJobId || (isLoading && !jobData?.error)) ? '' : 'mt-16 sm:mt-32'}`}>
           {(isValidJobId || (isLoading && !jobData?.error)) && (
             <div className="relative isolate">
               <TldrCardWrapper jobData={jobData} isLoading={isLoading} />

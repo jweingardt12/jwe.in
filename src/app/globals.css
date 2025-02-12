@@ -82,6 +82,21 @@
   }
 }
 
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translateY(-10px); }
+  50% { transform: translateY(0px); }
+}
+
+@keyframes float-3 {
+  0%, 100% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); }
+}
+
 .animate-overlay-in {
   animation: overlay-in 0.2s ease-out forwards;
 }
@@ -109,6 +124,18 @@
 .animate-delayed-fade-in {
   opacity: 0;
   animation: delayedFadeIn 1s ease-out 3s forwards;
+}
+
+.animate-float-1 {
+  animation: float-1 3s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-2 3.5s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: float-3 4s ease-in-out infinite;
 }
 
 .dialog-enter {
