@@ -12,6 +12,8 @@ export default function CreatePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [savedCards, setSavedCards] = useState([])
+  const [filteredCards, setFilteredCards] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [selectedCard, setSelectedCard] = useState(null)
   const [copiedId, setCopiedId] = useState(null)
   const [editingCard, setEditingCard] = useState(null)
@@ -80,6 +82,19 @@ export default function CreatePage() {
   useEffect(() => {
     loadSavedCards()
   }, [])
+
+  useEffect(() => {
+    // Filter cards based on search query
+    const query = searchQuery.toLowerCase()
+    const filtered = savedCards.filter(card => 
+      card.companyName?.toLowerCase().includes(query) ||
+      card.jobTitle?.toLowerCase().includes(query) ||
+      card.introText?.toLowerCase().includes(query) ||
+      card.title?.toLowerCase().includes(query) ||
+      card.relevantSkills?.some(skill => skill.toLowerCase().includes(query))
+    )
+    setFilteredCards(filtered)
+  }, [searchQuery, savedCards])
 
   const handleEdit = (card) => {
     setEditingCard(card)
@@ -392,26 +407,35 @@ export default function CreatePage() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
+    const formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+    
+    // Also calculate relative time for tooltip
     const now = new Date()
     const diffTime = Math.abs(now - date)
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
     
+    let relativeTime
     if (diffDays === 0) {
-      return 'Today'
+      relativeTime = 'Today'
     } else if (diffDays === 1) {
-      return 'Yesterday'
+      relativeTime = 'Yesterday'
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`
+      relativeTime = `${diffDays} days ago`
     } else if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7)
-      return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
+      relativeTime = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
     } else {
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
+      const months = Math.floor(diffDays / 30)
+      relativeTime = `${months} ${months === 1 ? 'month' : 'months'} ago`
     }
+    
+    return { formattedDate, relativeTime }
   }
 
   return (
@@ -499,15 +523,53 @@ export default function CreatePage() {
 
         {savedCards.length > 0 && (
           <div className="mt-8">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4">
-              Recent Analyses
-            </h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                Recent Analyses
+              </h3>
+              <div className="relative w-72">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search cards..."
+                  className="w-full px-4 py-2 pr-10 text-sm border rounded-md border-zinc-300 dark:border-zinc-700 bg-white/5 dark:bg-zinc-800/50 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+                <svg
+                  className="absolute right-3 top-2.5 h-5 w-5 text-zinc-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+            </div>
             <div className="space-y-16 w-full">
-              {savedCards.map((card) => (
+              {(searchQuery ? filteredCards : savedCards).map((card) => (
                 <div key={card.id} className="relative pb-16">
                   <div className="mb-8">
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                      Created {formatDate(card.createdAt)}
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-2">
+                      <span className="inline-block" title={formatDate(card.createdAt).relativeTime}>
+                        Created on {formatDate(card.createdAt).formattedDate}
+                      </span>
+                      {card.companyName && (
+                        <>
+                          <span className="text-zinc-300 dark:text-zinc-600">•</span>
+                          <span>{card.companyName}</span>
+                        </>
+                      )}
+                      {card.jobTitle && (
+                        <>
+                          <span className="text-zinc-300 dark:text-zinc-600">•</span>
+                          <span>{card.jobTitle}</span>
+                        </>
+                      )}
                     </div>
                     {renderCard(card)}
                   </div>
@@ -564,6 +626,11 @@ export default function CreatePage() {
                   </div>
                 </div>
               ))}
+              {searchQuery && filteredCards.length === 0 && (
+                <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
+                  No cards found matching "{searchQuery}"
+                </div>
+              )}
             </div>
           </div>
         )}
