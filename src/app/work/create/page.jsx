@@ -31,8 +31,11 @@ export default function CreatePage() {
         
         // Create a Map to ensure unique entries by ID
         const uniqueCards = new Map()
+        const now = new Date()
+        const sixtyDaysAgo = new Date(now.getTime() - (60 * 24 * 60 * 60 * 1000))
+
         data.forEach(card => {
-          // Only include cards that have all required data
+          // Only include cards that have all required data and are not older than 60 days
           if (card && 
               card.id && 
               card.jobTitle && 
@@ -42,6 +45,14 @@ export default function CreatePage() {
               card.relevantSkills) {
             // Ensure createdAt exists and is valid
             const createdAt = card.createdAt || new Date().toISOString()
+            const cardDate = new Date(createdAt)
+            
+            // If card is older than 60 days, delete it
+            if (cardDate < sixtyDaysAgo) {
+              handleDelete(card, true) // true flag for silent delete
+              return
+            }
+
             uniqueCards.set(card.id, {
               ...card,
               createdAt // Ensure createdAt exists
@@ -57,12 +68,6 @@ export default function CreatePage() {
           const dateB = new Date(b.createdAt || 0).getTime()
           return dateB - dateA // Sort newest to oldest
         })
-        
-        console.log('Sorted cards by date:', sortedData.map(card => ({
-          id: card.id,
-          createdAt: card.createdAt,
-          date: new Date(card.createdAt).toLocaleString()
-        })))
         
         setSavedCards(sortedData)
       }
@@ -264,8 +269,8 @@ export default function CreatePage() {
     toast.success('Share link copied to clipboard!')
   }
 
-  const handleDelete = async (card) => {
-    if (!confirm('Are you sure you want to delete this analysis?')) {
+  const handleDelete = async (card, silent = false) => {
+    if (!silent && !confirm('Are you sure you want to delete this analysis?')) {
       return
     }
 
@@ -285,17 +290,23 @@ export default function CreatePage() {
       // If we get a 404 or success, remove from UI
       if (deleteResponse.status === 404 || deleteResponse.ok) {
         setSavedCards(prev => prev.filter(c => c.id !== card.id))
-        toast.success('Analysis deleted successfully!')
+        if (!silent) {
+          toast.success('Analysis deleted successfully!')
+        }
         // Refresh the list to ensure we're in sync with Redis
-        await loadSavedCards()
+        if (!silent) {
+          await loadSavedCards()
+        }
       } else {
         throw new Error(responseData.error || 'Failed to delete job analysis')
       }
     } catch (error) {
       console.error('Error:', error)
-      toast.error(error.message)
-      // Refresh the list to ensure UI is in sync
-      await loadSavedCards()
+      if (!silent) {
+        toast.error(error.message)
+        // Refresh the list to ensure UI is in sync
+        await loadSavedCards()
+      }
     }
   }
 
@@ -377,6 +388,30 @@ export default function CreatePage() {
     }
 
     return <TldrCard data={card} />
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = Math.abs(now - date)
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 0) {
+      return 'Today'
+    } else if (diffDays === 1) {
+      return 'Yesterday'
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7)
+      return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
+    } else {
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    }
   }
 
   return (
@@ -471,6 +506,9 @@ export default function CreatePage() {
               {savedCards.map((card) => (
                 <div key={card.id} className="relative pb-16">
                   <div className="mb-8">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
+                      Created {formatDate(card.createdAt)}
+                    </div>
                     {renderCard(card)}
                   </div>
                   <div className="absolute bottom-0 right-0 flex gap-2">
