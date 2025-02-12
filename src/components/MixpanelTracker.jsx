@@ -2,12 +2,15 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import mixpanel from '@/lib/mixpanel'
+import { initMixpanel } from '@/lib/mixpanel'
 
 export default function MixpanelTracker() {
   const pathname = usePathname()
 
   useEffect(() => {
+    // Initialize Mixpanel on the client side
+    initMixpanel();
+
     if (typeof window === 'undefined') return;
 
     const properties = {
@@ -22,7 +25,7 @@ export default function MixpanelTracker() {
     };
 
     try {
-      mixpanel.track('Page View', properties);
+      initMixpanel().track('Page View', properties);
     } catch (error) {
       console.error('Error tracking page view:', error);
     }
