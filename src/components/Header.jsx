@@ -7,12 +7,11 @@ import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { MagnifyingGlassIcon, SunIcon, MoonIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
 import { useOpenPanel } from '@openpanel/nextjs'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
-import CommandPalette from './CommandPalette'
 import avatarImage from '../images/avatar.jpg'
 import { Button } from '@/components/ui/button'
 
@@ -126,22 +125,6 @@ function Avatar({ large = false, className, ...props }) {
   )
 }
 
-function SearchButton({ setIsOpen, setSource }) {
-  return (
-    <button
-      type="button"
-      aria-label="Search"
-      className="group flex items-center justify-center md:px-1 md:h-auto md:w-auto h-12 w-12"
-      onClick={() => {
-        setSource('search_icon')
-        setIsOpen(true)
-      }}
-    >
-      <MagnifyingGlassIcon className="h-5 w-5 md:h-4 md:w-4 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:text-zinc-400 dark:group-hover:text-sky-400" />
-    </button>
-  )
-}
-
 function ThemeToggle() {
   let { resolvedTheme, setTheme } = useTheme()
   let [mounted, setMounted] = useState(false)
@@ -180,8 +163,6 @@ export function Header() {
   let headerRef = useRef(null)
   let avatarRef = useRef(null)
   let isInitial = useRef(true)
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
-  const [commandPaletteSource, setCommandPaletteSource] = useState(null)
 
   useEffect(() => {
     let downDelay = avatarRef.current?.offsetTop ?? 0
@@ -342,13 +323,7 @@ export function Header() {
                   <Popover>
                     <div className="flex rounded-full bg-white/90 px-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                       <div className="flex items-center border-r border-zinc-900/5 pr-2 dark:border-white/10">
-                        <SearchButton 
-                          setIsOpen={setIsCommandPaletteOpen} 
-                          setSource={setCommandPaletteSource}
-                        />
-                        <div className="border-l border-zinc-900/5 dark:border-white/10">
-                          <ThemeToggle />
-                        </div>
+                        <ThemeToggle />
                       </div>
                       <Popover.Button className="group px-4 py-3 min-w-[4rem]">
                         Menu
@@ -410,13 +385,7 @@ export function Header() {
               <div className="hidden md:flex md:justify-end md:flex-1">
                 <div className="pointer-events-auto flex h-9 rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
                   <div className="flex items-center border-r border-zinc-900/5 pr-3 dark:border-white/10">
-                    <SearchButton 
-                      setIsOpen={setIsCommandPaletteOpen}
-                      setSource={setCommandPaletteSource}
-                    />
-                    <div className="ml-2 border-l border-zinc-900/5 pl-2 dark:border-white/10">
-                      <ThemeToggle />
-                    </div>
+                    <ThemeToggle />
                   </div>
                   <div className="flex items-center pl-3">
                     <ContactDrawer>
@@ -432,16 +401,6 @@ export function Header() {
       {isHomePage && (
         <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
-      <CommandPalette 
-        open={isCommandPaletteOpen} 
-        onOpenChange={(open) => {
-          setIsCommandPaletteOpen(open)
-          if (!open) {
-            setCommandPaletteSource(null)
-          }
-        }}
-        source={commandPaletteSource}
-      />
     </>
   )
 }

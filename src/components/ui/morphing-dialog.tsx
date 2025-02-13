@@ -20,6 +20,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import useClickOutside from '@/hooks/use-click-outside';
 import { XIcon } from 'lucide-react';
+import Image from 'next/image';
 
 interface MorphingDialogContextType {
   isOpen: boolean;
@@ -74,9 +75,9 @@ type MorphingDialogProps = {
 function MorphingDialog({ children, transition = {
   type: "spring",
   bounce: 0,
-  duration: 0.2,
-  stiffness: 300,
-  damping: 30
+  duration: 0.15,
+  stiffness: 400,
+  damping: 40
 } }: MorphingDialogProps) {
   return (
     <MorphingDialogProvider>
@@ -195,38 +196,15 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
 
   useEffect(() => {
     if (isOpen) {
-      // Store current scroll position before any modifications
       scrollPosition.current = window.scrollY;
-      
-      // Add padding to prevent layout shift before modifying overflow
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
-      // Lock the body scroll
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${scrollPosition.current}px`;
     } else {
-      // Restore scroll position and cleanup
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      document.body.style.paddingRight = '';
-      
-      // Use requestAnimationFrame to ensure smooth scroll restoration
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollPosition.current);
-      });
+      window.scrollTo(0, scrollPosition.current);
     }
 
     return () => {
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      document.body.style.paddingRight = '';
       window.scrollTo(0, scrollPosition.current);
     };
   }, [isOpen]);
@@ -234,14 +212,14 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
   if (!mounted) return null;
 
   return createPortal(
-    <AnimatePresence mode='wait'>
+    <AnimatePresence mode='sync'>
       {isOpen && (
         <div className="fixed inset-0 z-50">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-[2px] dark:bg-black/80"
           />
           <div 
@@ -352,7 +330,7 @@ function MorphingDialogDescription({
 }
 
 type MorphingDialogImageProps = {
-  src: string;
+  src: any;
   alt: string;
   className?: string;
   style?: React.CSSProperties;
@@ -367,13 +345,20 @@ function MorphingDialogImage({
   const { uniqueId } = useMorphingDialog();
 
   return (
-    <motion.img
-      src={src}
-      alt={alt}
-      className={cn(className)}
+    <motion.div
       layoutId={`dialog-img-${uniqueId}`}
+      className={cn('relative', className)}
       style={style}
-    />
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority
+      />
+    </motion.div>
   );
 }
 

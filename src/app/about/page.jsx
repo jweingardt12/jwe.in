@@ -15,8 +15,9 @@ import {
   IconCode,
 } from '@tabler/icons-react'
 import ckWebsite from '../../images/previews/ck-website.png'
-import lakeImage from '../../images/photos/new-york-lake.jpg'
+import prImage from '../../images/photos/puerto-rico.jpg'
 import sideProjectsImage from '../../images/photos/side-projects.jpg'
+import deerImage from '../../images/photos/deer.png'
 import { useOpenPanel } from '@openpanel/nextjs'
 import {
   MorphingDialog,
@@ -29,6 +30,7 @@ import {
   MorphingDialogDescription,
   MorphingDialogImage,
 } from '@/components/ui/morphing-dialog'
+import { TextLoop } from '@/components/ui/text-loop'
 
 export default function About() {
   const { track } = useOpenPanel()
@@ -40,7 +42,19 @@ export default function About() {
           <div className="flex flex-col-reverse sm:flex-row items-center gap-8">
             <h1 className="flex-1 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl leading-relaxed">
               Hi! I'm Jason.<br />
-              I'm a <span className="text-sky-500">product manager</span> and <span className="text-sky-500">technologist</span> living in DC.
+              I'm a <TextLoop interval={3} className="text-sky-500">
+                {[
+                  "product manager",
+                  "technologist",
+                  "tinkerer",
+                  "dad",
+                  "husband",
+                  "BBQ enthusiast",
+                  "photographer",
+                ].map((text) => (
+                  <span key={text}>{text}</span>
+                ))}
+              </TextLoop> living in DC.
             </h1>
             <div className="w-48 sm:max-w-[12rem] flex-shrink-0">
               <div className="pointer-events-none">
@@ -106,17 +120,17 @@ export default function About() {
               className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
             >
               <MorphingDialogImage
-                src={lakeImage}
+                src={prImage}
                 alt="Photography"
-                className="h-48 w-full object-cover"
+                className="h-64 w-full"
               />
               <div className="flex flex-grow flex-row items-end justify-between p-2">
                 <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
+                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50 font-extrabold">
                     Photography
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    The best camera is the one you have with you
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
+                    My contributions to Creative Commons
                   </MorphingDialogSubtitle>
                 </div>
                 <button
@@ -135,24 +149,26 @@ export default function About() {
                 }}
                 className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
               >
-                <MorphingDialogImage
-                  src={lakeImage}
-                  alt="Photography"
-                  className="h-full w-full"
-                />
+                <div className="relative h-64">
+                  <MorphingDialogImage
+                    src={prImage}
+                    alt="Photography"
+                    className="absolute inset-0"
+                  />
+                </div>
                 <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
+                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50 font-extrabold">
                     Photography
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
                     The best camera is the one you have with you
                   </MorphingDialogSubtitle>
                   <MorphingDialogDescription
                     disableLayoutAnimation
                     variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
+                      initial: { opacity: 0, scale: 0.95, y: 10 },
                       animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
+                      exit: { opacity: 0, scale: 0.95, y: 10 },
                     }}
                   >
                     <div className="space-y-6">
@@ -208,16 +224,18 @@ export default function About() {
               }}
               className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
             >
-              <div className="h-48 w-full">
-                <SmartHomeAnimation className="w-full h-full" />
-              </div>
+              <MorphingDialogImage
+                src={sideProjectsImage}
+                alt="Side Projects"
+                className="h-64 w-full"
+              />
               <div className="flex flex-grow flex-row items-end justify-between p-2">
                 <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
-                    Smart Home
+                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50 font-extrabold">
+                    Side Projects
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Thoughts on designing a smart home
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
+                    Random stuff I've built
                   </MorphingDialogSubtitle>
                 </div>
                 <button
@@ -236,26 +254,30 @@ export default function About() {
                 }}
                 className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
               >
-                <div className="h-64 w-full">
-                  <SmartHomeAnimation className="w-full h-full" />
+                <div className="relative h-64">
+                  <MorphingDialogImage
+                    src={sideProjectsImage}
+                    alt="Side Projects"
+                    className="absolute inset-0"
+                  />
                 </div>
                 <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
-                    Smart Home
+                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50 font-extrabold">
+                    Side Projects
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Thoughts on designing a smart home
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
+                    Random stuff I've built
                   </MorphingDialogSubtitle>
                   <MorphingDialogDescription
                     disableLayoutAnimation
                     variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
+                      initial: { opacity: 0, scale: 0.95, y: 10 },
                       animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
+                      exit: { opacity: 0, scale: 0.95, y: 10 },
                     }}
                   >
                     <p className="mt-2 text-zinc-500">
-                      I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment.
+                      From web applications to automation tools, I'm constantly working on side projects that let me explore new technologies and solve interesting problems.
                     </p>
                   </MorphingDialogDescription>
                 </div>
@@ -272,17 +294,17 @@ export default function About() {
               className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
             >
               <MorphingDialogImage
-                src={sideProjectsImage}
-                alt="Side Projects"
-                className="h-48 w-full object-cover"
+                src={deerImage}
+                alt="Smart Home"
+                className="h-64 w-full"
               />
               <div className="flex flex-grow flex-row items-end justify-between p-2">
                 <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
-                    Side Projects
+                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50 font-extrabold">
+                    Smart Home
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Random stuff I've built
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
+                    Thoughts on designing a smart home
                   </MorphingDialogSubtitle>
                 </div>
                 <button
@@ -301,28 +323,30 @@ export default function About() {
                 }}
                 className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
               >
-                <MorphingDialogImage
-                  src={sideProjectsImage}
-                  alt="Side Projects"
-                  className="h-full w-full"
-                />
+                <div className="relative h-64">
+                  <MorphingDialogImage
+                    src={deerImage}
+                    alt="Smart Home"
+                    className="absolute inset-0"
+                  />
+                </div>
                 <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
-                    Side Projects
+                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50 font-extrabold">
+                    Smart Home
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Random stuff I've built
+                  <MorphingDialogSubtitle className="text-sm text-zinc-600 dark:text-zinc-500">
+                    Thoughts on designing a smart home
                   </MorphingDialogSubtitle>
                   <MorphingDialogDescription
                     disableLayoutAnimation
                     variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
+                      initial: { opacity: 0, scale: 0.95, y: 10 },
                       animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
+                      exit: { opacity: 0, scale: 0.95, y: 10 },
                     }}
                   >
                     <p className="mt-2 text-zinc-500">
-                      From web applications to automation tools, I'm constantly working on side projects that let me explore new technologies and solve interesting problems.
+                      I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment.
                     </p>
                   </MorphingDialogDescription>
                 </div>
