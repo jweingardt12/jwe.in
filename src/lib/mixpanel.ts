@@ -37,7 +37,21 @@ export const initMixpanel = () => {
         api_host: 'https://api-js.mixpanel.com',
         track_pageview: false,
         ignore_dnt: true,
-        persistence: 'localStorage'
+        persistence: 'localStorage',
+        // @ts-ignore - Session recording config from latest Mixpanel docs
+        session_recording: {
+          enabled: true,
+          recordingPercent: 100,
+          minimize_logs: true,
+          block_class: 'mp-no-record',
+          block_selector: 'img, video',
+          mask_text_class: 'mp-mask',
+          mask_text_selector: 'input, textarea, [data-mp-mask]',
+          collect_fonts: false,
+          capture_canvas: false,
+          idle_timeout: 1800000, // 30 minutes idle timeout
+          max_duration: 3600000 // 1 hour max session length
+        }
       });
 
       initialized = true;
@@ -80,14 +94,71 @@ const setupClickTracking = () => {
       target.parentElement?.parentElement?.parentElement
     ].filter(Boolean);
 
+    // Track link clicks
+    const link = elements.find(el => el?.tagName === 'A') as HTMLAnchorElement;
+    if (link) {
+      const isNavLink = link.closest('nav') !== null;
+      const isContactButton = link.href?.includes('mailto:') || 
+                            link.textContent?.toLowerCase().includes('contact') ||
+                            link.classList.contains('contact-button');
+      
+      track(EVENTS.LINK_CLICK, {
+        link_text: link.textContent?.trim() || 'Untitled Link',
+        link_url: link.href,
+        link_id: link.id || undefined,
+        link_class: link.className || undefined,
+        is_navigation: isNavLink,
+        is_contact: isContactButton,
+        is_external: link.hostname !== window.location.hostname,
+        link_type: isContactButton ? 'contact' : 
+                  isNavLink ? 'navigation' : 
+                  link.hostname !== window.location.hostname ? 'external' : 
+                  'content',
+        current_page: window.location.pathname
+      });
+    }
+
     // Track button clicks
     const button = elements.find(el => el?.tagName === 'BUTTON');
     if (button) {
+      // Get meaningful text content from button or its children
+      let buttonText = button.textContent?.trim() || '';
+      if (!buttonText) {
+        // Try to get text from aria-label or title
+        buttonText = button.getAttribute('aria-label') || 
+                    button.getAttribute('title') || 
+                    'Untitled Button';
+      }
+
+      // Get meaningful description from button's purpose
+      const buttonPurpose = 
+        (button as HTMLButtonElement).form ? 'form-submit' :
+        button.closest('dialog') ? 'dialog' :
+        button.closest('nav') ? 'navigation' :
+        button.closest('header') ? 'header' :
+        button.closest('footer') ? 'footer' :
+        'content';
+
+      // Clean up class names to be more readable
+      const classList = Array.from(button.classList)
+        .filter(cls => 
+          !cls.includes('justify-') && 
+          !cls.includes('items-') && 
+          !cls.includes('mdx-') &&
+          !cls.includes('group') &&
+          !cls.includes('flex')
+        );
+
       track(EVENTS.BUTTON_CLICK, {
-        button_text: button.textContent?.trim(),
-        button_type: button.getAttribute('type'),
-        button_id: button.id,
-        button_class: button.className
+        text: buttonText,
+        type: button.getAttribute('type') || undefined,
+        id: button.id || undefined,
+        classes: classList.length > 0 ? classList.join(' ') : undefined,
+        purpose: buttonPurpose,
+        has_icon: button.querySelector('svg, img, .icon') !== null,
+        current_page: window.location.pathname,
+        parent_element: button.parentElement?.tagName.toLowerCase() || undefined,
+        location: buttonPurpose
       });
     }
 
@@ -102,7 +173,7 @@ const setupClickTracking = () => {
       const eventName = trackingElement.getAttribute('data-mp-track-name') || EVENTS.FEATURE_USED;
       const properties = {
         element: trackingElement.tagName.toLowerCase(),
-        text: trackingElement.textContent?.trim(),
+        text: trackingElement.textContent?.trim() || 'Untitled Element',
         'data-mp-track': trackingElement.getAttribute('data-mp-track'),
         href: (trackingElement as HTMLAnchorElement).href,
         path: window.location.pathname,
