@@ -328,32 +328,7 @@ export default function CreatePage() {
     try {
       console.log('Attempting to delete card with ID:', card.id)
       
-      const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-
-      // Handle different response statuses
-      if (deleteResponse.status === 404) {
-        console.log('Card already deleted or not found:', card.id)
-        // Remove from UI even if not found in backend
-        setSavedCards(prev => prev.filter(c => c.id !== card.id))
-        setFilteredCards(prev => prev.filter(c => c.id !== card.id))
-        if (!silent) {
-          toast.success('Card removed from view')
-        }
-        return
-      }
-
-      if (!deleteResponse.ok) {
-        const errorData = await deleteResponse.text()
-        console.error('Delete failed:', deleteResponse.status, errorData)
-        throw new Error(`Failed to delete analysis (${deleteResponse.status})`)
-      }
-
-      // Update UI state
+      // Remove the card from UI state first for better UX
       setSavedCards(prev => prev.filter(c => c.id !== card.id))
       setFilteredCards(prev => prev.filter(c => c.id !== card.id))
       
@@ -361,12 +336,41 @@ export default function CreatePage() {
       if (selectedCard?.id === card.id) {
         setSelectedCard(null)
       }
-      
+
+      // Then attempt to delete from backend
+      const deleteResponse = await fetch(`/api/job-analysis?id=${encodeURIComponent(card.id)}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        cache: 'no-store'
+      })
+
+      const responseData = await deleteResponse.text()
+      console.log('Delete response:', deleteResponse.status, responseData)
+
+      // If it's a 404, the card is already gone which is fine
+      if (deleteResponse.status === 404) {
+        console.log('Card was already deleted from backend:', card.id)
+        if (!silent) {
+          toast.success('Card removed successfully')
+        }
+        return
+      }
+
+      // For other non-200 responses, we should show an error
+      if (!deleteResponse.ok) {
+        throw new Error(`Failed to delete analysis (${deleteResponse.status})`)
+      }
+
       if (!silent) {
         toast.success('Analysis deleted successfully!')
       }
     } catch (error) {
       console.error('Error:', error)
+      // Revert the UI state since deletion failed
+      loadSavedCards() // Reload the cards to ensure UI is in sync with backend
       if (!silent) {
         toast.error(error.message || 'Failed to delete analysis')
       }

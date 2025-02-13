@@ -9,10 +9,12 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import '@radix-ui/themes/styles.css'
+import mixpanel from '@/lib/mixpanel'
 
 const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background'), { ssr: false })
 const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false })
+const MixpanelTracker = dynamic(() => import('../components/MixpanelTracker'), { ssr: false })
 
 export const viewport = {
   width: 'device-width',
@@ -65,6 +67,7 @@ export default function RootLayout({ children }) {
               <Analytics />
               <SpeedInsights />
               <OpenPanelWrapper />
+              <MixpanelTracker />
             </MDXWrapper>
           </ThemeProvider>
         </body>
