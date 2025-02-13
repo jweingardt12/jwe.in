@@ -14,6 +14,10 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
+        mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+      },
       backgroundImage: {
         'dot-pattern': 'radial-gradient(circle at center, currentColor 1px, transparent 1px)',
         'dot-black': 'radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px)',

@@ -148,6 +148,8 @@
 
 @layer base {
   :root {
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -168,6 +170,14 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+  }
+
+  pre, code {
+    font-family: var(--font-mono);
   }
 
   .dark {
