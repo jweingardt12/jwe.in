@@ -41,20 +41,32 @@ export async function POST(request) {
     
     // Check if password matches environment variable
     if (password === process.env.ADMIN_PASSWORD) {
+      console.log('Password matched, setting cookie...');
+      
+      // Get the host from the request
+      const host = request.headers.get('host') || '';
+      console.log('Request host:', host);
+      
       // Create response with success
       const response = NextResponse.json(
-        { success: true },
+        { 
+          success: true,
+          message: 'Login successful. Redirecting...',
+          redirectTo: '/work/create'
+        },
         { status: 200, headers: baseHeaders }
       );
 
       // Set auth cookie on the response
       response.cookies.set('admin_auth', password, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        path: '/'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7
       });
       
+      console.log('Cookie set, returning response');
       return response;
     }
     

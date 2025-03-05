@@ -227,27 +227,27 @@ function countSentences(text) {
 function validateAnalysis(analysis) {
   // Check required fields exist
   if (!analysis.jobTitle || !analysis.companyName || !analysis.introText || !analysis.relevantSkills?.length) {
-    throw new Error('Missing required fields in analysis');
+    return { valid: false, error: 'Missing required fields in analysis' };
   }
 
   // Validate intro text is exactly one sentence
   if (countSentences(analysis.introText) !== 1) {
-    throw new Error('Intro text must be exactly one sentence');
+    return { valid: false, error: 'Intro text must be exactly one sentence' };
   }
 
   // Validate bullet points
   if (!analysis.bulletPoints?.length || analysis.bulletPoints.length !== 3) {
-    throw new Error('Must have exactly 3 bullet points');
+    return { valid: false, error: 'Must have exactly 3 bullet points' };
   }
 
   // Validate each bullet point is one sentence
   for (const bullet of analysis.bulletPoints) {
     if (countSentences(bullet) !== 1) {
-      throw new Error('Each bullet point must be exactly one sentence');
+      return { valid: false, error: 'Each bullet point must be exactly one sentence' };
     }
   }
 
-  return true;
+  return { valid: true };
 }
 
 // Set longer timeout for this route
@@ -337,7 +337,7 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { jobUrl, jobContent } = body;
+    const { jobUrl, jobContent, model } = body;
 
     if (!jobUrl && !jobContent) {
       return NextResponse.json({ error: 'No job URL or content provided' }, { 
@@ -385,8 +385,122 @@ export async function POST(request) {
     }
 
     try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4-turbo-preview",
+      const modelToUse = model || "gpt-4o";
+      
+      // Validate the model is a supported one
+      // Allow any model that starts with gpt- or is a reasoning model (o1, o3)
+      // but exclude audio and realtime models
+      if ((!modelToUse.startsWith('gpt-') && 
+           !modelToUse.startsWith('o1') && 
+           !modelToUse.startsWith('o3')) || 
+          modelToUse.includes('audio') || 
+          modelToUse.includes('realtime')) {
+        return NextResponse.json({ 
+          error: 'Unsupported model specified. Please use a standard OpenAI GPT model or reasoning model (not audio or realtime variants).' 
+        }, { 
+          status: 400,
+          headers: corsHeaders 
+        });
+      }
+      
+      console.log(`Using model: ${modelToUse} for job analysis`);
+      
+      // Different parameters for reasoning models vs GPT models
+      const isReasoningModel = modelToUse.startsWith('o1') || modelToUse.startsWith('o3');
+      
+      // For reasoning models, we need to use a simpler approach with fewer parameters
+      if (isReasoningModel) {
+        try {
+          console.log(`Using reasoning model: ${modelToUse} with simplified parameters`);
+          
+          // Reasoning models only support these parameters
+          const reasoningApiParams = {
+            model: modelToUse,
+            messages: [
+              {
+                role: "system",
+                content: SYSTEM_PROMPT
+              },
+              {
+                role: "user",
+                content: `Analyze this job posting content and create a response following the format specified in the system prompt: ${content}`
+              }
+            ]
+          };
+          
+          console.log('Reasoning API parameters:', JSON.stringify(reasoningApiParams, null, 2));
+          
+          const completion = await openai.chat.completions.create(reasoningApiParams);
+          
+          if (!completion?.choices?.[0]?.message?.content) {
+            throw new Error('Failed to get valid response from reasoning model');
+          }
+          
+          const cleanContent = completion.choices[0].message.content
+            .replace(/```json\n/, '')
+            .replace(/\n```$/, '')
+            .trim();
+            
+          let analysis;
+          try {
+            analysis = JSON.parse(cleanContent);
+          } catch (parseError) {
+            console.error('Failed to parse reasoning model response as JSON:', parseError);
+            console.log('Raw response:', cleanContent);
+            throw new Error('Failed to parse analysis results. The reasoning model response was not in the expected format.');
+          }
+          
+          // Validate the analysis
+          const validationResult = validateAnalysis(analysis);
+          if (!validationResult.valid) {
+            console.error('Invalid analysis structure from reasoning model:', validationResult.error);
+            throw new Error(`Invalid analysis structure: ${validationResult.error}`);
+          }
+          
+          // Generate a unique ID for this analysis
+          const id = crypto.randomUUID();
+          
+          // Store the analysis in Redis
+          await storeAnalysis(id, analysis);
+          
+          return NextResponse.json({ 
+            id,
+            ...analysis
+          }, { 
+            headers: corsHeaders 
+          });
+        } catch (error) {
+          console.error('Error during reasoning model job analysis:', error);
+          
+          // Provide more specific error messages based on the error type
+          let errorMessage = 'Failed to analyze job posting with reasoning model.';
+          let statusCode = 500;
+          
+          // Log the full error object to help with debugging
+          console.error('Full reasoning model error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+          
+          if (error.response) {
+            errorMessage = `Reasoning model API error: ${error.response.status} ${JSON.stringify(error.response.data || {})}`;
+            statusCode = error.response.status >= 400 && error.response.status < 500 ? 400 : 500;
+          } else if (typeof error.error === 'object') {
+            errorMessage = `Reasoning model API error: ${error.status || 500} ${JSON.stringify(error.error || {})}`;
+            statusCode = error.status >= 400 && error.status < 500 ? 400 : 500;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          
+          return NextResponse.json({ 
+            error: errorMessage 
+          }, { 
+            status: statusCode,
+            headers: corsHeaders 
+          });
+        }
+      }
+      
+      // Standard GPT models
+      const apiParams = {
+        model: modelToUse,
         messages: [
           {
             role: "system",
@@ -399,64 +513,92 @@ export async function POST(request) {
         ],
         temperature: 0.7,
         max_tokens: 1000
-      });
-
-      if (!completion?.choices?.[0]?.message?.content) {
-        throw new Error('Failed to get valid response from OpenAI');
-      }
-
-      const cleanContent = completion.choices[0].message.content
-        .replace(/```json\n/, '')
-        .replace(/\n```$/, '')
-        .trim();
-
-      let parsedContent;
-      try {
-        parsedContent = JSON.parse(cleanContent);
-      } catch (parseError) {
-        return NextResponse.json({ 
-          error: 'Could not extract job details. Please ensure the URL points to a specific job posting.' 
-        }, { 
-          status: 400,
-          headers: corsHeaders 
-        });
-      }
-
-      // Generate a unique ID for this analysis
-      const analysisId = Math.random().toString(36).substring(2, 15);
-      
-      // Store the analysis in Redis
-      const analysisData = {
-        ...parsedContent,
-        jobContent: content,
-        createdAt: new Date().toISOString()
       };
       
-      const stored = await storeAnalysis(analysisId, analysisData);
-      if (!stored) {
+      console.log('GPT API parameters:', JSON.stringify(apiParams, null, 2));
+      
+      try {
+        const completion = await openai.chat.completions.create(apiParams);
+
+        if (!completion?.choices?.[0]?.message?.content) {
+          throw new Error('Failed to get valid response from OpenAI');
+        }
+
+        const cleanContent = completion.choices[0].message.content
+          .replace(/```json\n/, '')
+          .replace(/\n```$/, '')
+          .trim();
+
+        let analysis;
+        try {
+          analysis = JSON.parse(cleanContent);
+        } catch (parseError) {
+          console.error('Failed to parse OpenAI response as JSON:', parseError);
+          console.log('Raw response:', cleanContent);
+          throw new Error('Failed to parse analysis results. The AI response was not in the expected format.');
+        }
+
+        // Validate the analysis
+        const validationResult = validateAnalysis(analysis);
+        if (!validationResult.valid) {
+          console.error('Invalid analysis structure:', validationResult.error);
+          throw new Error(`Invalid analysis structure: ${validationResult.error}`);
+        }
+
+        // Generate a unique ID for this analysis
+        const id = crypto.randomUUID();
+        
+        // Store the analysis in Redis
+        await storeAnalysis(id, analysis);
+        
         return NextResponse.json({ 
-          error: 'Failed to store job analysis. Please try again.' 
+          id,
+          ...analysis
         }, { 
-          status: 500,
+          headers: corsHeaders 
+        });
+      } catch (error) {
+        console.error('Error during job analysis:', error);
+        
+        // Provide more specific error messages based on the error type
+        let errorMessage = 'Failed to analyze job posting.';
+        let statusCode = 500;
+        
+        // Log the full error object to help with debugging
+        console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+        
+        if (error.response) {
+          // This is an OpenAI API error with a response
+          console.error('OpenAI API error details:', error.response.data || error.response);
+          errorMessage = `OpenAI API error: ${error.response.status} ${JSON.stringify(error.response.data || {})}`;
+          statusCode = error.response.status >= 400 && error.response.status < 500 ? 400 : 500;
+        } else if (typeof error.error === 'object') {
+          // Handle OpenAI SDK error format
+          console.error('OpenAI SDK error:', error.error);
+          errorMessage = `OpenAI API error: ${error.status || 500} ${JSON.stringify(error.error || {})}`;
+          statusCode = error.status >= 400 && error.status < 500 ? 400 : 500;
+        } else if (error.message) {
+          errorMessage = error.message;
+          
+          // Check if the error message contains information about unsupported parameters
+          if (error.message.includes('Unsupported parameter')) {
+            errorMessage = `Model parameter error: ${error.message}. Please try a different model.`;
+          }
+        }
+        
+        return NextResponse.json({ 
+          error: errorMessage 
+        }, { 
+          status: statusCode,
           headers: corsHeaders 
         });
       }
-
-      return NextResponse.json({
-        id: analysisId,
-        ...parsedContent,
-        jobContent: content
-      }, { 
-        headers: corsHeaders 
-      });
     } catch (error) {
-      console.error('Error in OpenAI request:', error);
-      return NextResponse.json({ 
-        error: error.message || 'Failed to analyze job posting. Please try again.' 
-      }, { 
-        status: 500,
-        headers: corsHeaders 
-      });
+      console.error('Error in POST handler:', error);
+      return NextResponse.json(
+        { error: error.message || 'Failed to analyze job posting. Please try again.' },
+        { status: 500, headers: corsHeaders }
+      );
     }
   } catch (error) {
     console.error('Error in POST handler:', error);

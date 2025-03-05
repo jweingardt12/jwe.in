@@ -3,19 +3,23 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SimpleLayout } from '@/components/SimpleLayout'
+import { CookieTest } from './cookie-test'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
+    setLoginSuccess(false)
     
     try {
+      console.log('Attempting login...')
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -28,20 +32,43 @@ export default function LoginPage() {
         cache: 'no-cache'
       })
 
+      console.log('Login response status:', res.status)
+      
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({ error: 'Failed to login' }))
+        console.error('Login error response:', errorData)
         throw new Error(errorData.error || 'Failed to login')
       }
 
       const data = await res.json().catch(() => null)
+      console.log('Login success:', data?.success ? 'true' : 'false')
+      
       if (!data?.success) {
         throw new Error('Invalid response from server')
       }
 
+      // Set login success state
+      setLoginSuccess(true)
+
       // Add a small delay to ensure cookie is set
-      await new Promise(resolve => setTimeout(resolve, 100))
-      router.push('/work/create')
-      router.refresh() // Refresh to update auth state
+      await new Promise(resolve => setTimeout(resolve, 500)) // Increased delay
+      console.log('Redirecting to create page...');
+      
+      // Use the redirectTo from the response if available
+      const redirectUrl = data.redirectTo || '/work/create';
+      console.log('Redirect URL:', redirectUrl);
+      
+      // Try direct navigation
+      window.location.href = redirectUrl;
+      
+      // Keep the router approach as a fallback
+      setTimeout(() => {
+        console.log('Fallback redirection...');
+        if (window.location.pathname !== redirectUrl) {
+          router.push(redirectUrl);
+          router.refresh(); // Refresh to update auth state
+        }
+      }, 1000); // Longer timeout for fallback
     } catch (err) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to login. Please try again.')
@@ -49,6 +76,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleManualRedirect = () => {
+    window.location.href = '/work/create';
   }
 
   return (
@@ -97,6 +128,36 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
+          
+          {loginSuccess && (
+            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+              <p className="text-green-700 dark:text-green-400 text-sm font-medium mb-2">
+                Login successful! 
+              </p>
+              <p className="text-green-600 dark:text-green-500 text-xs mb-3">
+                If you're not automatically redirected, please click the button below.
+              </p>
+              <button
+                onClick={handleManualRedirect}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded text-sm"
+              >
+                Go to Create Page
+              </button>
+            </div>
+          )}
+          
+          <CookieTest />
+          
+          <div className="mt-8 text-sm text-zinc-500 dark:text-zinc-400">
+            <p>Having trouble logging in?</p>
+            <ul className="list-disc pl-5 mt-2 space-y-1">
+              <li>Make sure cookies are enabled in your browser</li>
+              <li>Try using a different browser</li>
+              <li>Clear your browser cache and cookies</li>
+              <li>If you're using a VPN or proxy, try disabling it</li>
+              <li>Contact the site administrator if problems persist</li>
+            </ul>
+          </div>
         </div>
       </div>
     </SimpleLayout>

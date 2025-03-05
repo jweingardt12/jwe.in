@@ -17,6 +17,9 @@ export default function CreatePage() {
   const [selectedCard, setSelectedCard] = useState(null)
   const [copiedId, setCopiedId] = useState(null)
   const [editingCard, setEditingCard] = useState(null)
+  const [selectedModel, setSelectedModel] = useState('gpt-4o')
+  const [availableModels, setAvailableModels] = useState([])
+  const [isLoadingModels, setIsLoadingModels] = useState(false)
   const [editedContent, setEditedContent] = useState({
     title: '',
     introText: '',
@@ -101,8 +104,37 @@ export default function CreatePage() {
     }
   }
 
+  const loadAvailableModels = async () => {
+    setIsLoadingModels(true)
+    try {
+      const response = await fetch('/api/models')
+      if (!response.ok) {
+        console.error('Failed to load models:', response.status)
+        return
+      }
+
+      const data = await response.json()
+      if (data.models && Array.isArray(data.models)) {
+        // Models are already filtered on the server side
+        console.log('Models received from API:', data.models.map(m => m.name));
+        setAvailableModels(data.models)
+        
+        // Check if gpt-4o is available, otherwise keep the current selection
+        const gpt4oModel = data.models.find(model => model.id === 'gpt-4o' || model.name.startsWith('GPT-4o'))
+        if (gpt4oModel && selectedModel !== gpt4oModel.id) {
+          setSelectedModel(gpt4oModel.id)
+        }
+      }
+    } catch (error) {
+      console.error('Error loading models:', error)
+    } finally {
+      setIsLoadingModels(false)
+    }
+  }
+
   useEffect(() => {
     loadSavedCards()
+    loadAvailableModels()
   }, [])
 
   useEffect(() => {
@@ -144,6 +176,9 @@ export default function CreatePage() {
     setJobDescription(card.jobContent || '')
     setJobUrl('') // Clear URL since we're editing existing content
     
+    // Set the model if available, otherwise use default
+    setSelectedModel(card.model || 'gpt-4o')
+    
     // Scroll to the top where the edit form is
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -167,7 +202,8 @@ export default function CreatePage() {
         relevantSkills: editedContent.relevantSkills,
         jobContent: jobDescription.trim() || editingCard.jobContent,
         createdAt: editingCard.createdAt,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        model: selectedModel
       };
 
       // Save to Redis
@@ -178,7 +214,8 @@ export default function CreatePage() {
         },
         body: JSON.stringify({
           jobId: editingCard.id,
-          data: updatedData
+          data: updatedData,
+          model: selectedModel
         }),
       })
 
@@ -230,6 +267,7 @@ export default function CreatePage() {
         body: JSON.stringify({
           jobUrl: jobUrl.trim(),
           jobContent: jobDescription.trim(),
+          model: selectedModel,
         }),
       })
       
@@ -523,6 +561,60 @@ export default function CreatePage() {
                 className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
                 placeholder="Paste the job description here..."
               />
+            </div>
+            <div>
+              <label htmlFor="modelSelector" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                OpenAI Model
+              </label>
+              <select
+                id="modelSelector"
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 shadow-sm focus:border-sky-500 focus:ring-sky-500 dark:focus:border-sky-400 dark:focus:ring-sky-400 sm:text-sm bg-white/5 dark:bg-zinc-800/50"
+                disabled={isLoadingModels}
+              >
+                {isLoadingModels ? (
+                  <option>Loading models...</option>
+                ) : availableModels.length > 0 ? (
+                  <>
+                    {/* Show recommended models first */}
+                    {availableModels.filter(model => model.isRecommended).length > 0 && (
+                      <optgroup label="Recommended Models">
+                        {availableModels
+                          .filter(model => model.isRecommended)
+                          .map(model => (
+                            <option key={model.id} value={model.id}>
+                              {model.name}{model.description ? ` (${model.description})` : ''}
+                            </option>
+                          ))}
+                      </optgroup>
+                    )}
+                    
+                    {/* Show other models */}
+                    {availableModels.filter(model => !model.isRecommended).length > 0 && (
+                      <optgroup label="Other Models">
+                        {availableModels
+                          .filter(model => !model.isRecommended)
+                          .map(model => (
+                            <option key={model.id} value={model.id}>
+                              {model.name}
+                            </option>
+                          ))}
+                      </optgroup>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <option value="gpt-4o">GPT-4o (Latest and most capable model)</option>
+                    <option value="gpt-4-turbo-preview">GPT-4 Turbo (Powerful with larger context)</option>
+                    <option value="gpt-4">GPT-4 (High quality, slower)</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast, less accurate)</option>
+                  </>
+                )}
+              </select>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                Select the model to use for analysis. GPT-4o is recommended for best results.
+              </p>
             </div>
             <div className="flex justify-end gap-4">
               {editingCard && (
