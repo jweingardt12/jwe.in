@@ -12,10 +12,48 @@ const openai = new OpenAI({
 });
 
 // Initialize Redis
-const redis = new Redis({
-  url: process.env.STORAGE_KV_REST_API_URL,
-  token: process.env.STORAGE_KV_REST_API_TOKEN,
-});
+const redis = (() => {
+  const url = process.env.STORAGE_KV_REST_API_URL;
+  const token = process.env.STORAGE_KV_REST_API_TOKEN;
+  
+  if (!url || !token) {
+    console.error('Redis configuration missing:', { 
+      url: url ? 'defined' : 'undefined', 
+      token: token ? 'defined' : 'undefined' 
+    });
+    // Return a mock Redis client that logs errors instead of throwing
+    return {
+      get: async () => {
+        console.error('Redis client not properly initialized');
+        return null;
+      },
+      set: async () => {
+        console.error('Redis client not properly initialized');
+        return false;
+      }
+    };
+  }
+  
+  try {
+    return new Redis({
+      url,
+      token,
+    });
+  } catch (error) {
+    console.error('Failed to initialize Redis client:', error);
+    // Return a mock Redis client
+    return {
+      get: async () => {
+        console.error('Redis client initialization failed');
+        return null;
+      },
+      set: async () => {
+        console.error('Redis client initialization failed');
+        return false;
+      }
+    };
+  }
+})();
 
 // CORS headers
 const corsHeaders = {
@@ -225,14 +263,6 @@ export async function OPTIONS(request) {
 
 export async function GET(request) {
   try {
-    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
-      console.error('Redis configuration is missing');
-      return NextResponse.json({ error: 'Storage service configuration missing' }, { 
-        status: 503,
-        headers: corsHeaders
-      });
-    }
-
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     
@@ -240,6 +270,18 @@ export async function GET(request) {
       return NextResponse.json({ error: 'No job ID provided' }, { 
         status: 400,
         headers: corsHeaders 
+      });
+    }
+
+    // Check if Redis is properly configured
+    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+      console.error('Redis configuration is missing');
+      return NextResponse.json({ 
+        error: 'Storage service unavailable', 
+        details: 'Configuration missing'
+      }, { 
+        status: 503,
+        headers: corsHeaders
       });
     }
 
@@ -254,10 +296,16 @@ export async function GET(request) {
       });
     }
 
-    return NextResponse.json(analysis, { headers: corsHeaders });
+    return NextResponse.json(analysis, { 
+      status: 200,
+      headers: corsHeaders 
+    });
   } catch (error) {
     console.error('Error in GET handler:', error);
-    return NextResponse.json({ error: 'Failed to retrieve job analysis' }, { 
+    return NextResponse.json({ 
+      error: 'Failed to retrieve job analysis', 
+      details: error.message 
+    }, { 
       status: 500,
       headers: corsHeaders 
     });
@@ -273,6 +321,18 @@ export async function POST(request) {
       }, { 
         status: 500,
         headers: corsHeaders 
+      });
+    }
+
+    // Check if Redis is properly configured
+    if (!process.env.STORAGE_KV_REST_API_URL || !process.env.STORAGE_KV_REST_API_TOKEN) {
+      console.error('Redis configuration is missing');
+      return NextResponse.json({ 
+        error: 'Storage service unavailable. Please try again later or contact support.',
+        details: 'Configuration missing'
+      }, { 
+        status: 503,
+        headers: corsHeaders
       });
     }
 

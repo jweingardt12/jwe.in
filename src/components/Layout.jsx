@@ -17,8 +17,9 @@ export function Layout({ children }) {
       </div>
       <div className="relative flex w-full flex-col min-h-screen" data-vaul-drawer-wrapper>
         <Header />
-        <main className="flex-auto">
+        <main className="flex-auto flex justify-center">
           <motion.div
+            className="w-full"
             key={pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

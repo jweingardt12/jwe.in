@@ -22,9 +22,9 @@ export function InnerContainer({ className, children, ...props }) {
   )
 }
 
-export function Container({ children, ...props }) {
+export function Container({ className, children, ...props }) {
   return (
-    <OuterContainer {...props}>
+    <OuterContainer className={className} {...props}>
       <InnerContainer>{children}</InnerContainer>
     </OuterContainer>
   )

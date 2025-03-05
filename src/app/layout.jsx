@@ -13,7 +13,6 @@ import mixpanel from '@/lib/mixpanel'
 
 const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background'), { ssr: false })
 const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
-const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false })
 const MixpanelTracker = dynamic(() => import('../components/MixpanelTracker'), { ssr: false })
 
 export const viewport = {
@@ -61,7 +60,6 @@ export default function RootLayout({ children }) {
                   <Layout>{children}</Layout>
                 </div>
               </div>
-              <CommandPalette />
               <Toaster />
               <SonnerToaster position="bottom-right" theme="system" />
               <Analytics />

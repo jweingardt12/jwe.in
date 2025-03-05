@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 import clsx from 'clsx'
 import {
   GitHubIcon,
@@ -9,6 +11,7 @@ import {
   ThreadsIcon,
 } from './SocialIcons'
 import { InnerContainer, OuterContainer } from './Container'
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
 
 function MailIcon(props) {
   return (
@@ -18,6 +21,39 @@ function MailIcon(props) {
         d="M6 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6Zm.245 2.187a.75.75 0 0 0-.99 1.126l6.25 5.5a.75.75 0 0 0 .99 0l6.25-5.5a.75.75 0 0 0-.99-1.126L12 12.251 6.245 7.187Z"
       />
     </svg>
+  )
+}
+
+function ThemeToggle() {
+  let { resolvedTheme, setTheme } = useTheme()
+  let [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <button type="button" className="group flex items-center justify-center h-8 w-8">
+        <span className="flex items-center justify-center">
+          <SunIcon className="h-5 w-5 stroke-current text-zinc-500 transition" />
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      aria-label="Toggle theme"
+      className="group flex items-center justify-center h-8 w-8"
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+    >
+      <span className="flex items-center justify-center">
+        <SunIcon className="h-5 w-5 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:hidden" />
+        <MoonIcon className="hidden h-5 w-5 stroke-current text-zinc-500 transition group-hover:text-sky-500 dark:block dark:text-zinc-400 dark:group-hover:text-sky-400" />
+      </span>
+    </button>
   )
 }
 
@@ -59,29 +95,36 @@ export function Footer() {
               <NavLink href="/notes">Notes</NavLink>
               <NavLink href="/reading">Reading</NavLink>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <ul role="list" className="flex gap-x-3 mb-4 sm:mb-0 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
-                <SocialLink 
-                  href="https://www.threads.net/@jweingardt" 
-                  icon={ThreadsIcon}
-                />
-                <SocialLink 
-                  href="https://instagram.com/jweingardt" 
-                  icon={InstagramIcon}
-                />
-                <SocialLink 
-                  href="https://github.com/jweingardt12" 
-                  icon={GitHubIcon}
-                />
-                <SocialLink 
-                  href="https://linkedin.com/in/jasonweingardt" 
-                  icon={LinkedInIcon}
-                />
-                <SocialLink
-                  href="mailto:hi@jwe.in"
-                  icon={MailIcon}
-                />
-              </ul>
+            <div className="flex flex-col items-center gap-4 sm:items-end">
+              <div className="flex flex-row items-center justify-center">
+                <div className="flex items-center">
+                  <ul role="list" className="flex flex-wrap justify-center gap-x-4 sm:mr-4 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
+                    <SocialLink 
+                      href="https://www.threads.net/@jweingardt" 
+                      icon={ThreadsIcon}
+                    />
+                    <SocialLink 
+                      href="https://instagram.com/jweingardt" 
+                      icon={InstagramIcon}
+                    />
+                    <SocialLink 
+                      href="https://github.com/jweingardt12" 
+                      icon={GitHubIcon}
+                    />
+                    <SocialLink 
+                      href="https://linkedin.com/in/jasonweingardt" 
+                      icon={LinkedInIcon}
+                    />
+                    <SocialLink
+                      href="mailto:hi@jwe.in"
+                      icon={MailIcon}
+                    />
+                  </ul>
+                </div>
+                <div className="ml-2 sm:ml-0">
+                  <ThemeToggle />
+                </div>
+              </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Jason Weingardt
               </p>

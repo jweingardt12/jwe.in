@@ -406,8 +406,13 @@ export function Photos() {
   }, [hoveredIndex, selectedIndex, hasInteracted])
 
   return (
-    <div className="mt-16 sm:mt-20">
-      <div className="-my-4 flex gap-6 overflow-x-auto py-20 px-12 sm:gap-8 sm:px-16 no-scrollbar">
+    <div className="mt-8 sm:mt-0 w-full overflow-hidden relative">
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent dark:from-zinc-900 z-10"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent dark:from-zinc-900 z-10"></div>
+      <div 
+        ref={scrollRef}
+        className="flex gap-6 overflow-x-auto py-16 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center"
+      >
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
           <Photo
             key={`photo-${index}-${photo.hoverText}`}
