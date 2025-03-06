@@ -108,6 +108,11 @@ export const SmartHomeAnimation = () => {
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         priority
       />
+      <div className="absolute inset-0 bg-black/10 rounded-t-xl flex items-center justify-center">
+        <div className="text-white text-sm font-medium px-3 py-1 bg-black/40 rounded-full">
+          Home Assistant Dashboard
+        </div>
+      </div>
     </div>
   );
 };

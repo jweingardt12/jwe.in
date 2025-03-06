@@ -291,11 +291,12 @@ const WorkContent = () => {
   const handleFaqOpen = (value) => {
     if (value) {
       const questions = {
+        'item-0': 'What makes you unique?',
         'item-1': 'What type of roles are you interested in?',
-        'item-2': 'What\'s your management style?',
+        'item-2': 'How do you work?',
         'item-3': 'How do you approach product development?',
         'item-4': 'What\'s your experience with remote teams?',
-        'item-5': 'What industries have you worked in?'
+        'item-5': 'Your journey seems to be a bit of a rollercoaster. Where do you see yourself in 5 years?'
       }
       const event = new CustomEvent('openpanel', { 
         detail: { question: questions[value] }
@@ -877,7 +878,7 @@ const WorkContent = () => {
                   {/* Bart Myers - Featured testimonial (60% width) */}
                   <figure className="col-span-1 md:col-span-3 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl">
                     <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
-                      <p>{`"`}<span className="font-bold">Jason is terrific</span>{`" He brings an incredible amount of energy and creativity to his work. He is also incredibly talented, a human Swiss army knife, bringing an impressive and diverse variety of skills to his work, including: dev. skills, product marketing, GTM, and overall technical prowess.`}</p>
+                      <p>{`"`}<span className="font-bold">Jason is terrific</span>{` He brings an incredible amount of energy and creativity to his work. He is also incredibly talented, a human Swiss army knife, bringing an impressive and diverse variety of skills to his work, including: dev. skills, product marketing, GTM, and overall technical prowess.`}</p>
                     </blockquote>
                     <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
                       <img
@@ -908,7 +909,7 @@ const WorkContent = () => {
                       className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
-                        <p>{`"`}<span className="font-bold">Most PMs excel at strategy, but lack the execution muscle to make it all happen</span>{`" Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers' lives better. His curiousity and positivity is infectious, and it makes working with him genuinely fun.`}</p>
+                        <p>{`"`}<span className="font-bold">Most PMs excel at strategy, but lack the execution muscle to make it all happen</span>{` Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers' lives better. His curiousity and positivity is infectious, and it makes working with him genuinely fun.`}</p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
                         <img 
@@ -943,7 +944,7 @@ const WorkContent = () => {
                       className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
-                        <p>{`"`}<span className="font-bold">Jason is one of the most unique Product Managers I've worked with</span>{`" He never let our engineering team lose sight of their impact to the business, and cared deeply for the problems of our customers. Any product team would be insanely lucky to have him.`}</p>
+                        <p>{`"`}<span className="font-bold">Jason is one of the most unique Product Managers I've worked with</span>{` He never let our engineering team lose sight of their impact to the business, and cared deeply for the problems of our customers. Any product team would be insanely lucky to have him.`}</p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
                         <img 
@@ -1282,16 +1283,26 @@ const WorkContent = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8" />
-            <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-8">
-              Frequently Asked Questions
-            </h2>
+            <div className="mx-auto text-center mb-8">
+              <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">FAQ</h2>
+              <p className="mt-2 text-balance text-2xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+                Learn more
+              </p>
+            </div>
             <Accordion 
               type="single" 
               collapsible 
               className="w-full"
-              defaultValue="item-1"
+              defaultValue="item-0"
               onValueChange={handleFaqOpen}
             >
+              <AccordionItem value="item-0">
+                <AccordionTrigger>What makes you unique?</AccordionTrigger>
+                <AccordionContent>
+                  I bring a rare combination of technical depth and product leadership. My background as a tinkerer with all things technology gives me the ability to understand complex technical challenges, while my product experience allows me to translate those into business value. I'm known for my ability to bridge communication gaps between technical and non-technical stakeholders, and for building products that users genuinely love.
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="item-1">
                 <AccordionTrigger>What type of roles are you interested in?</AccordionTrigger>
                 <AccordionContent>

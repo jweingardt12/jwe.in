@@ -282,10 +282,15 @@ function Photo({
           quality={95}
           className={clsx(
             'absolute inset-0 h-full w-full object-cover transition-[filter,brightness] duration-300',
+            'will-change-[filter,transform]',
             (isHovered || isSelected) && 'blur-[3px] brightness-[0.85]'
           )}
           priority={index <= 2}
           onLoad={() => setIsLoaded(true)}
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
         />
         <div 
           className={clsx(
@@ -312,6 +317,7 @@ export function Photos() {
   const [showTouchIndicator, setShowTouchIndicator] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
   const { track } = useOpenPanel()
+  const animationRef = useRef(null)
 
   const handleHover = (index) => {
     if (!hasInteracted) {
@@ -319,7 +325,6 @@ export function Photos() {
     }
     setHoveredIndex(index)
     
-    // Only track when entering hover state (not when leaving)
     if (index !== null) {
       const photo = [...photos, ...photos.slice(0, 3)][index]
       track('photo_hover', {
@@ -360,28 +365,42 @@ export function Photos() {
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
-    const scroll = () => {
+    let lastTimestamp = 0
+    const scrollSpeed = 0.05
+
+    const animateScroll = (timestamp) => {
+      if (!lastTimestamp) lastTimestamp = timestamp
+      const elapsed = timestamp - lastTimestamp
+      
       const currentScroll = scrollContainer.scrollLeft
       const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth
-
+      
+      const scrollAmount = elapsed * scrollSpeed
+      
       if (currentScroll >= maxScroll) {
         scrollContainer.scrollLeft = 0
       } else {
-        scrollContainer.scrollLeft += 1
+        scrollContainer.scrollLeft += scrollAmount
+      }
+      
+      lastTimestamp = timestamp
+      
+      if (hoveredIndex === null && selectedIndex === null) {
+        animationRef.current = requestAnimationFrame(animateScroll)
       }
     }
 
-    let intervalId = null
     if (hoveredIndex === null && selectedIndex === null) {
-      intervalId = setInterval(scroll, 50)
+      animationRef.current = requestAnimationFrame(animateScroll)
     }
 
     return () => {
-      if (intervalId) clearInterval(intervalId)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
     }
   }, [hoveredIndex, selectedIndex])
 
-  // Clear selection when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
       setSelectedIndex(null)
@@ -392,7 +411,6 @@ export function Photos() {
     }
   }, [])
 
-  // Add timer to show touch indicator after 3 seconds if no interaction
   useEffect(() => {
     if (!hasInteracted && hoveredIndex === null && selectedIndex === null) {
       const timer = setTimeout(() => {
@@ -412,6 +430,11 @@ export function Photos() {
       <div 
         ref={scrollRef}
         className="flex gap-6 overflow-x-auto py-16 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center"
+        style={{
+          willChange: 'scroll-position',
+          transform: 'translateZ(0)',
+          WebkitOverflowScrolling: 'touch'
+        }}
       >
         {[...photos, ...photos.slice(0, 3)].map((photo, index) => (
           <Photo

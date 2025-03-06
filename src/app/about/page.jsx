@@ -17,21 +17,239 @@ import {
 import ckWebsite from '../../images/previews/ck-website.png'
 import lakeImage from '../../images/photos/new-york-lake.jpg'
 import sideProjectsImage from '../../images/photos/side-projects.jpg'
+import smartHomeImage from '../../images/photos/smart-home.jpg'
 import { useOpenPanel } from '@openpanel/nextjs'
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContainer,
-  MorphingDialogContent,
-  MorphingDialogClose,
-  MorphingDialogTitle,
-  MorphingDialogSubtitle,
-  MorphingDialogDescription,
-  MorphingDialogImage,
-} from '@/components/ui/morphing-dialog'
+import { useRef, useState, useId, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useOutsideClick } from '@/hooks/use-outside-click'
+
+// CloseIcon component for the expandable cards
+const CloseIcon = () => {
+  return (
+    <motion.svg
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      exit={{
+        opacity: 0,
+        transition: {
+          duration: 0.05,
+        },
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 text-black">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
+    </motion.svg>
+  );
+};
 
 export default function About() {
   const { track } = useOpenPanel()
+  const [active, setActive] = useState(null);
+  const ref = useRef(null);
+  const id = useId();
+
+  useEffect(() => {
+    function onKeyDown(event) {
+      if (event.key === "Escape") {
+        setActive(false);
+      }
+    }
+
+    if (active && typeof active === "object") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [active]);
+
+  useOutsideClick(ref, () => setActive(null));
+
+  // Define cards for the expandable card component
+  const cards = [
+    {
+      description: "The best camera is the one you have with you",
+      title: "Photography",
+      src: lakeImage.src,
+      ctaText: "Learn More",
+      ctaLink: "#",
+      content: () => {
+        return (
+          <div className="space-y-6">
+            <p>
+              I've been taking pictures of things since I was young, starting with basic cameras and eventually trying out different types of photography equipment over the years. It's always been a way for me to remember moments and places that matter to me.
+            </p>
+            <p>
+              These days, I just use my phone for all my photos. My daughter was born in 2020, and I've captured every moment on my phone. It makes sense - I always have it with me, and it takes good enough pictures for what I need. Not having to carry around a separate camera means I end up taking more photos, which is what really matters.
+            </p>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">My stack</h3>
+              <table className="w-full text-left">
+                <tbody>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Camera</td>
+                    <td className="py-3">
+                      <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Software</td>
+                    <td className="py-3">
+                      <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Editing hardware</td>
+                    <td className="py-3">
+                      <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Video</td>
+                    <td className="py-3">
+                      <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      description: "Thoughts on designing a smart home",
+      title: "Smart Home",
+      src: smartHomeImage.src,
+      ctaText: "Learn More",
+      ctaLink: "#",
+      content: () => {
+        return (
+          <div className="space-y-6">
+            <p>
+              I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment. My approach focuses on practical automation that enhances daily life without adding unnecessary complexity.
+            </p>
+            <div className="mt-4 mb-6">
+              <SmartHomeAnimation className="w-full h-48" />
+            </div>
+            <p>
+              My smart home is powered by Home Assistant, an open-source platform that allows me to integrate and control all my devices from a single dashboard (shown above). I prefer this approach because it gives me complete control over my data and doesn't rely on cloud services that might be discontinued.
+            </p>
+            <p>
+              My smart home philosophy is simple: automation should solve real problems and be reliable enough that you forget it's there. I've built my system around privacy-focused, local-first solutions whenever possible.
+            </p>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">My smart home stack</h3>
+              <table className="w-full text-left">
+                <tbody>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Hub</td>
+                    <td className="py-3">
+                      <a href="https://www.home-assistant.io/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Home Assistant</a> on <a href="https://www.raspberrypi.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Raspberry Pi 4</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Lighting</td>
+                    <td className="py-3">
+                      <a href="https://www.philips-hue.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Philips Hue</a> + <a href="https://www.lutron.com/en-US/Products/Pages/SingleRoomControls/Caseta/Overview.aspx" target="_blank" rel="noopener noreferrer" className="text-sky-500">Lutron Caseta</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Climate</td>
+                    <td className="py-3">
+                      <a href="https://www.ecobee.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Ecobee Smart Thermostat</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Security</td>
+                    <td className="py-3">
+                      <a href="https://simplisafe.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">SimpliSafe</a> + <a href="https://www.aqara.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Aqara Sensors</a>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <td className="py-3 font-medium">Voice Control</td>
+                    <td className="py-3">
+                      <a href="https://www.apple.com/homepod-mini/" target="_blank" rel="noopener noreferrer" className="text-sky-500">HomePod Mini</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      description: "Random stuff I've built",
+      title: "Side Projects",
+      src: sideProjectsImage.src,
+      ctaText: "Learn More",
+      ctaLink: "#",
+      content: () => {
+        return (
+          <div className="space-y-6">
+            <p>
+              I'm constantly working on side projects that let me explore new technologies and solve interesting problems. These projects range from web applications to automation tools and hardware experiments.
+            </p>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Recent projects</h3>
+              <ul className="space-y-4">
+                <li className="border-b border-zinc-100 dark:border-zinc-800 pb-4">
+                  <h4 className="font-medium">Personal Website</h4>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                    This website! Built with Next.js, Tailwind CSS, and various modern web technologies. It serves as my digital garden and playground for web experiments.
+                  </p>
+                  <div className="flex gap-2 text-xs">
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Next.js</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Tailwind CSS</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Framer Motion</span>
+                  </div>
+                </li>
+                <li className="border-b border-zinc-100 dark:border-zinc-800 pb-4">
+                  <h4 className="font-medium">Home Automation Dashboard</h4>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                    A custom dashboard for my smart home that provides a unified interface for controlling all devices and viewing sensor data.
+                  </p>
+                  <div className="flex gap-2 text-xs">
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Home Assistant</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Node-RED</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">MQTT</span>
+                  </div>
+                </li>
+                <li className="pb-2">
+                  <h4 className="font-medium">AI-Powered News Aggregator</h4>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                    An experimental news aggregator that uses AI to summarize articles and identify key topics from various sources.
+                  </p>
+                  <div className="flex gap-2 text-xs">
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">Python</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">OpenAI API</span>
+                    <span className="px-2 py-1 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">FastAPI</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <Container className="mt-16 sm:mt-32">
@@ -97,239 +315,118 @@ export default function About() {
         <h2 className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-8">
           Learn more
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <MorphingDialog>
-            <MorphingDialogTrigger
-              style={{
-                borderRadius: "12px",
-              }}
-              className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-            >
-              <MorphingDialogImage
-                src={lakeImage}
-                alt="Photography"
-                className="h-48 w-full object-cover"
-              />
-              <div className="flex flex-grow flex-row items-end justify-between p-2">
-                <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
-                    Photography
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    The best camera is the one you have with you
-                  </MorphingDialogSubtitle>
-                </div>
-                <button
-                  type="button"
-                  className="relative ml-1 flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-500"
-                  aria-label="Open dialog"
-                >
-                  <PlusIcon size={12} />
-                </button>
-              </div>
-            </MorphingDialogTrigger>
-            <MorphingDialogContainer>
-              <MorphingDialogContent
-                style={{
-                  borderRadius: "24px",
-                }}
-                className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-              >
-                <MorphingDialogImage
-                  src={lakeImage}
-                  alt="Photography"
-                  className="h-full w-full"
-                />
-                <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
-                    Photography
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    The best camera is the one you have with you
-                  </MorphingDialogSubtitle>
-                  <MorphingDialogDescription
-                    disableLayoutAnimation
-                    variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
-                      animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
-                    }}
-                  >
-                    <div className="space-y-6">
-                      <p className="mt-2 text-zinc-500">
-                        I've been taking pictures of things since I was young, starting with basic cameras and eventually trying out different types of photography equipment over the years. It's always been a way for me to remember moments and places that matter to me.
-                      </p>
-                      <p className="text-zinc-500">
-                        These days, I just use my phone for all my photos. My daughter was born in 2020, and I've captured every moment on my phone. It makes sense - I always have it with me, and it takes good enough pictures for what I need. Not having to carry around a separate camera means I end up taking more photos, which is what really matters.
-                      </p>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-4 text-zinc-950 dark:text-zinc-50">My stack</h3>
-                        <table className="w-full text-left">
-                          <tbody>
-                            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                              <td className="py-3 font-medium text-zinc-950 dark:text-zinc-50">Camera</td>
-                              <td className="py-3">
-                                <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a>
-                              </td>
-                            </tr>
-                            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                              <td className="py-3 font-medium text-zinc-950 dark:text-zinc-50">Software</td>
-                              <td className="py-3">
-                                <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a>
-                              </td>
-                            </tr>
-                            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                              <td className="py-3 font-medium text-zinc-950 dark:text-zinc-50">Editing hardware</td>
-                              <td className="py-3">
-                                <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a>
-                              </td>
-                            </tr>
-                            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                              <td className="py-3 font-medium text-zinc-950 dark:text-zinc-50">Video</td>
-                              <td className="py-3">
-                                <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+        
+        {/* Expandable Cards Component */}
+        <div>
+          <AnimatePresence>
+            {active && typeof active === "object" && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm h-full w-full z-[999]" />
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {active && typeof active === "object" ? (
+              <div className="fixed inset-0 grid place-items-center z-[1000]">
+                <motion.button
+                  key={`button-${active.title}-${id}`}
+                  layout
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    transition: {
+                      duration: 0.05,
+                    },
+                  }}
+                  className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+                  onClick={() => setActive(null)}>
+                  <CloseIcon />
+                </motion.button>
+                <motion.div
+                  layoutId={`card-${active.title}-${id}`}
+                  ref={ref}
+                  className="w-full max-w-[800px] h-auto max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-700 shadow-xl">
+                  <motion.div layoutId={`image-${active.title}-${id}`}>
+                    <Image
+                      priority
+                      width={500}
+                      height={300}
+                      src={active.src}
+                      alt={active.title}
+                      className="w-full h-80 lg:h-80 rounded-t-3xl object-cover object-top" />
+                  </motion.div>
+
+                  <div className="overflow-y-auto">
+                    <div className="flex justify-between items-start p-4">
+                      <div className="w-full">
+                        <motion.h3
+                          layoutId={`title-${active.title}-${id}`}
+                          className="font-bold text-neutral-700 dark:text-neutral-200">
+                          {active.title}
+                        </motion.h3>
+                        <motion.p
+                          layoutId={`description-${active.description}-${id}`}
+                          className="text-neutral-600 dark:text-neutral-400">
+                          {active.description}
+                        </motion.p>
                       </div>
                     </div>
-                  </MorphingDialogDescription>
-                </div>
-                <MorphingDialogClose className="text-zinc-50" />
-              </MorphingDialogContent>
-            </MorphingDialogContainer>
-          </MorphingDialog>
-
-          <MorphingDialog>
-            <MorphingDialogTrigger
-              style={{
-                borderRadius: "12px",
-              }}
-              className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-            >
-              <div className="h-48 w-full">
-                <SmartHomeAnimation className="w-full h-full" />
+                    <div className="pt-4 relative px-4 pb-6">
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="text-neutral-600 text-xs md:text-sm lg:text-base flex flex-col items-start gap-4 dark:text-neutral-400">
+                        {typeof active.content === "function"
+                          ? active.content()
+                          : active.content}
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
-              <div className="flex flex-grow flex-row items-end justify-between p-2">
-                <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
-                    Smart Home
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Thoughts on designing a smart home
-                  </MorphingDialogSubtitle>
+            ) : null}
+          </AnimatePresence>
+          <ul className="max-w-full w-full gap-6 grid grid-cols-1 md:grid-cols-3">
+            {cards.map((card, index) => (
+              <motion.div
+                layoutId={`card-${card.title}-${id}`}
+                key={`card-${card.title}-${id}`}
+                onClick={() => setActive(card)}
+                className="p-4 flex flex-col justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer border border-zinc-950/10 dark:border-zinc-50/10 bg-white dark:bg-zinc-900 h-full">
+                <div className="flex gap-4 flex-col w-full">
+                  <motion.div layoutId={`image-${card.title}-${id}`}>
+                    <Image
+                      width={400}
+                      height={200}
+                      src={card.src}
+                      alt={card.title}
+                      className="h-40 w-full rounded-lg object-cover object-top" />
+                  </motion.div>
+                  <div className="">
+                    <motion.h3
+                      layoutId={`title-${card.title}-${id}`}
+                      className="font-medium text-neutral-800 dark:text-neutral-200 text-left">
+                      {card.title}
+                    </motion.h3>
+                    <motion.p
+                      layoutId={`description-${card.description}-${id}`}
+                      className="text-neutral-600 dark:text-neutral-400 text-left">
+                      {card.description}
+                    </motion.p>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="relative ml-1 flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-500"
-                  aria-label="Open dialog"
-                >
-                  <PlusIcon size={12} />
-                </button>
-              </div>
-            </MorphingDialogTrigger>
-            <MorphingDialogContainer>
-              <MorphingDialogContent
-                style={{
-                  borderRadius: "24px",
-                }}
-                className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-              >
-                <div className="h-64 w-full">
-                  <SmartHomeAnimation className="w-full h-full" />
-                </div>
-                <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
-                    Smart Home
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Thoughts on designing a smart home
-                  </MorphingDialogSubtitle>
-                  <MorphingDialogDescription
-                    disableLayoutAnimation
-                    variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
-                      animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
-                    }}
-                  >
-                    <p className="mt-2 text-zinc-500">
-                      I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment.
-                    </p>
-                  </MorphingDialogDescription>
-                </div>
-                <MorphingDialogClose className="text-zinc-50" />
-              </MorphingDialogContent>
-            </MorphingDialogContainer>
-          </MorphingDialog>
-
-          <MorphingDialog>
-            <MorphingDialogTrigger
-              style={{
-                borderRadius: "12px",
-              }}
-              className="flex max-w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-            >
-              <MorphingDialogImage
-                src={sideProjectsImage}
-                alt="Side Projects"
-                className="h-48 w-full object-cover"
-              />
-              <div className="flex flex-grow flex-row items-end justify-between p-2">
-                <div>
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50">
-                    Side Projects
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Random stuff I've built
-                  </MorphingDialogSubtitle>
-                </div>
-                <button
-                  type="button"
-                  className="relative ml-1 flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-500"
-                  aria-label="Open dialog"
-                >
-                  <PlusIcon size={12} />
-                </button>
-              </div>
-            </MorphingDialogTrigger>
-            <MorphingDialogContainer>
-              <MorphingDialogContent
-                style={{
-                  borderRadius: "24px",
-                }}
-                className="pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900"
-              >
-                <MorphingDialogImage
-                  src={sideProjectsImage}
-                  alt="Side Projects"
-                  className="h-full w-full"
-                />
-                <div className="p-6">
-                  <MorphingDialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
-                    Side Projects
-                  </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
-                    Random stuff I've built
-                  </MorphingDialogSubtitle>
-                  <MorphingDialogDescription
-                    disableLayoutAnimation
-                    variants={{
-                      initial: { opacity: 0, scale: 0.8, y: 100 },
-                      animate: { opacity: 1, scale: 1, y: 0 },
-                      exit: { opacity: 0, scale: 0.8, y: 100 },
-                    }}
-                  >
-                    <p className="mt-2 text-zinc-500">
-                      From web applications to automation tools, I'm constantly working on side projects that let me explore new technologies and solve interesting problems.
-                    </p>
-                  </MorphingDialogDescription>
-                </div>
-                <MorphingDialogClose className="text-zinc-50" />
-              </MorphingDialogContent>
-            </MorphingDialogContainer>
-          </MorphingDialog>
+              </motion.div>
+            ))}
+          </ul>
         </div>
       </div>
     </Container>
