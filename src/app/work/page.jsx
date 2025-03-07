@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
 import portraitImage from '@/images/portrait.jpg'
-import homeAssistantDashboardImage from '@/images/home-assistant-dashboard.jpg';
+import homeAssistantDashboardImage from '@/images/photos/screenshot.png'
 import { useSwipeable } from 'react-swipeable'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
