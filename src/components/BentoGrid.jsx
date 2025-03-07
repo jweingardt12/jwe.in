@@ -4,6 +4,7 @@ import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import smartHomeImage from '../images/photos/smart-home.jpg'
+import screenshotImage from '../images/photos/screenshot.png'
 
 export const SkeletonImage = ({ src }) => {
   return (
@@ -101,17 +102,14 @@ export const SmartHomeAnimation = () => {
   return (
     <div className="relative w-full h-full">
       <Image
-        src={smartHomeImage}
-        alt="Smart Home"
+        src={screenshotImage}
+        alt="Home Assistant Dashboard"
         fill
         className="object-cover rounded-t-xl"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         priority
       />
-      <div className="absolute inset-0 bg-black/10 rounded-t-xl flex items-center justify-center">
-        <div className="text-white text-sm font-medium px-3 py-1 bg-black/40 rounded-full">
-          Home Assistant Dashboard
-        </div>
+      <div className="absolute inset-0 bg-black/10 rounded-t-xl">
       </div>
     </div>
   );

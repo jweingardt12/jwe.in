@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
 import portraitImage from '@/images/portrait.jpg'
+import homeAssistantDashboardImage from '@/images/home-assistant-dashboard.jpg';
 import { useSwipeable } from 'react-swipeable'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
@@ -1339,6 +1340,18 @@ const WorkContent = () => {
               </AccordionItem>
             </Accordion>
           </motion.div>
+
+          {/* Smart Home Section */}
+          <section id="smart-home" className="mt-16">
+            <h2 className="text-2xl font-bold mb-4">Smart Home</h2>
+            <Image
+              src={homeAssistantDashboardImage}
+              alt="Home Assistant Dashboard"
+              width={800}
+              height={600}
+              className="object-cover"
+            />
+          </section>
 
           {/* CTA Section */}
           <motion.div 
