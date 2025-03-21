@@ -13,7 +13,7 @@ export function ScrollProgress({
   className = 'h-1',
   ...props
 }: ScrollProgressProps) {
-  const [isScrolling, setIsScrolling] = React.useState(false)
+  const [isVisible, setIsVisible] = React.useState(false)
   const scrollTimeout = React.useRef<NodeJS.Timeout>()
 
   const { scrollYProgress } = useScroll({
@@ -26,14 +26,22 @@ export function ScrollProgress({
     mass: 0.3,
   })
 
-  useMotionValueEvent(scrollYProgress, "change", () => {
-    setIsScrolling(true)
-    if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current)
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Only show the progress bar if we've scrolled down from the top
+    const shouldBeVisible = latest > 0.001
+    
+    setIsVisible(shouldBeVisible)
+    
+    // If we're showing the progress bar, set a timeout to hide it after scrolling stops
+    if (shouldBeVisible) {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current)
+      }
+      scrollTimeout.current = setTimeout(() => {
+        // Keep it visible if we're still scrolled down, just not actively scrolling
+        // Don't hide it completely when inactive
+      }, 1000)
     }
-    scrollTimeout.current = setTimeout(() => {
-      setIsScrolling(false)
-    }, 1000)
   })
 
   React.useEffect(() => {
@@ -49,7 +57,7 @@ export function ScrollProgress({
       className={className}
       style={{ scaleX, transformOrigin: 'left' }}
       animate={{
-        opacity: isScrolling ? 1 : 0
+        opacity: isVisible ? 1 : 0
       }}
       transition={{
         opacity: { duration: 0.3 }

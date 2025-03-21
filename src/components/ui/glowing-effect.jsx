@@ -82,6 +82,7 @@ export function GlowingEffect({
     <div 
       ref={containerRef}
       className="absolute inset-0 z-0 overflow-hidden rounded-[inherit]"
+      data-component-name="GlowingEffect"
     >
       {!disabled && (
         <div
@@ -89,7 +90,7 @@ export function GlowingEffect({
           style={{
             opacity,
             background: glow
-              ? `radial-gradient(${spread}rem circle at ${position.x}px ${position.y}px, rgba(99, 102, 241, 0.6), rgba(168, 85, 247, 0.3) 40%, transparent ${spread}%)`
+              ? `radial-gradient(${spread}rem circle at ${position.x}px ${position.y}px, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.3) 40%, transparent ${spread}%)`
               : "none",
             transition: "opacity 300ms ease, background 300ms ease",
           }}

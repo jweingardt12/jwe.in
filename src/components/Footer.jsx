@@ -10,7 +10,7 @@ import {
   LinkedInIcon,
   ThreadsIcon,
 } from './SocialIcons'
-import { InnerContainer, OuterContainer } from './Container'
+import { Container } from './Container'
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
 
 function MailIcon(props) {
@@ -85,53 +85,49 @@ function NavLink({ href, children }) {
 
 export function Footer() {
   return (
-    <OuterContainer>
-      <div className="border-t border-zinc-100 pb-16 pt-12 px-4 sm:px-6 lg:px-8 dark:border-zinc-700/40">
-        <InnerContainer>
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-              <NavLink href="/about">About</NavLink>
-              <NavLink href="/work">Work</NavLink>
-              <NavLink href="/notes">Notes</NavLink>
-              <NavLink href="/reading">Reading</NavLink>
-            </div>
-            <div className="flex flex-col items-center gap-4 sm:items-end">
-              <div className="flex flex-row items-center justify-center">
-                <div className="flex items-center">
-                  <ul role="list" className="flex flex-wrap justify-center gap-x-4 sm:mr-4 sm:border-r sm:border-zinc-100 sm:pr-4 dark:sm:border-zinc-700/40">
-                    <SocialLink 
-                      href="https://www.threads.net/@jweingardt" 
-                      icon={ThreadsIcon}
-                    />
-                    <SocialLink 
-                      href="https://instagram.com/jweingardt" 
-                      icon={InstagramIcon}
-                    />
-                    <SocialLink 
-                      href="https://github.com/jweingardt12" 
-                      icon={GitHubIcon}
-                    />
-                    <SocialLink 
-                      href="https://linkedin.com/in/jasonweingardt" 
-                      icon={LinkedInIcon}
-                    />
-                    <SocialLink
-                      href="mailto:hi@jwe.in"
-                      icon={MailIcon}
-                    />
-                  </ul>
-                </div>
-                <div className="ml-2 sm:ml-0">
-                  <ThemeToggle />
-                </div>
-              </div>
-              <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                &copy; {new Date().getFullYear()} Jason Weingardt
-              </p>
+    <Container>
+      <div className="border-t border-zinc-100 pb-16 pt-12 dark:border-zinc-700/40">
+        <div className="flex flex-col items-center justify-between gap-6" data-component-name="Footer">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/work">Work</NavLink>
+            <NavLink href="/notes">Notes</NavLink>
+            <NavLink href="/reading">Reading</NavLink>
+          </div>
+          
+          <div className="flex flex-row items-center justify-center">
+            <ul role="list" className="flex flex-wrap justify-center gap-x-4">
+              <SocialLink 
+                href="https://www.threads.net/@jweingardt" 
+                icon={ThreadsIcon}
+              />
+              <SocialLink 
+                href="https://instagram.com/jweingardt" 
+                icon={InstagramIcon}
+              />
+              <SocialLink 
+                href="https://github.com/jweingardt12" 
+                icon={GitHubIcon}
+              />
+              <SocialLink 
+                href="https://linkedin.com/in/jasonweingardt" 
+                icon={LinkedInIcon}
+              />
+              <SocialLink
+                href="mailto:hi@jwe.in"
+                icon={MailIcon}
+              />
+            </ul>
+            <div className="ml-4">
+              <ThemeToggle />
             </div>
           </div>
-        </InnerContainer>
+          
+          <p className="text-sm text-zinc-400 dark:text-zinc-500">
+            &copy; {new Date().getFullYear()} Jason Weingardt
+          </p>
+        </div>
       </div>
-    </OuterContainer>
+    </Container>
   )
 }
