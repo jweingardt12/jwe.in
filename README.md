@@ -1,6 +1,6 @@
 # jwe.in
 
-My personal site, built with Next.js, Tailwind CSS, and OpenPanel analytics.
+My personal site, built with Next.js, Tailwind CSS, and Plausible analytics.
 
 ![Screenshot of the website](/src/images/photos/screenshot.png)
 
@@ -16,8 +16,6 @@ Next, create a `.env.local` file in the root of your project and set the require
 
 ```
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_OPENPANEL_CLIENT_ID=your_client_id
-NEXT_PUBLIC_OPENPANEL_CLIENT_SECRET=your_client_secret
 ```
 
 Then run the development server:
@@ -31,7 +29,7 @@ npm run dev
 - 📝 Notes/blog with markdown support
 - 📚 RSS feed integration for sharing what I'm reading
 - 🌓 Dark mode support
-- 📊 Analytics with OpenPanel
+- 📊 Analytics with Plausible
 - 📱 Responsive design
 - 🖼️ Photo gallery with hover states
 - 🔗 Social links with click tracking
@@ -40,6 +38,6 @@ npm run dev
 
 - [Next.js](https://nextjs.org) - React framework
 - [Tailwind CSS](https://tailwindcss.com) - Styling
-- [OpenPanel](https://openpanel.dev) - Analytics
+- [Plausible](https://plausible.io) - Analytics
 - [Headless UI](https://headlessui.dev) - UI components
 - [MDX](https://mdxjs.com) - Markdown/JSX

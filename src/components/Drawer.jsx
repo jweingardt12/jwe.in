@@ -23,7 +23,7 @@ export function DrawerComponent() {
       <DrawerContent>
         <div className="mx-auto w-full max-w-2xl px-6">
           <div className="flex flex-col gap-6 py-6">
-            <DrawerTitle>How the Reading Page Works</DrawerTitle>
+            <DrawerTitle>How does this page work?</DrawerTitle>
             <div className="prose dark:prose-invert">
               <p>
                 This page displays articles I've come across from my RSS feeds. Here's how it works:
@@ -50,7 +50,7 @@ export function DrawerComponent() {
                       type: 'source'
                     })}
                   > component</a>.</li>
-                <li>The client (browser) handles fetching new items on page-load.</li>
+                <li>The client handles fetching new items on page-load, with some protections against Raindrop's rate limiting.</li>
               </ul>
             </div>
             <DrawerClose asChild>

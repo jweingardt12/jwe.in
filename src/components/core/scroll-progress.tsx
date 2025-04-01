@@ -27,8 +27,9 @@ export function ScrollProgress({
   })
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Only show the progress bar if we've scrolled down from the top
-    const shouldBeVisible = latest > 0.001
+    // Only show the progress bar if we've scrolled down a meaningful amount
+    // Increased threshold to avoid showing the bar when user hasn't actually scrolled
+    const shouldBeVisible = latest > 0.01
     
     setIsVisible(shouldBeVisible)
     

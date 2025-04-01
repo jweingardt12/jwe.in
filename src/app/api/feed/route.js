@@ -7,13 +7,17 @@ const FEED_URL = 'https://bg.raindrop.io/rss/public/51518726'
 
 export async function GET(request) {
   try {
-    console.log('Fetching feed from:', FEED_URL)
+    // Check if the request has a 'fresh' parameter to bypass cache
+    const { searchParams } = new URL(request.url)
+    const fresh = searchParams.has('fresh')
+    
+    console.log('Fetching feed from:', FEED_URL, fresh ? '(fresh data requested)' : '')
     const res = await fetch(FEED_URL, {
       headers: {
         'Accept': 'application/xml, application/rss+xml, text/xml',
         'Accept-Encoding': 'gzip'
       },
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: fresh ? { revalidate: 0 } : { revalidate: 3600 } // No cache if fresh, otherwise cache for 1 hour
     })
 
     if (!res.ok) {

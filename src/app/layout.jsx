@@ -12,8 +12,8 @@ import '@radix-ui/themes/styles.css'
 import mixpanel from '@/lib/mixpanel'
 
 const DotBackgroundDemo = dynamic(() => import('../components/ui/dot-background'), { ssr: false })
-const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
 const MixpanelTracker = dynamic(() => import('../components/MixpanelTracker'), { ssr: false })
+const OpenPanelWrapper = dynamic(() => import('../components/OpenPanelWrapper'), { ssr: false })
 
 export const viewport = {
   width: 'device-width',
@@ -49,6 +49,9 @@ export default function RootLayout({ children }) {
         }}
       />
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+        <head>
+          {/* No Plausible script here */}
+        </head>
         <body className="flex h-full bg-zinc-50 dark:bg-black" suppressHydrationWarning>
           <ThemeProvider attribute="class" disableTransitionOnChange enableSystem defaultTheme="system">
             <MDXWrapper>
@@ -64,8 +67,8 @@ export default function RootLayout({ children }) {
               <SonnerToaster position="bottom-right" theme="system" />
               <Analytics />
               <SpeedInsights />
-              <OpenPanelWrapper />
               <MixpanelTracker />
+              <OpenPanelWrapper />
             </MDXWrapper>
           </ThemeProvider>
         </body>

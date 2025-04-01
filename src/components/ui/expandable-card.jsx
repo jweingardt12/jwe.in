@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useOutsideClick } from '../../hooks/use-outside-click';
 import { cn } from '../../lib/utils';
-import { useOpenPanel } from '@openpanel/nextjs';
+import { usePlausible } from '@/lib/analytics';
 import Image from 'next/image';
 
 export const ExpandableCard = ({
@@ -37,7 +37,7 @@ export const ExpandableCard = ({
 
   useOutsideClick(modalRef, () => setIsOpen(false));
 
-  const { track } = useOpenPanel();
+  const { track } = usePlausible();
 
   const handleOpen = () => {
     setIsOpen(true);

@@ -18,10 +18,10 @@ import ckWebsite from '../../images/previews/ck-website.png'
 import lakeImage from '../../images/photos/new-york-lake.jpg'
 import sideProjectsImage from '../../images/photos/side-projects.jpg'
 import smartHomeImage from '../../images/photos/dashboard.jpg'
-import { useOpenPanel } from '@openpanel/nextjs'
 import { useRef, useState, useId, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
+import { usePlausible } from '@/lib/analytics'
 
 // CloseIcon component for the expandable cards
 const CloseIcon = () => {
@@ -57,7 +57,7 @@ const CloseIcon = () => {
 };
 
 export default function About() {
-  const { track } = useOpenPanel()
+  const { track } = usePlausible()
   const [active, setActive] = useState(null);
   const ref = useRef(null);
   const id = useId();

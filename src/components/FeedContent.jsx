@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react'
 import { Articles } from './Articles'
 import { ArticleSkeleton as LoadingSkeleton } from './ArticleSkeleton'
+import { usePlausible } from '@/lib/analytics'
 
 export function FeedContent() {
   const [articles, setArticles] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const { trackEvent } = usePlausible()
 
   useEffect(() => {
     let timeoutId
@@ -14,7 +16,7 @@ export function FeedContent() {
     async function fetchFeed() {
       try {
         const startTime = Date.now()
-        const res = await fetch('/api/feed')
+        const res = await fetch('/api/feed?fresh=true')
         const feed = await res.json()
         
         if (feed.error) {
@@ -29,11 +31,9 @@ export function FeedContent() {
         console.log('Raw feed items:', items)
         
         const processedArticles = items.map(item => {
-          // Extract image URL from description if present
-          const imgMatch = item.content_text?.match(/<img[^>]+src="([^">]+)"/)
+          const imgMatch = item.content_text?.match(/<img[^>]+src="([^"]+)"/) 
           const descriptionImage = imgMatch ? imgMatch[1] : null
 
-          // Get the best available image URL
           const imageUrl = item._reeder?.media?.[0]?.url || descriptionImage || null
 
           console.log('Processing item:', {
@@ -65,12 +65,15 @@ export function FeedContent() {
         })
 
         console.log('All processed articles:', processedArticles)
+        
+        trackEvent('Reading List Loaded', {
+          articleCount: processedArticles.length,
+          freshData: true
+        })
 
-        // Calculate remaining time to show skeleton
         const elapsedTime = Date.now() - startTime
         const remainingTime = Math.max(2000 - elapsedTime, 0)
 
-        // Set a timeout to ensure skeleton shows for at least 2 seconds
         timeoutId = setTimeout(() => {
           setArticles(processedArticles)
           setIsLoading(false)
@@ -78,7 +81,6 @@ export function FeedContent() {
 
       } catch (error) {
         console.error('Error fetching feed:', error)
-        // Even on error, wait 2 seconds before showing error state
         timeoutId = setTimeout(() => {
           setArticles([{
             id: 'error',
@@ -96,11 +98,10 @@ export function FeedContent() {
 
     fetchFeed()
 
-    // Cleanup timeout on unmount
     return () => {
       if (timeoutId) clearTimeout(timeoutId)
     }
-  }, [])
+  }, [trackEvent])
 
   if (isLoading) {
     return <LoadingSkeleton />
