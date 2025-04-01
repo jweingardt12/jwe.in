@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from './Card'
 import { useExternalLinkTracking } from '../lib/useExternalLinkTracking'
+import { SafeImage } from './SafeImage'
 
 function cleanContent(content) {
   if (!content) {
@@ -89,14 +90,11 @@ export function Articles({ articles = [] }) {
                       {imageUrl && (
                         <div className="mt-6 w-full">
                           <div className="h-48 w-full overflow-hidden rounded-md bg-zinc-200 dark:bg-zinc-700">
-                            <img
-                              alt=""
+                            <SafeImage
                               src={imageUrl}
+                              alt=""
                               className="h-full w-full object-cover"
-                              onError={(e) => {
-                                console.error('Image failed to load:', imageUrl)
-                                e.currentTarget.style.display = 'none'
-                              }}
+                              onError={() => console.error('Mobile image failed to load:', imageUrl)}
                             />
                           </div>
                         </div>
@@ -139,14 +137,11 @@ export function Articles({ articles = [] }) {
                 <div className="hidden md:block flex-shrink-0">
                   {imageUrl && (
                     <div className="h-24 w-24 sm:h-32 sm:w-32 lg:h-44 lg:w-44 overflow-hidden rounded-md bg-zinc-200 dark:bg-zinc-700">
-                      <img
-                        alt=""
+                      <SafeImage
                         src={imageUrl}
+                        alt=""
                         className="h-full w-full object-cover"
-                        onError={(e) => {
-                          console.error('Image failed to load:', imageUrl)
-                          e.currentTarget.style.display = 'none'
-                        }}
+                        onError={() => console.error('Desktop image failed to load:', imageUrl)}
                       />
                     </div>
                   )}

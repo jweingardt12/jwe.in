@@ -7,6 +7,7 @@ import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outlin
 import { useSearchParams } from 'next/navigation'
 import portraitImage from '@/images/portrait.jpg'
 import { useSwipeable } from 'react-swipeable'
+import { usePlausible } from '@/lib/analytics'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { Timeline } from '@/components/ui/timeline'
@@ -174,6 +175,7 @@ const WorkContent = () => {
   const totalTestimonials = 4 // Featured + 3 from nested array
   const [autoRotatePaused, setAutoRotatePaused] = useState(false)
   const [slideDirection, setSlideDirection] = useState('right')
+  const plausible = usePlausible()
   
   // Add useEffect for auto-rotation
   useEffect(() => {
@@ -291,17 +293,13 @@ const WorkContent = () => {
   const handleFaqOpen = (value) => {
     if (value) {
       const questions = {
-        'item-0': 'What makes you unique?',
-        'item-1': 'What type of roles are you interested in?',
-        'item-2': 'How do you work?',
-        'item-3': 'How do you approach product development?',
+        'item-1': 'What is your management style?',
+        'item-2': 'How do you handle conflict?',
+        'item-3': 'What are your thoughts on AI?',
         'item-4': 'What\'s your experience with remote teams?',
         'item-5': 'Your journey seems to be a bit of a rollercoaster. Where do you see yourself in 5 years?'
       }
-      const event = new CustomEvent('openpanel', { 
-        detail: { question: questions[value] }
-      })
-      window.dispatchEvent(event)
+      plausible('faq_open', { props: { question: questions[value] } })
     }
   }
 

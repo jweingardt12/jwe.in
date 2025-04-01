@@ -4,7 +4,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Container } from './Container'
-import { useOpenPanel } from '@openpanel/nextjs'
+import { usePlausible } from '@/lib/analytics'
 
 // Import images statically
 import image1 from '../images/photos/image-1.jpg'
@@ -316,7 +316,7 @@ export function Photos() {
   const [photoStats, setPhotoStats] = useState({})
   const [showTouchIndicator, setShowTouchIndicator] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
-  const { track } = useOpenPanel()
+  const { track } = usePlausible()
   const animationRef = useRef(null)
 
   const handleHover = (index) => {
@@ -425,11 +425,9 @@ export function Photos() {
 
   return (
     <div className="mt-8 sm:mt-0 w-full overflow-hidden relative">
-      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent dark:from-zinc-900 z-10"></div>
-      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent dark:from-zinc-900 z-10"></div>
       <div 
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto py-16 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center"
+        className="flex gap-6 overflow-x-auto py-16 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center mask-fade"
         style={{
           willChange: 'scroll-position',
           transform: 'translateZ(0)',
@@ -461,6 +459,10 @@ export function Photos() {
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
+        .mask-fade {
+          mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
         @keyframes ripple {
           0% { transform: scale(1); opacity: 0.2; }
           100% { transform: scale(2); opacity: 0; }
@@ -479,4 +481,3 @@ export function Photos() {
 }
 
 export { Photo, fetchPhotoStats }
-

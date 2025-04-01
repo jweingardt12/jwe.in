@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { motion, useScroll, useSpring, useMotionValueEvent } from 'framer-motion'
 
-interface ScrollProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ScrollProgressProps {
   containerRef: React.RefObject<HTMLElement>
   className?: string
 }
@@ -11,10 +11,9 @@ interface ScrollProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 export function ScrollProgress({
   containerRef,
   className = 'h-1',
-  ...props
 }: ScrollProgressProps) {
   const [isVisible, setIsVisible] = React.useState(false)
-  const scrollTimeout = React.useRef<NodeJS.Timeout>()
+  const scrollTimeout = React.useRef<NodeJS.Timeout | undefined>(undefined)
 
   const { scrollYProgress } = useScroll({
     container: containerRef,
@@ -27,8 +26,9 @@ export function ScrollProgress({
   })
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Only show the progress bar if we've scrolled down from the top
-    const shouldBeVisible = latest > 0.001
+    // Only show the progress bar if we've scrolled down a meaningful amount
+    // Increased threshold to avoid showing the bar when user hasn't actually scrolled
+    const shouldBeVisible = latest > 0.01
     
     setIsVisible(shouldBeVisible)
     
@@ -62,7 +62,6 @@ export function ScrollProgress({
       transition={{
         opacity: { duration: 0.3 }
       }}
-      {...props}
     />
   )
 }

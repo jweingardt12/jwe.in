@@ -1,15 +1,11 @@
 import { ArticleLayout } from '../../../components/ArticleLayout'
 import { getAllArticles } from '../../../lib/articles'
 import { notFound } from 'next/navigation'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import Image from 'next/image'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import remarkGfm from 'remark-gfm'
-import rehypePrismPlus from 'rehype-prism-plus'
-
-export const revalidate = 60; // Revalidate every 60 seconds
+import NotesClientContent from '../../../components/NotesClientContent'
 
 const components = {
   Image: Image,
@@ -24,6 +20,8 @@ const components = {
     />
   ),
 }
+
+export const revalidate = 60; // Revalidate every 60 seconds
 
 export async function generateStaticParams() {
   try {
@@ -110,23 +108,9 @@ export default async function Article({ params }) {
       notFound()
     }
 
-    const options = {
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [[rehypePrismPlus, { ignoreMissing: true, showLineNumbers: true }]],
-        format: 'mdx',
-      },
-    }
-
     return (
       <ArticleLayout article={article}>
-        <div className="prose dark:prose-invert max-w-none">
-          <MDXRemote 
-            source={article.content} 
-            options={options} 
-            components={components}
-          />
-        </div>
+        <NotesClientContent content={article.content} />
       </ArticleLayout>
     )
   } catch (error) {

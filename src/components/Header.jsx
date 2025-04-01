@@ -6,8 +6,8 @@ import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { useOpenPanel } from '@openpanel/nextjs'
 import { useTheme } from 'next-themes'
+import { usePlausible } from '@/lib/analytics'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
@@ -16,8 +16,9 @@ import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
 import { ChevronDownIcon, CloseIcon, SunIcon, MoonIcon, HamburgerIcon, ComputerIcon } from '@/components/Icons'
 import { HomeIcon, UserIcon, BriefcaseIcon, DocumentTextIcon, BookOpenIcon } from '@/components/Icons'
+import { useRecentArticles } from '@/hooks/useRecentArticles'
 
-function MobileNavItem({ href, children }) {
+function MobileNavItem({ href, children, badge = null }) {
   let pathname = usePathname()
   let isActive = href === '/work' 
     ? pathname.startsWith('/work')
@@ -52,16 +53,26 @@ function MobileNavItem({ href, children }) {
           ? "bg-sky-100/80 text-sky-900 dark:bg-sky-800/20 dark:text-sky-400"
           : "text-zinc-700 hover:bg-zinc-100 hover:translate-x-1 dark:text-zinc-300 dark:hover:bg-zinc-800/50"
       )}>
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           {icon}
-          {children}
+          <span className="relative inline-block">
+            {children}
+            {badge && (
+              <span 
+                className="absolute -top-3 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]"
+                style={{ transform: 'scale(0)', animation: 'notificationBadge 0.3s forwards ease-out' }}
+              >
+                {badge}
+              </span>
+            )}
+          </span>
         </div>
       </Popover.Button>
     </li>
   )
 }
 
-function NavItem({ href, children }) {
+function NavItem({ href, children, badge = null }) {
   let pathname = usePathname()
   let isActive = href === '/work' 
     ? pathname.startsWith('/work')
@@ -78,7 +89,17 @@ function NavItem({ href, children }) {
             : 'hover:text-sky-500 dark:hover:text-sky-400'
         )}
       >
-        {children}
+        <span className="relative inline-block">
+          {children}
+          {badge && (
+            <span 
+              className="absolute -top-3 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]"
+              style={{ transform: 'scale(0)', animation: 'notificationBadge 0.3s forwards ease-out' }}
+            >
+              {badge}
+            </span>
+          )}
+        </span>
       </Link>
     </li>
   )
@@ -88,6 +109,7 @@ function FloatingNavigation(props) {
   const pathname = usePathname()
   const isHomePage = pathname === '/'
   const [fadeIn, setFadeIn] = useState(false)
+  const { recentCount, isLoading, error } = useRecentArticles()
   
   useEffect(() => {
     // Add fade-in animation with 2s delay when on home page
@@ -118,7 +140,7 @@ function FloatingNavigation(props) {
         <NavItem href="/about">About</NavItem>
         <NavItem href="/work">Work</NavItem>
         <NavItem href="/notes">Notes</NavItem>
-        <NavItem href="/reading">Reading</NavItem>
+        <NavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</NavItem>
         <li className="flex items-center pl-3">
           <ContactDrawer>
             <Button 
@@ -171,8 +193,25 @@ function ThemeToggleDropdown() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
-  const isActive = (path) => pathname === path
+  const isHomePage = pathname === '/'
+  const [fadeIn, setFadeIn] = useState(false)
+  const router = useRouter()
   
+  useEffect(() => {
+    // Add fade-in animation with 2s delay when on home page
+    if (isHomePage) {
+      const timer = setTimeout(() => {
+        setFadeIn(true)
+      }, 2000)
+      
+      return () => clearTimeout(timer)
+    } else {
+      setFadeIn(true) // No delay on other pages
+    }
+  }, [isHomePage])
+
+  const { track } = usePlausible()
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -185,7 +224,7 @@ function ThemeToggleDropdown() {
         href="/"
         className={clsx(
           "flex items-center w-full px-2.5 py-1.5 text-xs rounded-md transition-all duration-200",
-          isActive('/') 
+          isHomePage 
             ? "bg-sky-100/80 text-sky-900 dark:bg-sky-800/20 dark:text-sky-400" 
             : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/50"
         )}
@@ -398,6 +437,13 @@ function Avatar({ large = false, className, ...props }) {
 }
 
 export function Header() {
+  const [isOpen, setIsOpen] = useState(false)
+  const { theme, setTheme } = useTheme()
+  const { recentCount, isLoading, error } = useRecentArticles()
+  const router = useRouter()
+  const pathname = usePathname()
+  const plausible = usePlausible()
+
   let isHomePage = usePathname() === '/'
   let headerRef = useRef(null)
   let isInitial = useRef(true)
@@ -583,7 +629,7 @@ export function Header() {
                               <MobileNavItem href="/about">About</MobileNavItem>
                               <MobileNavItem href="/work">Work</MobileNavItem>
                               <MobileNavItem href="/notes">Notes</MobileNavItem>
-                              <MobileNavItem href="/reading">Reading</MobileNavItem>
+                              <MobileNavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</MobileNavItem>
                             </ul>
                             <div className="mt-6 pt-5 border-t border-zinc-200 dark:border-zinc-700/40">
                               <ContactDrawer>

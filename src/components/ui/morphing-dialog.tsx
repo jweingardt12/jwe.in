@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  RefObject,
 } from 'react';
 import {
   motion,
@@ -150,7 +151,7 @@ function MorphingDialogContent({
   const { setIsOpen, isOpen, uniqueId, triggerRef } = useMorphingDialog();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside(containerRef, () => {
+  useClickOutside(containerRef as React.RefObject<HTMLElement>, () => {
     if (isOpen) {
       setIsOpen(false);
     }

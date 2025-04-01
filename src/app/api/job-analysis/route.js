@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
 
 export const runtime = 'edge';
-export const dynamic = 'force-dynamic';
+// Set cache revalidation time
+export const revalidate = 60; // Revalidate every minute
 
 // Initialize Redis
 const redis = new Redis({

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { TldrCard } from '@/components/ui/tldr-card'
 import { Button } from '@/components/ui/button'
@@ -27,16 +27,42 @@ export default function CreatePage() {
     relevantSkills: []
   })
 
-  const loadSavedCards = async () => {
+  const loadAvailableModels = useCallback(async () => {
+    setIsLoadingModels(true)
     try {
-      const response = await fetch('/api/job-analysis')
+      const response = await fetch('/api/models')
       if (!response.ok) {
-        console.error('Failed to load cards:', response.status)
-        setSavedCards([])
+        console.error('Failed to load models:', response.status)
         return
       }
 
       const data = await response.json()
+      if (data.models && Array.isArray(data.models)) {
+        // Models are already filtered on the server side
+        console.log('Models received from API:', data.models.map(m => m.name));
+        setAvailableModels(data.models)
+        
+        // Check if gpt-4o is available, otherwise keep the current selection
+        const gpt4oModel = data.models.find(model => model.id === 'gpt-4o' || model.name.startsWith('GPT-4o'))
+        if (gpt4oModel && selectedModel !== gpt4oModel.id) {
+          setSelectedModel(gpt4oModel.id)
+        }
+      }
+    } catch (error) {
+      console.error('Error loading models:', error)
+    } finally {
+      setIsLoadingModels(false)
+    }
+  }, [selectedModel])
+
+  const loadSavedCards = useCallback(async () => {
+    try {
+      const response = await fetch('/api/job-analysis');
+      if (!response.ok) {
+        console.error('Failed to load saved cards:', response.status)
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json();
       console.log('Raw response from Redis:', data)
       
       // Create a Map to ensure unique entries by ID
@@ -102,40 +128,12 @@ export default function CreatePage() {
       console.error('Error loading saved cards:', error)
       setSavedCards([])
     }
-  }
-
-  const loadAvailableModels = async () => {
-    setIsLoadingModels(true)
-    try {
-      const response = await fetch('/api/models')
-      if (!response.ok) {
-        console.error('Failed to load models:', response.status)
-        return
-      }
-
-      const data = await response.json()
-      if (data.models && Array.isArray(data.models)) {
-        // Models are already filtered on the server side
-        console.log('Models received from API:', data.models.map(m => m.name));
-        setAvailableModels(data.models)
-        
-        // Check if gpt-4o is available, otherwise keep the current selection
-        const gpt4oModel = data.models.find(model => model.id === 'gpt-4o' || model.name.startsWith('GPT-4o'))
-        if (gpt4oModel && selectedModel !== gpt4oModel.id) {
-          setSelectedModel(gpt4oModel.id)
-        }
-      }
-    } catch (error) {
-      console.error('Error loading models:', error)
-    } finally {
-      setIsLoadingModels(false)
-    }
-  }
+  }, [])
 
   useEffect(() => {
     loadSavedCards()
     loadAvailableModels()
-  }, [])
+  }, [loadSavedCards, loadAvailableModels])
 
   useEffect(() => {
     // Filter cards based on search query

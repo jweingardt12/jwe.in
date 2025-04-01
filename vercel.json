@@ -6,6 +6,7 @@
   "outputDirectory": ".next",
   "env": {
     "NEXT_RUNTIME": "nodejs",
-    "NEXT_TELEMETRY_DISABLED": "1"
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   }
 }

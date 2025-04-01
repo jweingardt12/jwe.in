@@ -51,6 +51,24 @@
   }
 }
 
+@keyframes notificationBadge {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes shimmer {
   from {
     transform: translateX(-100%);
