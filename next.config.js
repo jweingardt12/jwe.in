@@ -2,18 +2,23 @@
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   reactStrictMode: true,
-  experimental: {
-    // Enable the standalone output mode
-    outputStandalone: true,
-  },
-  // Add WebSocket polyfill
-  webpack: (config, { isServer, webpack }) => {
+  // Specifically for Vercel deployment
+  webpack: (config, { isServer }) => {
     if (isServer) {
-      // This ensures the ws module is bundled with the server code
-      config.externals = [...config.externals, 'bufferutil', 'utf-8-validate'];
+      // Mark ws as external to prevent bundling issues
+      config.externals = [...(config.externals || []), 'bufferutil', 'utf-8-validate', 'ws'];
     }
+    
+    // Add a fallback for the ws module
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      ws: false,
+    };
+    
     return config;
   },
+  // Explicitly set the target for Vercel
+  target: 'serverless',
 };
 
 module.exports = nextConfig;
