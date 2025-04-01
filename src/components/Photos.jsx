@@ -424,10 +424,10 @@ export function Photos() {
   }, [hoveredIndex, selectedIndex, hasInteracted])
 
   return (
-    <div className="mt-8 sm:mt-0 w-full overflow-hidden relative">
+    <div className="w-full overflow-hidden relative">
       <div 
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto py-16 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center mask-fade"
+        className="flex gap-6 overflow-x-auto py-8 no-scrollbar w-full px-4 sm:px-8 md:px-16 lg:px-24 justify-start md:justify-center mask-fade"
         style={{
           willChange: 'scroll-position',
           transform: 'translateZ(0)',

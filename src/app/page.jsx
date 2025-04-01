@@ -36,7 +36,7 @@ function SocialLink({ icon: Icon, className, href, ...props }) {
 export default function HomePage() {
   return (
     <>
-      <Container className="mt-9">
+      <Container className="mt-9 mb-4">
         <div className="flex flex-col items-center justify-center mx-auto">
           <div className="max-w-2xl text-center mx-auto">
             <BlurFade delay={0.25} inView>
@@ -77,7 +77,7 @@ export default function HomePage() {
         </div>
       </Container>
       
-      <div className="mt-6 w-full">
+      <div className="mt-0 w-full">
         <Photos />
       </div>
     </>

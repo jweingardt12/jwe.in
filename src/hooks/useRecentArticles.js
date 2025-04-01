@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 /**
  * Hook to fetch and count articles added in the last week
@@ -10,6 +11,26 @@ export function useRecentArticles() {
   const [recentCount, setRecentCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [badgeDismissed, setBadgeDismissed] = useState(false)
+  const pathname = usePathname()
+
+  // Check if we're on the Reading page and dismiss the badge for the session
+  useEffect(() => {
+    // Check if localStorage is available (client-side only)
+    if (typeof window !== 'undefined') {
+      // Check if badge was already dismissed in this session
+      const dismissed = localStorage.getItem('readingBadgeDismissed')
+      if (dismissed) {
+        setBadgeDismissed(true)
+      }
+      
+      // If we're on the Reading page, dismiss the badge for this session
+      if (pathname === '/reading') {
+        localStorage.setItem('readingBadgeDismissed', 'true')
+        setBadgeDismissed(true)
+      }
+    }
+  }, [pathname])
 
   useEffect(() => {
     let isMounted = true
@@ -69,5 +90,10 @@ export function useRecentArticles() {
     }
   }, [])
 
-  return { recentCount, isLoading, error }
+  // Return 0 for the badge count when on the Reading page or if badge was dismissed
+  return { 
+    recentCount: badgeDismissed ? 0 : recentCount, 
+    isLoading, 
+    error 
+  }
 }
