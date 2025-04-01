@@ -19,7 +19,7 @@ export function trackEvent(eventName, props = {}) {
     if (window.H && typeof window.H.getSessionURL === 'function') {
       highlightSessionUrl = window.H.getSessionURL();
       // Extract session ID from URL if available
-      if (highlightSessionUrl) {
+      if (highlightSessionUrl && typeof highlightSessionUrl === 'string') {
         const urlParts = highlightSessionUrl.split('/');
         highlightSessionId = urlParts[urlParts.length - 1];
       }

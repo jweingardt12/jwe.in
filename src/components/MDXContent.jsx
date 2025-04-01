@@ -1,6 +1,10 @@
 'use client'
 
-import { MDXProvider } from '@mdx-js/react'
+import { useState, useEffect } from 'react'
+import { MDXRemote } from 'next-mdx-remote'
+import { serialize } from 'next-mdx-remote/serialize'
+import remarkGfm from 'remark-gfm'
+import rehypePrismPlus from 'rehype-prism-plus'
 import Image from 'next/image'
 
 const components = {
@@ -28,17 +32,15 @@ const components = {
   blockquote: (props) => (
     <blockquote className="mt-6 border-l-2 border-zinc-200 pl-6 italic text-zinc-600 dark:border-zinc-700 dark:text-zinc-400" {...props} />
   ),
-  img: (props) => (
-    <div className="relative aspect-[16/9] my-8 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-      <Image
-        {...props}
-        alt={props.alt || ''}
-        fill
-        className="object-cover"
-        loading="lazy"
-        sizes="(min-width: 768px) 42rem, 100vw"
-      />
-    </div>
+  img: ({ src, alt }) => (
+    <Image
+      src={src}
+      alt={alt || ''}
+      width={1200}
+      height={600}
+      className="w-full rounded-lg my-8"
+      priority
+    />
   ),
   pre: (props) => (
     <pre className="mt-6 overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-200" {...props} />
@@ -48,12 +50,36 @@ const components = {
   ),
 }
 
-export function MDXContent({ children }) {
+export default function MDXContent({ content }) {
+  const [mdxSource, setMdxSource] = useState(null)
+  
+  useEffect(() => {
+    const processMdx = async () => {
+      if (!content) return
+      
+      try {
+        const result = await serialize(content, {
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [[rehypePrismPlus, { ignoreMissing: true, showLineNumbers: true }]],
+          },
+        })
+        setMdxSource(result)
+      } catch (error) {
+        console.error('Error processing MDX:', error)
+      }
+    }
+    
+    processMdx()
+  }, [content])
+  
+  if (!mdxSource) {
+    return <div>Loading content...</div>
+  }
+  
   return (
-    <MDXProvider components={components}>
-      <article className="prose prose-quoteless prose-neutral dark:prose-invert">
-        {children}
-      </article>
-    </MDXProvider>
+    <div className="prose dark:prose-invert max-w-none">
+      <MDXRemote {...mdxSource} components={components} />
+    </div>
   )
 }
