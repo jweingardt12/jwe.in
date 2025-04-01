@@ -32,6 +32,7 @@ const components = {
     <div className="relative aspect-[16/9] my-8 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
       <Image
         {...props}
+        alt={props.alt || ''}
         fill
         className="object-cover"
         loading="lazy"

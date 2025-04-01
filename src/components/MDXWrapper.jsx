@@ -13,7 +13,7 @@ const components = {
   ol: props => <ol className="mt-6 list-decimal list-inside text-zinc-600 dark:text-zinc-400" {...props} />,
   li: props => <li className="mt-2" {...props} />,
   blockquote: props => <blockquote className="mt-6 border-l-2 border-zinc-200 pl-6 italic text-zinc-600 dark:border-zinc-700 dark:text-zinc-400" {...props} />,
-  img: props => <img className="rounded-lg" {...props} />,
+  img: props => <img className="rounded-lg" alt={props.alt || ''} {...props} />,
   code: props => <code className="rounded bg-zinc-100 px-1 py-0.5 text-sm font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200" {...props} />,
   pre: props => <pre className="mt-6 overflow-x-auto rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800" {...props} />,
 }
