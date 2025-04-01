@@ -19,14 +19,17 @@ export function ShineBorderMonotone() {
   return (
     <ShineBorder
       className="text-center text-2xl font-bold capitalize"
-      color={theme.theme === "dark" ? "white" : "black"}
+      color={[theme.theme === "dark" ? "white" : "black"]}
     >
       Shine Border
     </ShineBorder>
   )
 }
 
-export default {
+// Single default export with both components
+const components = {
   ShineBorderDemo,
   ShineBorderMonotone,
-} 
+}
+
+export default components
