@@ -253,6 +253,9 @@ function validateAnalysis(analysis) {
 // Set longer timeout for this route
 export const maxDuration = 30 // 30 seconds
 
+// Set cache revalidation time
+export const revalidate = 60; // Revalidate every minute
+
 // Handle OPTIONS request for CORS
 export async function OPTIONS(request) {
   return new NextResponse(null, {

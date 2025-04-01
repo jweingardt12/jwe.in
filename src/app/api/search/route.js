@@ -3,7 +3,8 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
-export const dynamic = 'force-dynamic'
+// Set cache revalidation time to 1 hour by default
+export const revalidate = 3600
 
 // Function to recursively find all page files
 async function findPages(dir) {
@@ -194,8 +195,9 @@ async function getMarkdownFiles() {
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const query = searchParams.get('q')?.toLowerCase() || ''
+    // Get the search query from the URL params
+    const url = new URL(request.url)
+    const query = url.searchParams.get('q')?.toLowerCase() || ''
 
     if (!query) {
       return NextResponse.json({ results: [] })

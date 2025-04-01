@@ -5,13 +5,12 @@ import { promisify } from 'util'
 const parseXML = promisify(parseString)
 const FEED_URL = 'https://bg.raindrop.io/rss/public/51518726'
 
-export async function GET(request) {
+// Set cache revalidation time to 1 hour by default
+export const revalidate = 3600
+
+export async function GET() {
   try {
-    // Check if the request has a 'fresh' parameter to bypass cache
-    const { searchParams } = new URL(request.url)
-    const fresh = searchParams.has('fresh')
-    
-    console.log('Fetching feed from:', FEED_URL, fresh ? '(fresh data requested)' : '')
+    console.log('Fetching feed from:', FEED_URL)
     
     // Add more robust error handling for the fetch request
     let res;
@@ -22,7 +21,7 @@ export async function GET(request) {
           'Accept-Encoding': 'gzip',
           'User-Agent': 'jwe.in/1.0 (https://jwe.in)'
         },
-        next: fresh ? { revalidate: 0 } : { revalidate: 3600 } // No cache if fresh, otherwise cache for 1 hour
+        next: { revalidate }
       })
     } catch (fetchError) {
       console.error('Network error fetching feed:', fetchError)
@@ -98,7 +97,7 @@ export async function GET(request) {
     console.log(`Found ${rssItems.length} items in feed`)
 
     // Extract items from RSS feed
-    const items = rssItems.map((item, index) => {
+    const items = rssItems.map((item) => {
       // Extract all possible link sources
       const possibleLinks = [
         item.link?.[0],

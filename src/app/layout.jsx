@@ -27,6 +27,7 @@ export const metadata = {
     default: 'Jason Weingardt - Product Manager, technologist, nerd.',
   },
   description: "Jason Weingardt is a product manager and technologist based in Washington, DC.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://jwe.in'),
   alternates: {
     types: {
       'application/rss+xml': `${process.env.NEXT_PUBLIC_SITE_URL}/feed.xml`,
