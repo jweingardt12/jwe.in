@@ -6,6 +6,10 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import OpenPanel from '@/components/analytics/OpenPanel'
+import dynamic from 'next/dynamic'
+
+// Dynamically import the WYSIWYG editor to avoid SSR issues
+const WysiwygEditor = dynamic(() => import('@/components/WysiwygEditor'), { ssr: false })
 
 export default function CreateNotePage() {
   const router = useRouter()
@@ -518,17 +522,15 @@ export default function CreateNotePage() {
             
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Content (Markdown) *
+                Content *
               </label>
-              <textarea
-                id="content"
-                value={editingNote ? editedContent.content : content}
-                onChange={(e) => editingNote ? setEditedContent({...editedContent, content: e.target.value}) : setContent(e.target.value)}
-                rows="10"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-zinc-700 dark:text-white font-mono"
-                required
-                placeholder="# Your note content here\n\nWrite your note using Markdown syntax."
-              />
+              <div className="border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
+                <WysiwygEditor
+                  value={editingNote ? editedContent.content : content}
+                  onChange={(newContent) => editingNote ? setEditedContent({...editedContent, content: newContent}) : setContent(newContent)}
+                  height={400}
+                />
+              </div>
             </div>
             
             {error && (

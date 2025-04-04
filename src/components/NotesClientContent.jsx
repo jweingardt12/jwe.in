@@ -2,12 +2,9 @@
 
 import dynamic from 'next/dynamic';
 
-const MDXContent = dynamic(() => import('./MDXContent'), { ssr: false });
+// Use the new HybridContentRenderer that can handle both HTML and Markdown
+const HybridContentRenderer = dynamic(() => import('./HybridContentRenderer'), { ssr: false });
 
 export default function NotesClientContent({ content }) {
-  return (
-    <div className="prose dark:prose-invert max-w-none">
-      <MDXContent content={content} />
-    </div>
-  );
+  return <HybridContentRenderer content={content} />;
 }
