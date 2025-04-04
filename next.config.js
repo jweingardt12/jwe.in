@@ -2,6 +2,10 @@
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   reactStrictMode: true,
+  // Enable Turbopack for faster builds
+  experimental: {
+    turbo: true,
+  },
   images: {
     remotePatterns: [
       {
