@@ -1,31 +1,55 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
+// Create a component that will load TinyMCE only on the client side
 export default function WysiwygEditor({ value, onChange, height = 500 }) {
   const editorRef = useRef(null);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const [editorLoaded, setEditorLoaded] = useState(false);
+  const [Editor, setEditor] = useState(null);
+
+  // Load the editor dynamically only on the client side
+  useEffect(() => {
+    // Import TinyMCE editor only on client side
+    import('@tinymce/tinymce-react').then(({ Editor }) => {
+      setEditor(() => Editor);
+      setEditorLoaded(true);
+    });
+  }, []);
 
   // Handle theme changes
   useEffect(() => {
-    if (editorRef.current) {
-      const editor = editorRef.current;
+    if (editorRef.current && editorRef.current.editor) {
+      const editor = editorRef.current.editor;
       // Apply theme changes if editor is initialized
-      if (editor.editor) {
-        editor.editor.setContent(editor.editor.getContent());
-      }
+      editor.setContent(editor.getContent());
     }
   }, [resolvedTheme]);
 
+  if (!editorLoaded || !Editor) {
+    return (
+      <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-100 dark:bg-gray-800" style={{ height }}>
+        <div className="animate-pulse flex space-x-4 items-center justify-center h-full">
+          <span className="text-gray-500 dark:text-gray-400">Loading editor...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Editor
-      apiKey="no-api-key" // You can get a free API key from TinyMCE
-      onInit={(evt, editor) => editorRef.current = editor}
+      apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // Using API key from environment variables
+      onInit={(evt, editor) => {
+        editorRef.current = editor;
+      }}
+      initialValue={value}
       value={value}
-      onEditorChange={onChange}
+      onEditorChange={(newContent) => {
+        onChange(newContent);
+      }}
       init={{
         height,
         menubar: true,
@@ -43,12 +67,8 @@ export default function WysiwygEditor({ value, onChange, height = 500 }) {
         content_css: isDark ? 'dark' : 'default',
         branding: false,
         promotion: false,
-        // Enable automatic conversion from Markdown
         paste_enable_default_filters: true,
         paste_data_images: true,
-        // Add custom CSS for better integration with your site
-        content_css: isDark ? 'dark' : 'default',
-        // Add custom CSS for better integration with your site
         setup: (editor) => {
           editor.on('change', () => {
             onChange(editor.getContent());

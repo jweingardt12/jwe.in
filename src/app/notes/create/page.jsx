@@ -522,7 +522,7 @@ export default function CreateNotePage() {
             
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Content *
+                Content * (Rich Text Editor)
               </label>
               <div className="border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
                 <WysiwygEditor
