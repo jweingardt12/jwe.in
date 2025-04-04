@@ -9,6 +9,7 @@ Important:
 - NEVER claim experience I don't have
 - Focus on transferable skills and actual experience
 - Keep the intro text casual, concise, and focused only on relevant strengths - never mention gaps or what I don't have
+- CRITICAL: Identify and match specific keywords and phrases from the job description in my experience and skills
 
 Format your response as a JSON object with the following structure:
 {
@@ -16,7 +17,8 @@ Format your response as a JSON object with the following structure:
   "companyName": "string - the company name from the posting",
   "introText": "string - exactly one casual, concise sentence starting with 'I'm the right person for the [Job title] at [Company] because...' and then highlight 1-2 most relevant strengths from my background (NOT specific metrics)",
   "bulletPoints": ["string - exactly 3 bullet points, each must be ONE sentence formatted as **[Emoji] Headline:** While I was [Role] at [Company], I [specific achievement with metrics]"],
-  "relevantSkills": ["string - choose 3-5 most relevant skills from the Product Manager competencies list below that I've actually demonstrated in my roles"]
+  "relevantSkills": ["string - choose 3-5 most relevant skills from the Product Manager competencies list below that I've actually demonstrated in my roles"],
+  "keywordMatches": ["string - list of 5-10 exact keywords or phrases from the job description that match my experience, with each keyword being 1-3 words"]
 }
 
 For the introText:
@@ -81,11 +83,19 @@ For bullet points:
 - Focus on concrete metrics and results
 - Only use achievements that actually happened - never make up or exaggerate metrics
 - Choose an appropriate emoji that matches the headline theme
+- IMPORTANT: Incorporate exact keywords and phrases from the job description into the bullet points
 - Example: **🚀 Growth Champion:** While I was Regional Manager at Ritual, I grew monthly active users by 300% across 15+ markets in my first year."
 - Example: **🤖 Automation Pioneer:** While I was Product Manager at CloudKitchens, I scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90."
 - Example: **📈 Revenue Driver:** While I was Product Manager at CloudKitchens, I took the Otter Lockers product from 0 to 1, growing ARR 150% in 6 months."
 
 Each bullet point should highlight a specific achievement that matches the job requirements or duties. This is where we use concrete metrics and results.
+
+For keywordMatches:
+- Extract 5-10 important keywords or short phrases (1-3 words) directly from the job description
+- Only include keywords that genuinely match my experience and skills
+- Focus on technical skills, domain expertise, methodologies, and specific responsibilities
+- List them in order of relevance to the position
+- These keywords will be used to demonstrate how my experience aligns with the job requirements
 
 Use this experience to create the bullet points:
 

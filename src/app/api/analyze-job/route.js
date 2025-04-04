@@ -247,6 +247,19 @@ function validateAnalysis(analysis) {
     }
   }
 
+  // Validate keyword matches
+  if (!analysis.keywordMatches || !Array.isArray(analysis.keywordMatches)) {
+    // If keywordMatches is missing or not an array, add an empty array to maintain compatibility
+    analysis.keywordMatches = [];
+  } else if (analysis.keywordMatches.length > 0 && analysis.keywordMatches.length < 5) {
+    // If we have some keywords but fewer than 5, that's acceptable
+    console.log(`Found ${analysis.keywordMatches.length} keyword matches, which is fewer than the ideal 5-10`);
+  } else if (analysis.keywordMatches.length > 10) {
+    // If we have too many keywords, trim to 10
+    console.log(`Trimming keyword matches from ${analysis.keywordMatches.length} to 10`);
+    analysis.keywordMatches = analysis.keywordMatches.slice(0, 10);
+  }
+
   return { valid: true };
 }
 
