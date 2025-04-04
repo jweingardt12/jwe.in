@@ -2,17 +2,26 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
-const postsDirectory = path.join(process.cwd(), 'src/app/notes')
+const notesDirectory = path.join(process.cwd(), 'src/app/notes')
+const blogDirectory = path.join(process.cwd(), 'src/app/blog')
 
-export async function getAllArticles() {
+export async function getAllArticles(type = 'notes') {
   try {
-    console.log('Reading articles from filesystem...')
+    console.log(`Reading ${type} from filesystem...`)
+    const directory = type === 'blog' ? blogDirectory : notesDirectory
+    
+    // Check if directory exists
+    if (!fs.existsSync(directory)) {
+      console.log(`Directory ${directory} does not exist`)
+      return []
+    }
+    
     const findMDXFiles = (dir) => {
       const entries = fs.readdirSync(dir, { withFileTypes: true })
       return entries.flatMap(entry => {
         const fullPath = path.join(dir, entry.name)
-        // Skip the template directory
-        if (entry.isDirectory() && entry.name === 'template') {
+        // Skip the template directory and create directory
+        if (entry.isDirectory() && (entry.name === 'template' || entry.name === 'create')) {
           return []
         }
         if (entry.isDirectory()) {
@@ -24,23 +33,24 @@ export async function getAllArticles() {
       })
     }
 
-    const mdxFiles = findMDXFiles(postsDirectory)
+    const mdxFiles = findMDXFiles(directory)
     const allPostsData = mdxFiles.map(({ path: fullPath, name: fileName }) => {
-      const relativePath = path.relative(postsDirectory, fullPath)
+      const relativePath = path.relative(directory, fullPath)
       const slug = relativePath.replace(/\.mdx?$/, '').replace(/\/?content$/, '')
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data, content } = matter(fileContents)
 
-        return {
-          slug,
-          title: data.title,
-          date: data.date,
-          description: data.description,
-          content,
-          ...data,
-        }
-      })
-      .sort((a, b) => (a.date > b.date ? -1 : 1))
+      return {
+        slug,
+        title: data.title,
+        date: data.date,
+        description: data.description,
+        content,
+        type, // Add type to distinguish between blog and notes
+        ...data,
+      }
+    })
+    .sort((a, b) => (a.date > b.date ? -1 : 1))
 
     console.log('Found articles:', allPostsData)
     return allPostsData
@@ -50,18 +60,26 @@ export async function getAllArticles() {
   }
 }
 
-export async function getArticleBySlug(slug) {
+export async function getArticleBySlug(slug, type = 'notes') {
   try {
-    console.log('Reading article by slug:', slug)
+    console.log(`Reading ${type} article by slug:`, slug)
+    const directory = type === 'blog' ? blogDirectory : notesDirectory
+    
+    // Check if directory exists
+    if (!fs.existsSync(directory)) {
+      console.log(`Directory ${directory} does not exist`)
+      return null
+    }
+    
     const findMDXFile = (dir, targetSlug) => {
       const entries = fs.readdirSync(dir, { withFileTypes: true })
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name)
-        if (entry.isDirectory()) {
+        if (entry.isDirectory() && entry.name !== 'create') {
           const found = findMDXFile(fullPath, targetSlug)
           if (found) return found
         } else if ((entry.name === 'content.mdx' || entry.name === `${targetSlug}.mdx` || entry.name === `${targetSlug}.md`) && !entry.name.startsWith('.')) {
-          const relativePath = path.relative(postsDirectory, fullPath)
+          const relativePath = path.relative(directory, fullPath)
           const fileSlug = relativePath.replace(/\.mdx?$/, '').replace(/\/?content$/, '')
           if (fileSlug === targetSlug) {
             return fullPath
@@ -71,7 +89,21 @@ export async function getArticleBySlug(slug) {
       return null
     }
 
-    const filePath = findMDXFile(postsDirectory, slug)
+    // First try in the specified directory
+    let filePath = findMDXFile(directory, slug)
+    
+    // If not found and we're looking in notes, try in blog
+    if (!filePath && type === 'notes') {
+      console.log('Article not found in notes, trying blog directory')
+      filePath = findMDXFile(blogDirectory, slug)
+    }
+    
+    // If not found and we're looking in blog, try in notes
+    if (!filePath && type === 'blog') {
+      console.log('Article not found in blog, trying notes directory')
+      filePath = findMDXFile(notesDirectory, slug)
+    }
+    
     if (!filePath) {
       console.error('Article not found:', slug)
       return null
@@ -80,12 +112,16 @@ export async function getArticleBySlug(slug) {
     const fileContents = fs.readFileSync(filePath, 'utf8')
     const { data, content } = matter(fileContents)
 
+    // Determine the type based on which directory the file was found in
+    const articleType = filePath.includes('/blog/') ? 'blog' : 'notes'
+    
     const article = {
       slug,
       content,
       title: data.title,
       date: data.date,
       description: data.description,
+      type: articleType,
       ...data,
     }
 
