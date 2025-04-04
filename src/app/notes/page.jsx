@@ -7,7 +7,12 @@ import { LoadingSkeleton } from '../../components/ArticleSkeleton'
 async function ArticlesFeed() {
   const articles = await getAllArticles()
   
-  if (!articles || articles.length === 0) {
+  // Ensure articles are sorted by date (newest first)
+  const sortedArticles = articles && articles.length > 0
+    ? [...articles].sort((a, b) => new Date(b.date) - new Date(a.date))
+    : []
+  
+  if (!sortedArticles || sortedArticles.length === 0) {
     return (
       <div className="text-center py-8">
         <p className="text-zinc-600 dark:text-zinc-400">
@@ -20,7 +25,7 @@ async function ArticlesFeed() {
   return (
     <div className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
       <div className="flex max-w-3xl flex-col space-y-16">
-        {articles.map((article) => (
+        {sortedArticles.map((article) => (
           <NoteCard key={article.slug} article={article} />
         ))}
       </div>

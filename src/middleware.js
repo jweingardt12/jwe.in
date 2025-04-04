@@ -29,8 +29,8 @@ function middleware(request) {
     return response;
   }
 
-  // Protect /work/create route
-  if (request.nextUrl.pathname.startsWith('/work/create')) {
+  // Protect /work/create and /admin routes
+  if (request.nextUrl.pathname.startsWith('/work/create') || request.nextUrl.pathname.startsWith('/admin')) {
     const authCookie = request.cookies.get('admin_auth');
     
     // Debug cookie information
@@ -67,6 +67,7 @@ module.exports = {
   config: {
     matcher: [
       '/work/create',
+      '/admin/:path*',
       '/api/:path*'
     ]
   }
