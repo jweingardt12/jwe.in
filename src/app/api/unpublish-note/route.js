@@ -90,10 +90,10 @@ export async function POST(request) {
       });
     }
     
-    // Note: In Edge runtime, we can't directly delete the MDX file
-    // The file will be removed during the next build/deployment
+    // Note: In Edge runtime, we can't directly modify the MDX file
+    // The unpublished status will be stored in Redis and checked during build
     console.log(`Note marked as unpublished: ${parsedData.slug}`);
-    // The actual file deletion will happen during the build process
+    // The actual file update will happen during the build process
     
     // Update the Redis entry to mark as unpublished
     const updatedData = {

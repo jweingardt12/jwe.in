@@ -47,9 +47,12 @@ export async function getAllArticles(type = 'notes') {
         description: data.description,
         content,
         type, // Add type to distinguish between blog and notes
+        published: data.published !== false, // Default to true if not specified
         ...data,
       }
     })
+    // Filter out unpublished articles
+    .filter(article => article.published !== false)
     .sort((a, b) => (a.date > b.date ? -1 : 1))
 
     console.log('Found articles:', allPostsData)
