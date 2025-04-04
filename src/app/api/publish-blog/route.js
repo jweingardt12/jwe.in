@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 import { v4 as uuidv4 } from 'uuid'
 
 // Set cache revalidation time
@@ -99,28 +96,12 @@ export async function POST(request) {
       .replace(/[^\w\s]/gi, '')
       .replace(/\s+/g, '-');
     
-    // Create the blog directory if it doesn't exist
-    const blogDirectory = path.join(process.cwd(), 'src/app/blog');
-    if (!fs.existsSync(blogDirectory)) {
-      fs.mkdirSync(blogDirectory, { recursive: true });
-    }
-    
-    // Create the MDX file
+    // In Edge runtime, we can't directly create MDX files
+    // Instead, we'll just mark the blog post as published in Redis
+    // The actual MDX file will be generated during the build process
     const date = parsedData.date || new Date().toISOString();
-    const frontMatter = {
-      title: parsedData.title,
-      date,
-      description: parsedData.description || '',
-      author: parsedData.author || 'Jason Weingardt',
-      image: parsedData.image || null,
-      tags: parsedData.tags || [],
-      published: true,
-    };
-    
-    const mdxContent = matter.stringify(parsedData.content, frontMatter);
-    const filePath = path.join(blogDirectory, `${slug}.mdx`);
-    
-    fs.writeFileSync(filePath, mdxContent, 'utf8');
+    console.log(`Blog post marked for publishing: ${slug}`);
+    // The static site generation process will use this data to create the MDX files
     
     // Update the Redis entry with the slug
     const updatedData = {

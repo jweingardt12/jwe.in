@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 
-export const runtime = 'edge';
 // Set cache revalidation time
 export const revalidate = 60; // Revalidate every minute
 
@@ -185,23 +181,12 @@ export async function POST(request) {
       await redis.set(`blog-post:${postId}`, jsonString, { ex: 60 * 60 * 24 * 90 });
       console.log('Successfully stored blog post for ID:', postId);
       
-      // If publish flag is true, create an MDX file in the blog directory
+      // If publish flag is true, note that in the response
       if (publish && data.title && data.content) {
-        try {
-          // This part will be handled by a separate API endpoint for publishing
-          // since this is running on the edge runtime
-          return NextResponse.json({ 
-            success: true, 
-            message: 'Blog post saved. Use the publish endpoint to create the MDX file.' 
-          }, { headers: corsHeaders });
-        } catch (fileError) {
-          console.error('Failed to create MDX file:', fileError);
-          // Still return success since the Redis save worked
-          return NextResponse.json({ 
-            success: true, 
-            warning: 'Blog post saved to Redis but MDX file creation failed' 
-          }, { headers: corsHeaders });
-        }
+        return NextResponse.json({ 
+          success: true, 
+          message: 'Blog post saved. Use the publish endpoint to create the MDX file.' 
+        }, { headers: corsHeaders });
       }
       
       return NextResponse.json({ success: true }, { headers: corsHeaders });

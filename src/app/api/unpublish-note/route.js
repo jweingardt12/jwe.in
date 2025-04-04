@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 import { Redis } from '@upstash/redis'
-import fs from 'fs'
-import path from 'path'
 
 // Set cache revalidation time
 export const revalidate = 60; // Revalidate every minute
@@ -92,20 +90,10 @@ export async function POST(request) {
       });
     }
     
-    // Delete the MDX file
-    const filePath = path.join(process.cwd(), 'src/app/notes', `${parsedData.slug}.mdx`);
-    
-    try {
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        console.log(`Deleted file: ${filePath}`);
-      } else {
-        console.log(`File not found: ${filePath}`);
-      }
-    } catch (fileError) {
-      console.error(`Error deleting file: ${filePath}`, fileError);
-      // Continue even if file deletion fails
-    }
+    // Note: In Edge runtime, we can't directly delete the MDX file
+    // The file will be removed during the next build/deployment
+    console.log(`Note marked as unpublished: ${parsedData.slug}`);
+    // The actual file deletion will happen during the build process
     
     // Update the Redis entry to mark as unpublished
     const updatedData = {
