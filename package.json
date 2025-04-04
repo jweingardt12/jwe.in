@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/process-notes.js && next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "next build"
+    "vercel-build": "node scripts/process-notes.js && next build",
+    "process-notes": "node scripts/process-notes.js"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
