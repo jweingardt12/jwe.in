@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Container } from '../../components/Container'
-import { getAllArticles } from '../../lib/articles'
+import { getAllArticles } from '../../lib/redis-articles'
 import { NoteCard } from '../../components/NoteCard'
 import { LoadingSkeleton } from '../../components/ArticleSkeleton'
 
@@ -28,7 +28,8 @@ async function ArticlesFeed() {
   )
 }
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const dynamic = 'force-dynamic'
+export const revalidate = 0 // Disable static regeneration to always fetch fresh data
 
 export default function NotesPage() {
   return (

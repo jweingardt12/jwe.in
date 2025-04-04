@@ -4,7 +4,8 @@ import { Redis } from '@upstash/redis'
 import { SYSTEM_PROMPT } from './prompt.js'
 
 export const runtime = 'edge';
-export const dynamic = 'force-dynamic';
+// Removed dynamic = 'force-dynamic' to enable static generation
+export const revalidate = 60; // Revalidate every minute
 
 // Initialize OpenAI
 const openai = new OpenAI({ 
@@ -265,9 +266,6 @@ function validateAnalysis(analysis) {
 
 // Set longer timeout for this route
 export const maxDuration = 30 // 30 seconds
-
-// Set cache revalidation time
-export const revalidate = 60; // Revalidate every minute
 
 // Handle OPTIONS request for CORS
 export async function OPTIONS(request) {

@@ -1,10 +1,7 @@
 import { ArticleLayout } from '../../../components/ArticleLayout'
-import { getAllArticles } from '../../../lib/articles'
+import { getAllArticles, getArticleBySlug } from '../../../lib/redis-articles'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 import NotesClientContent from '../../../components/NotesClientContent'
 
 const components = {
@@ -21,7 +18,8 @@ const components = {
   ),
 }
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const dynamic = 'force-dynamic'
+export const revalidate = 0 // Disable static regeneration to always fetch fresh data
 
 export async function generateStaticParams() {
   try {
@@ -77,27 +75,9 @@ export async function generateMetadata({ params }) {
 }
 
 async function getArticle(slug) {
-  const postsDirectory = path.join(process.cwd(), 'src/app/notes')
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`)
-  const mdPath = path.join(postsDirectory, `${slug}.md`)
-  
-  let filePath = fs.existsSync(fullPath) ? fullPath : mdPath
-  
-  if (!fs.existsSync(filePath)) {
-    return null
-  }
-
-  const fileContents = fs.readFileSync(filePath, 'utf8')
-  const { data, content } = matter(fileContents)
-
-  return {
-    slug,
-    content,
-    title: data.title,
-    date: data.date,
-    description: data.description,
-    ...data,
-  }
+  // Fetch the article directly from Redis
+  const article = await getArticleBySlug(slug, 'notes')
+  return article
 }
 
 export default async function Article({ params }) {

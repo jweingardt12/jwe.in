@@ -2,6 +2,19 @@
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   reactStrictMode: true,
+  // Configure image domains for static generation
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      }
+    ],
+  },
   webpack: (config, { isServer }) => {
     // Only run this on the server
     if (isServer) {
