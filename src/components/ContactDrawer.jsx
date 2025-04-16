@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useToast } from './ui/use-toast'
-import { usePlausible } from 'next-plausible'
+import { usePlausible } from '@/lib/analytics'
 import {
   Drawer,
   DrawerClose,
@@ -22,15 +22,13 @@ export function ContactDrawer({ children }) {
     email: '',
     message: ''
   })
-  const plausible = usePlausible()
+  const analytics = usePlausible()
 
   const handleOpenChange = (open) => {
     setIsOpen(open)
     if (open) {
-      plausible('contact_drawer_open', {
-        props: {
-          source: 'navigation'
-        }
+      analytics.track('contact_drawer_open', {
+        source: 'navigation'
       })
     }
   }
@@ -40,10 +38,8 @@ export function ContactDrawer({ children }) {
       setIsOpen(prev => {
         const newState = !prev
         if (newState) {
-          plausible('contact_drawer_open', {
-            props: {
-              source: 'command_palette'
-            }
+          analytics.track('contact_drawer_open', {
+            source: 'command_palette'
           })
         }
         return newState
@@ -54,7 +50,7 @@ export function ContactDrawer({ children }) {
     return () => {
       window.removeEventListener('toggle-contact-drawer', handleToggle)
     }
-  }, [plausible])
+  }, [analytics])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [countdown, setCountdown] = useState(3)

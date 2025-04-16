@@ -8,6 +8,7 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Container } from '../components/Container'
 import { Photos } from '../components/Photos'
+import { ReadingSection } from '../components/ReadingSection'
 import {
   GitHubIcon,
   InstagramIcon,
@@ -15,6 +16,7 @@ import {
   ThreadsIcon,
 } from '../components/SocialIcons'
 import { BlurFade } from '../components/ui/blur-fade'
+import { AnimatedText } from '../components/AnimatedText'
 
 function SocialLink({ icon: Icon, className, href, ...props }) {
   return (
@@ -41,7 +43,10 @@ export default function HomePage() {
           <div className="max-w-2xl text-center mx-auto">
             <BlurFade delay={0.25} inView>
               <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-                Jason Weingardt
+                <AnimatedText 
+                  text="Jason Weingardt" 
+                  delay={0.3} 
+                />
               </h1>
             </BlurFade>
             <BlurFade delay={0.5} inView>
@@ -80,6 +85,14 @@ export default function HomePage() {
       <div className="mt-0 w-full">
         <Photos />
       </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="border-t border-zinc-100 dark:border-zinc-700 my-12 sm:my-20"></div>
+      </div>
+
+      <Container className="mt-0">
+        <ReadingSection />
+      </Container>
     </>
   )
 }

@@ -280,7 +280,6 @@ function Avatar({ large = false, className, ...props }) {
   const [isHovered, setIsHovered] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const timeoutRef = useRef(null)
-  const hoverTimeoutRef = useRef(null)
   const dropdownRef = useRef(null)
   const pathname = usePathname()
   const isHomePage = pathname === '/'
@@ -301,30 +300,23 @@ function Avatar({ large = false, className, ...props }) {
   }, [isHomePage])
 
   const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-    }
-    
-    // Set a delay of 0.5 seconds before showing the popover
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(true)
+    setIsHovered(true)
+    // Open dropdown after a short delay
+    timeoutRef.current = setTimeout(() => {
       setIsOpen(true)
-    }, 500)
+    }, 200)
   }
 
   const handleMouseLeave = () => {
-    // Clear the hover timeout if the user moves away before the delay completes
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current)
-      hoverTimeoutRef.current = null
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
-    
-    timeoutRef.current = setTimeout(() => {
-      setIsHovered(false)
-      setTimeout(() => {
-        setIsOpen(false)
-      }, 150) // Match the leave transition duration
-    }, 100)
+    setIsHovered(false)
+    // Close dropdown with a slight delay
+    setTimeout(() => {
+      setIsOpen(false)
+    }, 200)
   }
 
   // Handle click for the avatar image - always navigate home
@@ -333,33 +325,11 @@ function Avatar({ large = false, className, ...props }) {
     router.push('/')
   }
 
-  // Handle click for the container - for mobile devices
-  const handleContainerClick = (e) => {
-    // Only handle dropdown toggle if the click wasn't on the avatar image itself
-    if (!e.target.closest('a[aria-label="Home"]')) {
-      if (!isOpen) {
-        e.preventDefault()
-        
-        // Clear any existing hover timeout
-        if (hoverTimeoutRef.current) {
-          clearTimeout(hoverTimeoutRef.current)
-        }
-        
-        // Show immediately on click
-        setIsHovered(true)
-        setIsOpen(true)
-      }
-    }
-  }
-
   // Clean up timeouts when component unmounts
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
-      }
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current)
       }
     }
   }, [])
@@ -369,9 +339,7 @@ function Avatar({ large = false, className, ...props }) {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsHovered(false)
-        setTimeout(() => {
-          setIsOpen(false)
-        }, 150)
+        setIsOpen(false)
       }
     }
 
@@ -395,39 +363,59 @@ function Avatar({ large = false, className, ...props }) {
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleContainerClick}
       {...props}
     >
       <Link
         href="/"
         aria-label="Home"
-        className="block"
+        className="block relative"
         onClick={handleAvatarClick}
       >
-        <Image
-          src={avatarImage}
-          alt=""
-          width={large ? 64 : 36}
-          height={large ? 64 : 36}
-          sizes={large ? '4rem' : '2.25rem'}
+        {/* Profile photo that shows when not hovered */}
+        <div
           className={clsx(
-            'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 shadow-md transition-all duration-300',
-            large ? 'h-16 w-16' : 'h-8 w-8 md:h-9 md:w-9',
-            isLoaded ? 'opacity-100' : 'opacity-0',
-            isHovered && 'ring-2 ring-sky-500/50 dark:ring-sky-400/50 scale-110'
+            'transition-opacity duration-300 ease-in-out',
+            isHovered ? 'opacity-0' : 'opacity-100'
           )}
-          priority
-          onLoad={() => setIsLoaded(true)}
-        />
+        >
+          <Image
+            src={avatarImage}
+            alt=""
+            width={large ? 64 : 36}
+            height={large ? 64 : 36}
+            sizes={large ? '4rem' : '2.25rem'}
+            className={clsx(
+              'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 shadow-md',
+              large ? 'h-16 w-16' : 'h-8 w-8 md:h-9 md:w-9',
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            )}
+            priority
+            onLoad={() => setIsLoaded(true)}
+          />
+        </div>
+        
+        {/* House emoji that shows when hovered */}
+        <div
+          className={clsx(
+            'absolute inset-0 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 shadow-md',
+            large ? 'h-16 w-16' : 'h-8 w-8 md:h-9 md:w-9',
+            'transition-opacity duration-300 ease-in-out',
+            isHovered ? 'opacity-100' : 'opacity-0'
+          )}
+        >
+          <span className={clsx('text-xl', large && 'text-3xl')}>🏠</span>
+        </div>
       </Link>
       
       {isOpen && (
         <div
           className={clsx(
             "absolute right-0 top-full z-50",
-            isHovered ? "opacity-100 animate-bounce-in" : "opacity-0 scale-95",
-            "transition-opacity duration-200 origin-top-right"
+            "opacity-100 transform-gpu",
+            "transition-all duration-200 origin-top-right",
+            isOpen ? "scale-100" : "scale-95 opacity-0"
           )}
+          style={{ marginTop: '0.5rem' }}
         >
           <ThemeToggleDropdown />
         </div>
