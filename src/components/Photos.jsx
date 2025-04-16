@@ -26,30 +26,32 @@ const placeholderPhotos = Array(5).fill(null).map((_, i) => ({
 }))
 
 /**
- * Gets photos for the gallery
+ * Gets all photos for the gallery (fetches all pages)
  * @returns {Promise<Array>} - Array of photo objects
  */
+import unsplashStats from '../data/unsplash-stats.json';
+
+// Returns top 9 photos from static stats JSON
 async function getPhotos() {
-  const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-  if (!accessKey) {
-    throw new Error('Unsplash API key not found. Please set NEXT_PUBLIC_UNSPLASH_ACCESS_KEY in your environment.');
-  }
-  const response = await fetch(
-    `https://api.unsplash.com/photos?client_id=${accessKey}&per_page=9`
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Unsplash photos: ${response.status}`);
-  }
-  const data = await response.json();
-  return data.map(photo => ({
+  // Defensive: if stats file missing or malformed, return empty array
+  if (!unsplashStats || !unsplashStats.downloads?.all_time?.top_photos) return [];
+  const topPhotos = unsplashStats.downloads.all_time.top_photos;
+  return topPhotos.slice(0, 9).map((photo, idx) => ({
     id: photo.id,
     photoId: photo.id,
     image: photo.urls.regular,
-    width: photo.width,
-    height: photo.height,
-    hoverText: photo.location?.name || 'Unknown location',
-    link: photo.links.html,
-    description: photo.description || photo.alt_description || 'Photo from Unsplash',
+    width: 1080, // fallback width (could be improved if you want to add to JSON)
+    height: 720, // fallback height
+    hoverText: '',
+    link: `https://unsplash.com/photos/${photo.id}`,
+    description: '',
+    stats: {
+      views: photo.views,
+      downloads: photo.downloads,
+      camera: photo.camera,
+      aperture: photo.aperture,
+      iso: photo.iso
+    }
   }));
 }
 
@@ -58,130 +60,7 @@ async function getPhotos() {
  * @param {string} photoId - Unsplash photo ID
  * @returns {Promise<Object>} - Photo statistics
  */
-async function fetchPhotoStats(photoId) {
-  try {
-    // Use the Unsplash API to get photo statistics
-    // Note: This requires an Unsplash API access key in your environment variables
-    const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-    
-    if (!accessKey) {
-      console.warn('Unsplash API key not found, using fallback data');
-      return getFallbackPhotoStats(photoId);
-    }
-    
-    // First, get the photo details to get location and camera info
-    const photoResponse = await fetch(`https://api.unsplash.com/photos/${photoId}?client_id=${accessKey}`);
-    
-    if (!photoResponse.ok) {
-      throw new Error(`Failed to fetch photo details: ${photoResponse.status}`);
-    }
-    
-    const photoData = await photoResponse.json();
-    
-    // Then, get the photo statistics
-    const statsResponse = await fetch(`https://api.unsplash.com/photos/${photoId}/statistics?client_id=${accessKey}`);
-    
-    if (!statsResponse.ok) {
-      throw new Error(`Failed to fetch photo statistics: ${statsResponse.status}`);
-    }
-    
-    const statsData = await statsResponse.json();
-    
-    // Extract location from photo data
-    let location = 'Unsplash Photo';
-    if (photoData.location && photoData.location.name) {
-      location = photoData.location.name;
-    } else if (photoData.location && photoData.location.city && photoData.location.country) {
-      location = `${photoData.location.city}, ${photoData.location.country}`;
-    } else if (photoData.location && photoData.location.city) {
-      location = photoData.location.city;
-    } else if (photoData.location && photoData.location.country) {
-      location = photoData.location.country;
-    }
-    
-    // Extract camera info from exif data
-    let camera = 'Unknown';
-    let aperture = null;
-    let focalLength = null;
-    let iso = null;
-    
-    if (photoData.exif) {
-      camera = photoData.exif.make && photoData.exif.model ? `${photoData.exif.make} ${photoData.exif.model}` : camera;
-      aperture = photoData.exif.aperture || aperture;
-      focalLength = photoData.exif.focal_length || focalLength;
-      iso = photoData.exif.iso || iso;
-    }
-    
-    // Return formatted photo stats
-    return {
-      views: statsData.views.total,
-      downloads: statsData.downloads.total,
-      likes: photoData.likes,
-      location,
-      camera,
-      aperture,
-      focalLength,
-      iso,
-      created_at: photoData.created_at
-    };
-  } catch (error) {
-    console.error('Error fetching photo stats from Unsplash:', error);
-    // If the API call fails, fall back to deterministic generated data
-    return getFallbackPhotoStats(photoId);
-  }
-}
 
-/**
- * Generates fallback statistics for a photo when the Unsplash API is unavailable
- * @param {string} photoId - Unsplash photo ID
- * @returns {Object} - Fallback photo statistics
- */
-function getFallbackPhotoStats(photoId) {
-  // Generate deterministic but seemingly random stats based on the photo ID
-  const idSum = photoId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const views = 1000 + (idSum % 9000); // Between 1,000 and 10,000
-  const downloads = 100 + (idSum % 900); // Between 100 and 1,000
-  const likes = 50 + (idSum % 450); // Between 50 and 500
-  
-  // Get location from our photo data mapping
-  let location = 'Unsplash Photo';
-  if (photoId.includes('1')) {
-    location = 'Kauai, HI';
-  } else if (photoId.includes('2')) {
-    location = 'Chicago, IL';
-  } else if (photoId.includes('3')) {
-    location = 'Boston, MA';
-  } else if (photoId.includes('4')) {
-    location = 'Washington, D.C.';
-  } else if (photoId.includes('6')) {
-    location = 'New York City';
-  } else if (photoId.includes('7')) {
-    location = 'Asheville, NC';
-  } else if (photoId.includes('8')) {
-    location = 'Toronto, ON';
-  } else if (photoId.includes('9')) {
-    location = 'Kauai, HI';
-  }
-  
-  // Generate a random date within the last 3 years
-  const now = new Date();
-  const threeYearsAgo = new Date(now.getFullYear() - 3, now.getMonth(), now.getDate());
-  const randomTimestamp = threeYearsAgo.getTime() + Math.random() * (now.getTime() - threeYearsAgo.getTime());
-  const created_at = new Date(randomTimestamp).toISOString();
-  
-  // Return fallback photo stats
-  return {
-    views,
-    downloads,
-    likes,
-    location,
-    camera: 'Sony α7 III',
-    aperture: 'f/2.8',
-    focalLength: '24mm',
-    iso: '100',
-    created_at
-  };
-}
 
 function PhotoMetadata({ metadata, visible, title, link }) {
   const handleLinkClick = (e) => {
@@ -334,7 +213,7 @@ function Photo({
         {index === 0 && showTouchIndicator && <TouchIndicator />}
         <Image
           src={photo.image}
-          alt={photo.hoverText}
+          alt={photo.hoverText || photo.description || 'Unsplash photo'}
           fill
           sizes="(min-width: 640px) 224px, 224px"
           quality={95}
@@ -359,7 +238,7 @@ function Photo({
         <PhotoMetadata 
           metadata={photoStats[photo.photoId]} 
           visible={isHovered || isSelected} 
-          title={photo.hoverText} 
+          title={photo.hoverText ? photo.hoverText : undefined} 
           link={photo.link} 
         />
       </div>
@@ -480,14 +359,6 @@ function Photos() {
     };
   }, [photos.length]) // Add photos.length to dependency array
 
-  useEffect(() => {
-    if ((hoveredIndex !== null || selectedIndex !== null) && photos.length > 0) {
-      const index = hoveredIndex ?? selectedIndex
-      const photo = [...photos, ...photos][index % (photos.length * 2)]
-      getPhotoStats(photo)
-    }
-  }, [hoveredIndex, selectedIndex, getPhotoStats, photos])
-
   // Use a ref for the timestamp to persist between renders
   const lastTimestampRef = useRef(0)
   
@@ -495,7 +366,10 @@ function Photos() {
     const scrollContainer = scrollRef.current
     if (!scrollContainer || photos.length === 0) return
 
-    const scrollSpeed = 0.05 // Adjust speed as needed
+    const scrollSpeed = 0.003 // Much slower for gentle auto-scroll
+    let animationFrameId = null;
+    let resumeTimeoutId = null;
+    let scrollingActive = false;
 
     const animateScroll = (timestamp) => {
       if (!scrollContainer) return
@@ -522,19 +396,59 @@ function Photos() {
       
       lastTimestampRef.current = timestamp
       
-      // Always continue the animation regardless of hover or selection state
-      animationRef.current = requestAnimationFrame(animateScroll)
+      // Only continue animation if not hovered
+      if (scrollingActive) {
+        animationFrameId = requestAnimationFrame(animateScroll)
+        animationRef.current = animationFrameId
+      } else {
+        animationRef.current = null;
+      }
     }
 
-    // Always start the animation when the component mounts
-    animationRef.current = requestAnimationFrame(animateScroll)
+    // Helper to start scrolling
+    const startScrolling = () => {
+      if (!scrollingActive) {
+        scrollingActive = true;
+        animationFrameId = requestAnimationFrame(animateScroll)
+        animationRef.current = animationFrameId
+      }
+    }
 
-    return () => {
+    // Helper to stop scrolling
+    const stopScrolling = () => {
+      scrollingActive = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [photos.length]) // Include photos.length in the dependency array
+
+    // Debounced resume logic
+    if (hoveredIndex === null) {
+      // Wait before resuming scroll
+      resumeTimeoutId = setTimeout(() => {
+        startScrolling()
+      }, 700)
+    } else {
+      // Stop scrolling immediately on hover
+      if (resumeTimeoutId) clearTimeout(resumeTimeoutId)
+      stopScrolling()
+    }
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+      if (resumeTimeoutId) {
+        clearTimeout(resumeTimeoutId)
+      }
+    }
+  }, [photos.length, hoveredIndex]) // Also depend on hoveredIndex
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -593,7 +507,6 @@ function Photos() {
               isSelected={selectedIndex === index}
               onSelect={handleSelect}
               photoStats={photoStats}
-              onFetchStats={getPhotoStats}
               showTouchIndicator={showTouchIndicator && index === 0}
               onMouseEnter={() => handleHover(index)}
               onMouseLeave={() => handleHover(null)}
@@ -612,7 +525,6 @@ function Photos() {
               isSelected={selectedIndex === (index + photos.length)}
               onSelect={handleSelect}
               photoStats={photoStats}
-              onFetchStats={getPhotoStats}
               showTouchIndicator={false}
               onMouseEnter={() => handleHover(index + photos.length)}
               onMouseLeave={() => handleHover(null)}
@@ -631,7 +543,6 @@ function Photos() {
               isSelected={selectedIndex === (index + (photos.length * 2))}
               onSelect={handleSelect}
               photoStats={photoStats}
-              onFetchStats={getPhotoStats}
               showTouchIndicator={false}
               onMouseEnter={() => handleHover(index + (photos.length * 2))}
               onMouseLeave={() => handleHover(null)}
@@ -666,8 +577,29 @@ function Photos() {
           50% { transform: scale(0.85); }
         }
       `}</style>
+      <div className="w-full flex justify-center mt-4">
+        <p className="text-xs text-zinc-400 dark:text-zinc-500">
+          Photos by{' '}
+          <a
+            href="https://unsplash.com/@jasonw"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-zinc-600 dark:hover:text-zinc-300"
+          >
+            Jason Weingardt
+          </a>{' '}on{' '}
+          <a
+            href="https://unsplash.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-zinc-600 dark:hover:text-zinc-300"
+          >
+            Unsplash
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
 
-export { Photos, Photo, fetchPhotoStats }
+export { Photos, Photo }
