@@ -30,54 +30,27 @@ const placeholderPhotos = Array(5).fill(null).map((_, i) => ({
  * @returns {Promise<Array>} - Array of photo objects
  */
 async function getPhotos() {
-  try {
-    console.log('Creating photo objects')
-    
-    // Create an array of photo data with locations
-    const photoData = [
-      { id: '1', location: 'Kauai, HI' },
-      { id: '2', location: 'Chicago, IL' },
-      { id: '3', location: 'Boston, MA' },
-      { id: '4', location: 'Washington, D.C.' },
-      { id: '5', location: 'Kauai, HI' },
-      { id: '6', location: 'New York City' },
-      { id: '7', location: 'Asheville, NC' },
-      { id: '8', location: 'Toronto, ON' },
-      { id: '9', location: 'Kauai, HI' }
-    ];
-    
-    // Import the images directly
-    const imageModules = {
-      '1': '/images/photos/image-1.jpg',
-      '2': '/images/photos/image-2.jpg',
-      '3': '/images/photos/image-3.jpg',
-      '4': '/images/photos/image-4.jpg',
-      '5': '/images/photos/image-5.jpg',
-      '6': '/images/photos/image-6.jpg',
-      '7': '/images/photos/image-7.jpg',
-      '8': '/images/photos/image-8.jpg',
-      '9': '/images/photos/image-9.jpg'
-    };
-    
-    // Create photo objects with the imported images
-    const photos = photoData.map(({ id, location }) => ({
-      id,
-      photoId: id,
-      image: imageModules[id],
-      width: 800,
-      height: 600,
-      hoverText: location,
-      link: `#photo-${id}`,
-      description: `Photo by Jason Weingardt`
-    }));
-    
-    console.log(`Created ${photos.length} photo objects`);
-    return photos;
-    
-  } catch (error) {
-    console.error('Error creating photo objects:', error);
-    return [];
+  const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
+  if (!accessKey) {
+    throw new Error('Unsplash API key not found. Please set NEXT_PUBLIC_UNSPLASH_ACCESS_KEY in your environment.');
   }
+  const response = await fetch(
+    `https://api.unsplash.com/photos?client_id=${accessKey}&per_page=9`
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Unsplash photos: ${response.status}`);
+  }
+  const data = await response.json();
+  return data.map(photo => ({
+    id: photo.id,
+    photoId: photo.id,
+    image: photo.urls.regular,
+    width: photo.width,
+    height: photo.height,
+    hoverText: photo.location?.name || 'Unknown location',
+    link: photo.links.html,
+    description: photo.description || photo.alt_description || 'Photo from Unsplash',
+  }));
 }
 
 /**

@@ -2,6 +2,9 @@
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   reactStrictMode: true,
+  experimental: {
+    turbo: true,
+  },
   // Configure image domains for static generation
   images: {
     remotePatterns: [
