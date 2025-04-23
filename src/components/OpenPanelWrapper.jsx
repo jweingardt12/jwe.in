@@ -1,7 +1,5 @@
 'use client'
 
-import { OpenPanelComponent } from '@openpanel/nextjs'
-
 import { useEffect, useRef } from 'react';
 import OpenPanel from '../components/analytics/OpenPanel';
 import { OpenPanelComponent } from '@openpanel/nextjs';
