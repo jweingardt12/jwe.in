@@ -1,6 +1,6 @@
 # jwe.in
 
-My personal site, built with Next.js, Tailwind CSS, and Plausible analytics.
+My personal site, built with Next.js, Tailwind CSS 4.1, and Plausible analytics.
 
 ![Screenshot of the website](/src/images/photos/screenshot.png)
 
