@@ -220,7 +220,12 @@ p a:hover {
   @apply text-sky-600;
 }
 
-/* Add this at the top of the file */
+/* Ensure the layout never overflows horizontally */
+html,
+body {
+  overflow-x: hidden;
+}
+
 html {
   overflow-y: overlay;
   scrollbar-gutter: stable;
