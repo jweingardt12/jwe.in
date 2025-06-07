@@ -95,7 +95,7 @@ const testimonials = [
   [
     [
       {
-        body: 'Most PMs excel at strategy, but lack the execution muscle to make it all happen. Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers\' lives better. His curiousity and positivity is infectious, and it makes working with him genuinely fun.',
+        body: 'Most PMs excel at strategy, but lack the execution muscle to make it all happen. Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers\' lives better. His curiosity and positivity is infectious, and it makes working with him genuinely fun.',
         author: {
           name: 'Julia Gasboro',
           handle: 'Product Manager, CloudKitchens',
@@ -907,7 +907,7 @@ const WorkContent = () => {
                       className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
-                        <p>{`"`}<span className="font-bold">Most PMs excel at strategy, but lack the execution muscle to make it all happen</span>{` Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers' lives better. His curiousity and positivity is infectious, and it makes working with him genuinely fun.`}</p>
+                        <p>{`"`}<span className="font-bold">Most PMs excel at strategy, but lack the execution muscle to make it all happen</span>{` Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers' lives better. His curiosity and positivity is infectious, and it makes working with him genuinely fun.`}</p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
                         <img 
