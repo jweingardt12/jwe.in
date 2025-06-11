@@ -11,7 +11,7 @@ import { usePlausible } from '@/lib/analytics'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
-import avatarImage from '../images/avatar.jpg'
+const avatarImage = '/images/avatar.jpg'
 import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
 import { LiquidGlass } from '@/components/ui/liquid-glass'
@@ -593,7 +593,7 @@ export function Header() {
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
                 <div className={clsx(
-                  "pointer-events-auto block md:hidden",
+                  "pointer-events-auto hidden", // Hide the old mobile nav
                   isHomePage && "transition-all duration-1000 ease-in-out",
                   isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
                 )}>
@@ -698,6 +698,105 @@ export function Header() {
       {isHomePage && (
         <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
+      
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto">
+        <LiquidGlass
+          displacementScale={40}
+          blurAmount={0.4}
+          saturation={220}
+          aberrationIntensity={2}
+          elasticity={0.2}
+          cornerRadius={0}
+          className="shadow-lg shadow-zinc-800/20"
+        >
+          <div className="px-4 py-3 bg-gradient-to-t from-white/5 to-transparent">
+            <nav className="flex items-center justify-around">
+              <Link
+                href="/"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname === '/'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <HomeIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Home</span>
+              </Link>
+              
+              <Link
+                href="/about"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname === '/about'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">About</span>
+              </Link>
+              
+              <Link
+                href="/work"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname.startsWith('/work')
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <BriefcaseIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Work</span>
+              </Link>
+              
+              <Link
+                href="/notes"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200 relative',
+                  pathname === '/notes'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <DocumentTextIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Notes</span>
+              </Link>
+              
+              <Link
+                href="/reading"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200 relative',
+                  pathname === '/reading'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <BookOpenIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Reading</span>
+                {recentCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]">
+                    {recentCount}
+                  </span>
+                )}
+              </Link>
+              
+              <ContactDrawer>
+                <button className="flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200 text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                  <span className="text-xs font-medium">Contact</span>
+                </button>
+              </ContactDrawer>
+            </nav>
+          </div>
+        </LiquidGlass>
+      </div>
+      
+      {/* Mobile bottom padding to prevent content being hidden behind nav */}
+      <div className="md:hidden h-20" />
     </>
   )
 }

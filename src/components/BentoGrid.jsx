@@ -3,8 +3,10 @@
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import smartHomeImage from '../images/photos/smart-home.jpg'
-import screenshotImage from '../images/photos/screenshot.png'
+// import smartHomeImage from '../images/photos/smart-home.jpg'
+const smartHomeImage = '/images/photos/smart-home.jpg';
+// import screenshotImage from '../images/photos/screenshot.png'
+const screenshotImage = '/images/photos/screenshot.png';
 
 export const SkeletonImage = ({ src }) => {
   return (

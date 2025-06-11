@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Weather } from '@/components/Weather';
 import Image from 'next/image';
-import avatarImage from '@/images/avatar.jpg';
+// import avatarImage from '@/images/avatar.jpg';
+const avatarImage = '/images/avatar.jpg';
 
 export function AvatarWithTooltip() {
   const [isHovered, setIsHovered] = useState(false);
