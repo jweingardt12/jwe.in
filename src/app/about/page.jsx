@@ -265,6 +265,8 @@ export default function About() {
                 <Image
                   src={portraitImage}
                   alt=""
+                  width={192}
+                  height={192}
                   sizes="(min-width: 1024px) 15rem, (min-width: 640px) 12rem, 12rem"
                   className="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800 select-none"
                   draggable="false"
