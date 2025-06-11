@@ -8,6 +8,7 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Container } from '../components/Container'
 import { Photos } from '../components/Photos'
+import Projects from '../components/Projects'
 import {
   GitHubIcon,
   InstagramIcon,
@@ -80,6 +81,8 @@ export default function HomePage() {
       <div className="mt-0 w-full">
         <Photos />
       </div>
+      
+      <Projects />
     </>
   )
 }
