@@ -646,19 +646,12 @@ export function Header() {
                                 <Avatar className="flex-shrink-0" />
                                 <div className="flex items-center space-x-3">
                                   <ContactDrawer>
-                                    <Button 
-                                      className="bg-zinc-800 text-white hover:bg-zinc-700 shadow-sm px-3 py-1.5 h-auto dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group text-sm"
+                                    <Button
+                                      className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
                                       onMouseEnter={() => {}}
                                       onMouseMove={() => {}}
                                     >
-                                      <GlowingEffect
-                                        spread={60}
-                                        glow={true}
-                                        disabled={false}
-                                        proximity={100}
-                                        inactiveZone={0.01}
-                                      />
-                                      <span className="relative z-10">Contact</span>
+                                      Contact
                                     </Button>
                                   </ContactDrawer>
                                   <Popover.Button aria-label="Close menu" className="rounded-full p-2 hover:bg-zinc-800/50 dark:hover:bg-zinc-800/50">
@@ -711,18 +704,11 @@ export function Header() {
           <Avatar large={true} />
           <ContactDrawer>
             <Button
-              className="bg-sky-600 text-white hover:bg-sky-500 shadow px-4 py-2 h-auto rounded-full font-medium"
+              className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
               onMouseEnter={() => {}}
               onMouseMove={() => {}}
             >
-              <GlowingEffect
-                spread={80}
-                glow={true}
-                disabled={false}
-                proximity={120}
-                inactiveZone={0.01}
-              />
-              <span className="relative z-10">Contact</span>
+              Contact
             </Button>
           </ContactDrawer>
         </LiquidGlass>
