@@ -11,7 +11,7 @@ import { usePlausible } from '@/lib/analytics'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
-const avatarImage = '/images/avatar.jpg'
+const avatarImage = '/images/photos/avatar.jpg'
 import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
 import { LiquidGlass } from '@/components/ui/liquid-glass'
@@ -699,14 +699,13 @@ export function Header() {
           aberrationIntensity={2}
           elasticity={0.25}
           cornerRadius={16}
-          className="shadow-lg border border-zinc-200 dark:border-zinc-700 px-4 py-2 flex items-center justify-between"
+          className="shadow-lg border border-zinc-200 dark:border-zinc-700 px-4 py-2 flex items-center"
         >
           <Avatar large={true} />
+          <div className="flex-1" />
           <ContactDrawer>
             <Button
               className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
-              onMouseEnter={() => {}}
-              onMouseMove={() => {}}
             >
               Contact
             </Button>
