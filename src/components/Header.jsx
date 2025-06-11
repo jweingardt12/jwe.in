@@ -698,8 +698,10 @@ export function Header() {
       )}
       
       {/* Mobile Top Sticky Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 w-full flex items-center justify-between px-4 py-2 bg-zinc-950/95 dark:bg-zinc-900/95 border-b border-zinc-800 shadow-lg">
-        <Avatar large={true} />
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 w-full flex items-center justify-between px-4 py-2 bg-zinc-900/95 dark:bg-zinc-900/95 border-b border-zinc-800 shadow" style={{ borderRadius: 0 }}>
+        <div className="flex items-center gap-3">
+          <Avatar large={true} />
+        </div>
         <ContactDrawer>
           <Button
             className="bg-sky-600 text-white hover:bg-sky-500 shadow px-4 py-2 h-auto rounded-full font-medium"
