@@ -698,11 +698,11 @@ export function Header() {
       )}
       
       {/* Mobile Top Sticky Bar */}
-      <div className="md:hidden sticky top-0 left-0 right-0 z-50 pointer-events-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between px-4 py-2">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 w-full flex items-center justify-between px-4 py-2 bg-zinc-950/95 dark:bg-zinc-900/95 border-b border-zinc-800 shadow-lg">
         <Avatar large={true} />
         <ContactDrawer>
-          <Button 
-            className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
+          <Button
+            className="bg-sky-600 text-white hover:bg-sky-500 shadow px-4 py-2 h-auto rounded-full font-medium"
             onMouseEnter={() => {}}
             onMouseMove={() => {}}
           >
