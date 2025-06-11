@@ -95,7 +95,6 @@
     "remark-gfm": "^4.0.1",
     "rss-parser": "^3.13.0",
     "scheduler": "^0.25.0",
-    "sharp": "^0.33.5",
     "sonner": "^1.7.2",
     "space-separated-tokens": "^2.0.0",
     "tailwind-merge": "^2.6.0",
