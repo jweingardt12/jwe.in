@@ -699,10 +699,9 @@ export function Header() {
           aberrationIntensity={2}
           elasticity={0.25}
           cornerRadius={16}
-          className="shadow-lg border border-zinc-200 dark:border-zinc-700 px-4 py-2 flex items-center"
+          className="shadow-lg border border-zinc-200 dark:border-zinc-700 px-4 py-2 flex items-center justify-between"
         >
           <Avatar large={true} />
-          <div className="flex-1" />
           <ContactDrawer>
             <Button
               className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
