@@ -699,16 +699,27 @@ export function Header() {
           aberrationIntensity={2}
           elasticity={0.25}
           cornerRadius={16}
-          className="shadow-lg border border-zinc-200 dark:border-zinc-700 px-4 py-2 flex items-center justify-between"
+          className="shadow-lg border border-zinc-200 dark:border-zinc-700"
         >
-          <Avatar large={true} />
-          <ContactDrawer>
-            <Button
-              className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
-            >
-              Contact
-            </Button>
-          </ContactDrawer>
+          <div className="px-4 h-16 flex items-center justify-between gap-x-4">
+            <Avatar large={false} className="flex-shrink-0" />
+            <ContactDrawer>
+              <Button
+                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-4 py-2 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium"
+                onMouseEnter={() => {}}
+                onMouseMove={() => {}}
+              >
+                <GlowingEffect
+                  spread={80}
+                  glow={true}
+                  disabled={false}
+                  proximity={120}
+                  inactiveZone={0.01}
+                />
+                <span className="relative z-10">Contact</span>
+              </Button>
+            </ContactDrawer>
+          </div>
         </LiquidGlass>
       </div>
       
@@ -716,14 +727,14 @@ export function Header() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto">
         <LiquidGlass
           displacementScale={40}
-          blurAmount={0.4}
-          saturation={220}
-          aberrationIntensity={2}
+          blurAmount={0.15}
+          saturation={150}
+          aberrationIntensity={1}
           elasticity={0.2}
           cornerRadius={0}
           className="shadow-lg shadow-zinc-800/20"
         >
-          <div className="px-4 py-3 bg-gradient-to-t from-white/5 to-transparent">
+          <div className="px-4 py-3 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md">
             <nav className="flex items-center justify-around">
               <Link
                 href="/"
