@@ -47,7 +47,7 @@ export default function Speaking() {
           <Appearance
             href="#"
             title="Lessons learned from our first product recall"
-            description="They say that if you’re not embarassed by your first version, you’re doing it wrong. Well when you’re selling DIY space shuttle kits it turns out it’s a bit more complicated."
+            description="They say that if you’re not embarrassed by your first version, you’re doing it wrong. Well when you’re selling DIY space shuttle kits it turns out it’s a bit more complicated."
             event="Business of Startups 2020"
             cta="Watch video"
           />

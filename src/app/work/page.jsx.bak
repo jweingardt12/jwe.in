@@ -99,7 +99,7 @@ const testimonials = [
   [
     [
       {
-        body: 'Most PMs excel at strategy, but lack the execution muscle to make it all happen. Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers\' lives better. His curiousity and positivity is infectious, and it makes working with him genuinely fun.',
+        body: 'Most PMs excel at strategy, but lack the execution muscle to make it all happen. Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers\' lives better. His curiosity and positivity is infectious, and it makes working with him genuinely fun.',
         author: {
           name: 'Julia Gasboro',
           handle: 'Product Manager, CloudKitchens',
