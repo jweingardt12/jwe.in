@@ -5,7 +5,8 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
-import portraitImage from '@/images/portrait.jpg'
+// import portraitImage from '@/images/portrait.jpg'
+const portraitImage = '/images/portrait.jpg';
 import { useSwipeable } from 'react-swipeable'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
@@ -27,10 +28,14 @@ import { Button } from "@/components/ui/button"
 
 import { ExpandedContext } from '@/contexts/expanded'
 
-import logoCloudKitchens from '@/images/logos/cloudkitchens.svg'
-import logoRitual from '@/images/logos/ritual.svg'
-import logoCountable from '@/images/logos/countable.svg'
-import logoUber from '@/images/logos/uber.svg'
+// import logoCloudKitchens from '@/images/logos/cloudkitchens.svg'
+const logoCloudKitchens = '/images/logos/cloudkitchens.svg';
+// import logoRitual from '@/images/logos/ritual.svg'
+const logoRitual = '/images/logos/ritual.svg';
+// import logoCountable from '@/images/logos/countable.svg'
+const logoCountable = '/images/logos/countable.svg';
+// import logoUber from '@/images/logos/uber.svg'
+const logoUber = '/images/logos/uber.svg';
 import { LinkedInIcon } from '@/components/SocialIcons'
 
 // Utility function for combining class names

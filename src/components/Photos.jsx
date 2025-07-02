@@ -7,15 +7,15 @@ import { Container } from './Container'
 import { usePlausible } from '@/lib/analytics'
 
 // Import images statically
-import image1 from '../images/photos/image-1.jpg'
-import image2 from '../images/photos/image-2.jpg'
-import image3 from '../images/photos/image-3.jpg'
-import image4 from '../images/photos/image-4.jpg'
-import image5 from '../images/photos/image-5.jpg'
-import image6 from '../images/photos/image-6.jpg'
-import image7 from '../images/photos/image-7.jpg'
-import image8 from '../images/photos/image-8.jpg'
-import image9 from '../images/photos/image-9.jpg'
+const image1 = '/images/photos/image-1.jpg'
+const image2 = '/images/photos/image-2.jpg'
+const image3 = '/images/photos/image-3.jpg'
+const image4 = '/images/photos/image-4.jpg'
+const image5 = '/images/photos/image-5.jpg'
+const image6 = '/images/photos/image-6.jpg'
+const image7 = '/images/photos/image-7.jpg'
+const image8 = '/images/photos/image-8.jpg'
+const image9 = '/images/photos/image-9.jpg'
 
 const photos = [
   {

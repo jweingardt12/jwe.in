@@ -5,7 +5,8 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
-import portraitImage from '@/images/portrait.jpg'
+// import portraitImage from '@/images/portrait.jpg'
+const portraitImage = '/images/portrait.jpg';
 import { useSwipeable } from 'react-swipeable'
 import { usePlausible } from '@/lib/analytics'
 
@@ -28,10 +29,14 @@ import { Button } from "@/components/ui/button"
 
 import { ExpandedContext } from '@/contexts/expanded'
 
-import logoCloudKitchens from '@/images/logos/cloudkitchens.svg'
-import logoRitual from '@/images/logos/ritual.svg'
-import logoCountable from '@/images/logos/countable.svg'
-import logoUber from '@/images/logos/uber.svg'
+// import logoCloudKitchens from '@/images/logos/cloudkitchens-clean.svg'
+const logoCloudKitchens = '/images/logos/cloudkitchens-clean.svg';
+// import logoRitual from '@/images/logos/ritual.svg'
+const logoRitual = '/images/logos/ritual.svg';
+// import logoCountable from '@/images/logos/Countable.png'
+const logoCountable = '/images/logos/Countable.png';
+// import logoUber from '@/images/logos/uber.svg'
+const logoUber = '/images/logos/uber.svg';
 import { LinkedInIcon } from '@/components/SocialIcons'
 
 // Utility function for combining class names
@@ -378,7 +383,7 @@ const WorkContent = () => {
                 <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
               )) || (
                 <>
-                  <li>Took Otter Lockers product 0 → 1, growing ARR 150% in 6 months.</li>
+                  <li>Led development of <a href="https://www.tryotter.com/products/lockers" target="_blank" rel="noopener noreferrer" className="text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800 dark:hover:text-emerald-300">Otter Lockers</a> - a contactless food pickup solution with temperature-controlled compartments for restaurant order fulfillment.</li>
                   <li>Scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90.</li>
                   <li>Reduced facility technology support escalations by 80% through self-serve ops tooling. </li>
                   <li>Contributed 250+ custom Slack emojis, each designed for maximum hilarity.</li>
@@ -506,14 +511,16 @@ const WorkContent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-64 space-y-4 py-4"
         >
-          <a href="https://www.countable.us" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
-            <Image
-              src={logoCountable}
-              alt="Countable"
-              width={258}
-              height={20}
-              className="dark:invert object-contain w-auto h-full"
-            />
+          <a href="https://www.countable.us" target="_blank" rel="noopener noreferrer" className="block h-6 md:h-7">
+            <div className="h-full inline-flex items-center px-3 py-1 bg-white rounded">
+              <Image
+                src={logoCountable}
+                alt="Countable"
+                width={120}
+                height={32}
+                className="object-contain"
+              />
+            </div>
           </a>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Civic engagement platform</p>
           <CompanyDetails>
@@ -821,6 +828,31 @@ const WorkContent = () => {
               </div>
             </div>
           </div>
+
+          {/* Divider */}
+          <motion.div 
+            className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8 mt-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          />
+
+          {/* Timeline */}
+          <motion.div 
+            className="space-y-8" 
+            suppressHydrationWarning
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="mx-auto text-center mb-12">
+              <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">Experience</h2>
+              <p className="mt-2 text-balance text-2xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+                What I've done
+              </p>
+            </div>
+            <Timeline data={timelineData} />
+          </motion.div>
 
           {/* Divider */}
           <motion.div 
@@ -1245,31 +1277,6 @@ const WorkContent = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
-
-          {/* Divider */}
-          <motion.div 
-            className="h-px bg-zinc-200 dark:bg-zinc-800 mb-8 mt-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          />
-
-          {/* Timeline */}
-          <motion.div 
-            className="space-y-8" 
-            suppressHydrationWarning
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="mx-auto text-center mb-12">
-              <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">Experience</h2>
-              <p className="mt-2 text-balance text-2xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
-                What I've done
-              </p>
-            </div>
-            <Timeline data={timelineData} />
           </motion.div>
 
           {/* FAQs Section */}

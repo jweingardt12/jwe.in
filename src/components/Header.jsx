@@ -11,9 +11,10 @@ import { usePlausible } from '@/lib/analytics'
 
 import { Container } from './Container'
 import { ContactDrawer } from './ContactDrawer'
-import avatarImage from '../images/avatar.jpg'
+const avatarImage = '/images/photos/avatar.jpg'
 import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
+import { LiquidGlass } from '@/components/ui/liquid-glass'
 import { ChevronDownIcon, CloseIcon, SunIcon, MoonIcon, HamburgerIcon, ComputerIcon } from '@/components/Icons'
 import { HomeIcon, UserIcon, BriefcaseIcon, DocumentTextIcon, BookOpenIcon } from '@/components/Icons'
 import { useRecentArticles } from '@/hooks/useRecentArticles'
@@ -48,10 +49,10 @@ function MobileNavItem({ href, children, badge = null }) {
   return (
     <li className="py-1">
       <Popover.Button as={Link} href={href} className={clsx(
-        "block w-full px-4 py-2 rounded-lg transition-all duration-200 text-base font-medium",
+        "block w-full px-4 py-3 rounded-lg transition-all duration-200 text-base font-medium",
         isActive
-          ? "bg-sky-100/80 text-sky-900 dark:bg-sky-800/20 dark:text-sky-400"
-          : "text-zinc-700 hover:bg-zinc-100 hover:translate-x-1 dark:text-zinc-300 dark:hover:bg-zinc-800/50"
+          ? "bg-sky-500/20 text-sky-400 dark:bg-sky-400/20 dark:text-sky-300"
+          : "text-zinc-200 hover:bg-zinc-800/60 hover:translate-x-1 dark:text-zinc-200 dark:hover:bg-zinc-800/60"
       )}>
         <div className="flex items-center relative">
           {icon}
@@ -85,8 +86,8 @@ function NavItem({ href, children, badge = null }) {
         className={clsx(
           'relative block px-6 py-2 transition-colors font-medium',
           isActive
-            ? 'text-sky-500 dark:text-sky-400'
-            : 'hover:text-sky-500 dark:hover:text-sky-400'
+            ? 'text-sky-600 dark:text-sky-400'
+            : 'text-zinc-900 dark:text-zinc-100 hover:text-sky-600 dark:hover:text-sky-400'
         )}
       >
         <span className="relative inline-block">
@@ -133,33 +134,43 @@ function FloatingNavigation(props) {
         isHomePage && (fadeIn ? "opacity-100" : "opacity-0 -translate-y-4")
       )}
     >
-      <ul className="flex items-center rounded-lg bg-white/70 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/10 ring-1 ring-zinc-900/5 backdrop-blur-md dark:bg-zinc-800/70 dark:text-zinc-200 dark:ring-white/10">
-        <li className="flex items-center pr-3 border-r border-zinc-200 dark:border-zinc-700 mr-2">
-          <Avatar />
-        </li>
-        <NavItem href="/about">About</NavItem>
-        <NavItem href="/work">Work</NavItem>
-        <NavItem href="/notes">Notes</NavItem>
-        <NavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</NavItem>
-        <li className="flex items-center pl-3">
-          <ContactDrawer>
-            <Button 
-              className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
-              onMouseEnter={() => {}}
-              onMouseMove={() => {}}
-            >
-              <GlowingEffect
-                spread={80}
-                glow={true}
-                disabled={false}
-                proximity={120}
-                inactiveZone={0.01}
-              />
-              <span className="relative z-10">Contact</span>
-            </Button>
-          </ContactDrawer>
-        </li>
-      </ul>
+      <LiquidGlass
+        displacementScale={40}
+        blurAmount={0.35}
+        saturation={200}
+        aberrationIntensity={2}
+        elasticity={0.25}
+        cornerRadius={12}
+        className="shadow-lg shadow-zinc-800/10"
+      >
+        <ul className="flex items-center px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <li className="flex items-center pr-3 border-r border-zinc-200 dark:border-zinc-700 mr-2">
+            <Avatar />
+          </li>
+          <NavItem href="/about">About</NavItem>
+          <NavItem href="/work">Work</NavItem>
+          <NavItem href="/notes">Notes</NavItem>
+          <NavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</NavItem>
+          <li className="flex items-center pl-3">
+            <ContactDrawer>
+              <Button 
+                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
+                onMouseEnter={() => {}}
+                onMouseMove={() => {}}
+              >
+                <GlowingEffect
+                  spread={80}
+                  glow={true}
+                  disabled={false}
+                  proximity={120}
+                  inactiveZone={0.01}
+                />
+                <span className="relative z-10">Contact</span>
+              </Button>
+            </ContactDrawer>
+          </li>
+        </ul>
+      </LiquidGlass>
     </nav>
   )
 }
@@ -582,17 +593,27 @@ export function Header() {
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
                 <div className={clsx(
-                  "pointer-events-auto block md:hidden",
+                  "pointer-events-auto hidden", // Hide the old mobile nav
                   isHomePage && "transition-all duration-1000 ease-in-out",
                   isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
                 )}>
                   <Popover>
-                    <div className="inline-flex items-center rounded-lg bg-white/70 px-3 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/10 ring-1 ring-zinc-900/5 backdrop-blur-md dark:bg-zinc-800/70 dark:text-zinc-200 dark:ring-white/10">
-                      <Avatar className="mr-1.5" />
-                      <Popover.Button className="group flex items-center p-0.5 transition-all duration-200 hover:text-sky-500 dark:hover:text-sky-400">
-                        <HamburgerIcon className="h-5 w-5" />
-                      </Popover.Button>
-                    </div>
+                    <LiquidGlass
+                      displacementScale={30}
+                      blurAmount={0.25}
+                      saturation={180}
+                      aberrationIntensity={1.5}
+                      elasticity={0.2}
+                      cornerRadius={12}
+                      className="shadow-lg shadow-zinc-800/10"
+                    >
+                      <div className="inline-flex items-center px-3 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <Avatar className="mr-1.5" />
+                        <Popover.Button className="group flex items-center p-0.5 transition-all duration-200 hover:text-sky-500 dark:hover:text-sky-400">
+                          <HamburgerIcon className="h-5 w-5" />
+                        </Popover.Button>
+                      </div>
+                    </LiquidGlass>
                     <Transition.Root>
                       <Transition.Child
                         as={Fragment}
@@ -603,7 +624,7 @@ export function Header() {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                       >
-                        <Popover.Overlay className="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
+                        <Popover.Overlay className="fixed inset-0 z-50 bg-zinc-900/80 backdrop-blur-sm dark:bg-black/90" />
                       </Transition.Child>
                       <Transition.Child
                         as={Fragment}
@@ -616,40 +637,41 @@ export function Header() {
                       >
                         <Popover.Panel
                           focus
-                          className="fixed inset-x-4 top-16 z-50 origin-top rounded-xl bg-white/95 p-6 shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-md dark:bg-zinc-900/95 dark:ring-zinc-800"
+                          className="fixed inset-x-4 top-0 z-50 origin-top min-h-screen"
                         >
-                          <div className="flex justify-end mb-4">
-                            <Popover.Button aria-label="Close menu" className="rounded-full p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                              <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
-                            </Popover.Button>
-                          </div>
-                          <nav>
-                            <ul className="space-y-1">
-                              <MobileNavItem href="/">Home</MobileNavItem>
-                              <MobileNavItem href="/about">About</MobileNavItem>
-                              <MobileNavItem href="/work">Work</MobileNavItem>
-                              <MobileNavItem href="/notes">Notes</MobileNavItem>
-                              <MobileNavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</MobileNavItem>
-                            </ul>
-                            <div className="mt-6 pt-5 border-t border-zinc-200 dark:border-zinc-700/40">
-                              <ContactDrawer>
-                                <Button 
-                                  className="w-full bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm py-2 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
-                                  onMouseEnter={() => {}}
-                                  onMouseMove={() => {}}
-                                >
-                                  <GlowingEffect
-                                    spread={80}
-                                    glow={true}
-                                    disabled={false}
-                                    proximity={120}
-                                    inactiveZone={0.01}
-                                  />
-                                  <span className="relative z-10">Contact</span>
-                                </Button>
-                              </ContactDrawer>
+                          <div className="min-h-screen bg-zinc-950/95 dark:bg-black/95 backdrop-blur-md relative">
+                            {/* Sticky header with profile and contact */}
+                            <div className="sticky top-0 z-10 bg-zinc-950/98 dark:bg-black/98 backdrop-blur-lg border-b border-zinc-800/50 dark:border-zinc-700/50">
+                              <div className="flex items-center justify-between p-4">
+                                <Avatar className="flex-shrink-0" />
+                                <div className="flex items-center space-x-3">
+                                  <ContactDrawer>
+                                    <Button
+                                      className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
+                                      onMouseEnter={() => {}}
+                                      onMouseMove={() => {}}
+                                    >
+                                      Contact
+                                    </Button>
+                                  </ContactDrawer>
+                                  <Popover.Button aria-label="Close menu" className="rounded-full p-2 hover:bg-zinc-800/50 dark:hover:bg-zinc-800/50">
+                                    <CloseIcon className="h-5 w-5 text-zinc-400 dark:text-zinc-400" />
+                                  </Popover.Button>
+                                </div>
+                              </div>
                             </div>
-                          </nav>
+                            
+                            {/* Menu content */}
+                            <nav className="p-6">
+                              <ul className="space-y-2">
+                                <MobileNavItem href="/">Home</MobileNavItem>
+                                <MobileNavItem href="/about">About</MobileNavItem>
+                                <MobileNavItem href="/work">Work</MobileNavItem>
+                                <MobileNavItem href="/notes">Notes</MobileNavItem>
+                                <MobileNavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</MobileNavItem>
+                              </ul>
+                            </nav>
+                          </div>
                         </Popover.Panel>
                       </Transition.Child>
                     </Transition.Root>
@@ -667,6 +689,129 @@ export function Header() {
       {isHomePage && (
         <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
       )}
+      
+      {/* Mobile Top Sticky Bar */}
+      <div className="md:hidden fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[95vw] max-w-lg">
+        <LiquidGlass
+          displacementScale={40}
+          blurAmount={0.35}
+          saturation={200}
+          aberrationIntensity={2}
+          elasticity={0.25}
+          cornerRadius={16}
+          className="shadow-lg border border-zinc-200 dark:border-zinc-700"
+        >
+          <div className="px-4 h-16 flex items-center justify-between gap-x-4">
+            <Avatar large={false} className="flex-shrink-0" />
+            <ContactDrawer>
+              <Button
+                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-4 py-2 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium"
+                onMouseEnter={() => {}}
+                onMouseMove={() => {}}
+              >
+                <GlowingEffect
+                  spread={80}
+                  glow={true}
+                  disabled={false}
+                  proximity={120}
+                  inactiveZone={0.01}
+                />
+                <span className="relative z-10">Contact</span>
+              </Button>
+            </ContactDrawer>
+          </div>
+        </LiquidGlass>
+      </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto">
+        <LiquidGlass
+          displacementScale={40}
+          blurAmount={0.15}
+          saturation={150}
+          aberrationIntensity={1}
+          elasticity={0.2}
+          cornerRadius={0}
+          className="shadow-lg shadow-zinc-800/20"
+        >
+          <div className="px-4 py-3 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md">
+            <nav className="flex items-center justify-around">
+              <Link
+                href="/"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname === '/'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <HomeIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Home</span>
+              </Link>
+              
+              <Link
+                href="/about"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname === '/about'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <UserIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">About</span>
+              </Link>
+              
+              <Link
+                href="/work"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  pathname.startsWith('/work')
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <BriefcaseIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Work</span>
+              </Link>
+              
+              <Link
+                href="/notes"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200 relative',
+                  pathname === '/notes'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <DocumentTextIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Notes</span>
+              </Link>
+              
+              <Link
+                href="/reading"
+                className={clsx(
+                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200 relative',
+                  pathname === '/reading'
+                    ? 'text-sky-500 dark:text-sky-400'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
+                )}
+              >
+                <BookOpenIcon className="h-5 w-5" />
+                <span className="text-xs font-medium">Reading</span>
+                {recentCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]">
+                    {recentCount}
+                  </span>
+                )}
+              </Link>
+            </nav>
+          </div>
+        </LiquidGlass>
+      </div>
+      
+      {/* Mobile bottom padding to prevent content being hidden behind nav */}
+      <div className="md:hidden h-20" />
     </>
   )
 }

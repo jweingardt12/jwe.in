@@ -6,18 +6,18 @@ import clsx from 'clsx'
 import { Container } from '../../components/Container'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Globe, PlusIcon } from 'lucide-react'
-import portraitImage from '../../images/portrait.jpg'
-import { LinkPreview } from '../../components/ui/link-preview'
-import { SmartHomeAnimation } from '../../components/BentoGrid'
-import {
-  IconCamera,
-  IconHome,
-  IconCode,
-} from '@tabler/icons-react'
-import ckWebsite from '../../images/previews/ck-website.png'
-import lakeImage from '../../images/photos/new-york-lake.jpg'
-import sideProjectsImage from '../../images/photos/side-projects.jpg'
-import smartHomeImage from '../../images/photos/dashboard.jpg'
+import { LinkPreview } from '@/components/ui/link-preview'
+import { SmartHomeAnimation } from '@/components/BentoGrid'
+// import portraitImage from '../../images/portrait.jpg'
+const portraitImage = '/images/portrait.jpg';
+// import ckWebsite from '../../images/previews/ck-website.png'
+const ckWebsite = '/images/previews/ck-website.png';
+// import lakeImage from '../../images/photos/new-york-lake.jpg'
+const lakeImage = '/images/photos/new-york-lake.jpg';
+// import sideProjectsImage from '../../images/photos/side-projects.jpg'
+const sideProjectsImage = '/images/photos/side-projects.jpg';
+// import smartHomeImage from '../../images/photos/dashboard.jpg'
+const smartHomeImage = '/images/photos/dashboard.jpg';
 import { useRef, useState, useId, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
@@ -86,7 +86,7 @@ export default function About() {
     {
       description: "The best camera is the one you have with you",
       title: "Photography",
-      src: lakeImage.src,
+      src: lakeImage,
       ctaText: "Learn More",
       ctaLink: "#",
       content: () => {
@@ -136,7 +136,7 @@ export default function About() {
     {
       description: "Thoughts on designing a smart home",
       title: "Smart Home",
-      src: smartHomeImage.src,
+      src: smartHomeImage,
       ctaText: "Learn More",
       ctaLink: "#",
       content: () => {
@@ -198,7 +198,7 @@ export default function About() {
     {
       description: "Random stuff I've built",
       title: "Side Projects",
-      src: sideProjectsImage.src,
+      src: sideProjectsImage,
       ctaText: "Learn More",
       ctaLink: "#",
       content: () => {
@@ -265,6 +265,8 @@ export default function About() {
                 <Image
                   src={portraitImage}
                   alt=""
+                  width={192}
+                  height={192}
                   sizes="(min-width: 1024px) 15rem, (min-width: 640px) 12rem, 12rem"
                   className="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800 select-none"
                   draggable="false"
