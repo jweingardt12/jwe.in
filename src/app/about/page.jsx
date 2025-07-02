@@ -7,7 +7,6 @@ import { Container } from '../../components/Container'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Globe, PlusIcon } from 'lucide-react'
 import { LinkPreview } from '@/components/ui/link-preview'
-import { SmartHomeAnimation } from '@/components/BentoGrid'
 // import portraitImage from '../../images/portrait.jpg'
 const portraitImage = '/images/portrait.jpg';
 // import ckWebsite from '../../images/previews/ck-website.png'
@@ -22,6 +21,7 @@ import { useRef, useState, useId, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
 import { usePlausible } from '@/lib/analytics'
+import { trackLinkClick, EventNames } from '@/lib/analytics/tracking'
 
 // CloseIcon component for the expandable cards
 const CloseIcon = () => {
@@ -105,25 +105,25 @@ export default function About() {
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Camera</td>
                     <td className="py-3">
-                      <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPhone 16 Pro</a>
+                      <a href="https://www.apple.com/iphone-16-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'iPhone 16 Pro', type: 'tool', location: 'about_photography', url: 'https://www.apple.com/iphone-16-pro/', tool: 'iPhone 16 Pro', category: 'photography' })}>iPhone 16 Pro</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Software</td>
                     <td className="py-3">
-                      <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500">Photomator</a>
+                      <a href="https://apps.apple.com/us/app/photomator-photo-editor/id1444636541" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Photomator', type: 'tool', location: 'about_photography', url: 'https://apps.apple.com/us/app/photomator-photo-editor/id1444636541', tool: 'Photomator', category: 'photography' })}>Photomator</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Editing hardware</td>
                     <td className="py-3">
-                      <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500">iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Apple Pencil</a>
+                      <a href="https://www.apple.com/ipad-pro/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'iPad Pro (M4)', type: 'tool', location: 'about_photography', url: 'https://www.apple.com/ipad-pro/', tool: 'iPad Pro (M4)', category: 'photography' })}>iPad Pro (M4)</a> + <a href="https://www.apple.com/apple-pencil/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Apple Pencil', type: 'tool', location: 'about_photography', url: 'https://www.apple.com/apple-pencil/', tool: 'Apple Pencil', category: 'photography' })}>Apple Pencil</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Video</td>
                     <td className="py-3">
-                      <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500">LumaFusion</a>
+                      <a href="https://apps.apple.com/us/app/lumafusion/id1062022008" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'LumaFusion', type: 'tool', location: 'about_photography', url: 'https://apps.apple.com/us/app/lumafusion/id1062022008', tool: 'LumaFusion', category: 'photography' })}>LumaFusion</a>
                     </td>
                   </tr>
                 </tbody>
@@ -146,7 +146,12 @@ export default function About() {
               I've transformed my home into a smart living space, integrating various technologies to create a seamless and efficient environment. My approach focuses on practical automation that enhances daily life without adding unnecessary complexity.
             </p>
             <div className="mt-4 mb-6">
-              <SmartHomeAnimation className="w-full h-48" />
+              <div className="w-full h-48 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🏠</div>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Smart Home Dashboard</p>
+                </div>
+              </div>
             </div>
             <p>
               My smart home is powered by Home Assistant, an open-source platform that allows me to integrate and control all my devices from a single dashboard (shown above). I prefer this approach because it gives me complete control over my data and doesn't rely on cloud services that might be discontinued.
@@ -161,31 +166,31 @@ export default function About() {
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Hub</td>
                     <td className="py-3">
-                      <a href="https://www.home-assistant.io/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Home Assistant</a> on <a href="https://www.raspberrypi.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Raspberry Pi 4</a>
+                      <a href="https://www.home-assistant.io/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Home Assistant', type: 'tool', location: 'about_smart_home', url: 'https://www.home-assistant.io/', tool: 'Home Assistant', category: 'smart_home' })}>Home Assistant</a> on <a href="https://www.raspberrypi.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Raspberry Pi 4', type: 'tool', location: 'about_smart_home', url: 'https://www.raspberrypi.com/', tool: 'Raspberry Pi 4', category: 'smart_home' })}>Raspberry Pi 4</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Lighting</td>
                     <td className="py-3">
-                      <a href="https://www.philips-hue.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Philips Hue</a> + <a href="https://www.lutron.com/en-US/Products/Pages/SingleRoomControls/Caseta/Overview.aspx" target="_blank" rel="noopener noreferrer" className="text-sky-500">Lutron Caseta</a>
+                      <a href="https://www.philips-hue.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Philips Hue', type: 'tool', location: 'about_smart_home', url: 'https://www.philips-hue.com/', tool: 'Philips Hue', category: 'smart_home' })}>Philips Hue</a> + <a href="https://www.lutron.com/en-US/Products/Pages/SingleRoomControls/Caseta/Overview.aspx" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Lutron Caseta', type: 'tool', location: 'about_smart_home', url: 'https://www.lutron.com/en-US/Products/Pages/SingleRoomControls/Caseta/Overview.aspx', tool: 'Lutron Caseta', category: 'smart_home' })}>Lutron Caseta</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Climate</td>
                     <td className="py-3">
-                      <a href="https://www.ecobee.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Ecobee Smart Thermostat</a>
+                      <a href="https://www.ecobee.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Ecobee Smart Thermostat', type: 'tool', location: 'about_smart_home', url: 'https://www.ecobee.com/', tool: 'Ecobee Smart Thermostat', category: 'smart_home' })}>Ecobee Smart Thermostat</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Security</td>
                     <td className="py-3">
-                      <a href="https://simplisafe.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">SimpliSafe</a> + <a href="https://www.aqara.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500">Aqara Sensors</a>
+                      <a href="https://simplisafe.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'SimpliSafe', type: 'tool', location: 'about_smart_home', url: 'https://simplisafe.com/', tool: 'SimpliSafe', category: 'smart_home' })}>SimpliSafe</a> + <a href="https://www.aqara.com/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'Aqara Sensors', type: 'tool', location: 'about_smart_home', url: 'https://www.aqara.com/', tool: 'Aqara Sensors', category: 'smart_home' })}>Aqara Sensors</a>
                     </td>
                   </tr>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium">Voice Control</td>
                     <td className="py-3">
-                      <a href="https://www.apple.com/homepod-mini/" target="_blank" rel="noopener noreferrer" className="text-sky-500">HomePod Mini</a>
+                      <a href="https://www.apple.com/homepod-mini/" target="_blank" rel="noopener noreferrer" className="text-sky-500" onClick={() => trackLinkClick(EventNames.ABOUT_TOOL_LINK_CLICK, { title: 'HomePod Mini', type: 'tool', location: 'about_smart_home', url: 'https://www.apple.com/homepod-mini/', tool: 'HomePod Mini', category: 'smart_home' })}>HomePod Mini</a>
                     </td>
                   </tr>
                 </tbody>

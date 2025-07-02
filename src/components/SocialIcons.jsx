@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useExternalLinkTracking } from '../lib/useExternalLinkTracking'
+import { trackSocialClick, getPlatformFromUrl } from '@/lib/analytics/tracking'
 
 function SocialLink({ icon: Icon, ...props }) {
   const trackExternalClick = useExternalLinkTracking()
@@ -14,9 +15,15 @@ function SocialLink({ icon: Icon, ...props }) {
       {...props}
       onClick={() => {
         // Track social link click with both Umami events
-        const platform = props.href.match(/(?:https?:\/\/)?(?:www\.)?([^\/]+)/)[1]
+        const platform = getPlatformFromUrl(props.href)
         window.umami?.track('social_click', { platform })
         trackExternalClick(props.href, { platform, type: 'social' })
+        // Track with centralized utility
+        trackSocialClick({
+          platform,
+          url: props.href,
+          location: 'header'
+        })
       }}
     >
       <Icon className="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300" />

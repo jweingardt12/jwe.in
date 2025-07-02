@@ -2,6 +2,7 @@ import React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { trackLinkClick, EventNames } from '@/lib/analytics/tracking';
 
 export function LinkPreview({ href, children, imageUrl, title, description }) {
   return (
@@ -29,6 +30,12 @@ export function LinkPreview({ href, children, imageUrl, title, description }) {
             target="_blank"
             rel="noopener noreferrer"
             className="block overflow-hidden rounded-lg transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            onClick={() => trackLinkClick(EventNames.LINK_PREVIEW_CLICK, {
+              title,
+              url: href,
+              type: 'link_preview',
+              location: 'card'
+            })}
           >
             <div className="flex flex-col">
               {imageUrl && (

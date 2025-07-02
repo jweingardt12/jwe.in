@@ -12,6 +12,7 @@ import {
 } from './SocialIcons'
 import { Container } from './Container'
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
+import { trackSocialClick, getPlatformFromUrl } from '@/lib/analytics/tracking'
 
 function MailIcon(props) {
   return (
@@ -58,6 +59,18 @@ function ThemeToggle() {
 }
 
 function SocialLink({ href, icon: Icon }) {
+  const handleClick = () => {
+    // Extract platform name from URL
+    const platform = getPlatformFromUrl(href)
+    
+    // Track with centralized utility
+    trackSocialClick({
+      platform,
+      url: href,
+      location: 'footer'
+    })
+  }
+
   return (
     <li>
       <a
@@ -65,6 +78,7 @@ function SocialLink({ href, icon: Icon }) {
         target="_blank"
         rel="noopener noreferrer"
         className="group"
+        onClick={handleClick}
       >
         <Icon className="h-5 w-5 fill-zinc-500 transition group-hover:fill-sky-500" />
       </a>

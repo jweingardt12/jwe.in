@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
-import { Toaster } from '../components/ui/toaster'
+// import { Toaster } from '../components/ui/toaster' // Using Sonner instead
 import { HighlightInit } from '@highlight-run/next/client'
 import { Toaster as SonnerToaster } from 'sonner'
 import { MDXWrapper } from '../components/MDXWrapper'
@@ -60,7 +60,6 @@ export default function RootLayout({ children }) {
                   <Layout>{children}</Layout>
                 </div>
               </div>
-              <Toaster />
               <SonnerToaster position="bottom-right" theme="system" />
               <Analytics />
               <SpeedInsights />

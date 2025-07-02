@@ -1,21 +1,16 @@
-import { useId } from 'react'
+import React from 'react'
+import { cn } from '../lib/utils'
 
-export function Section({ title, children }) {
-  let id = useId()
-
+export function Section({ title, children, className, ...props }) {
   return (
-    <section
-      aria-labelledby={id}
-      className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40"
-    >
-      <div className="grid max-w-3xl grid-cols-1 items-baseline gap-y-8 md:grid-cols-4">
-        <h2
-          id={id}
-          className="text-sm font-semibold text-zinc-800 dark:text-zinc-100"
-        >
+    <section className={cn("mb-16", className)} {...props}>
+      {title && (
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-3xl mb-6">
           {title}
         </h2>
-        <div className="md:col-span-3">{children}</div>
+      )}
+      <div className="space-y-16">
+        {children}
       </div>
     </section>
   )

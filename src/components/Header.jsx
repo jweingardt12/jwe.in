@@ -15,7 +15,7 @@ const avatarImage = '/images/photos/avatar.jpg'
 import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
 import { LiquidGlass } from '@/components/ui/liquid-glass'
-import { ChevronDownIcon, CloseIcon, SunIcon, MoonIcon, HamburgerIcon, ComputerIcon } from '@/components/Icons'
+import { CloseIcon, HamburgerIcon } from '@/components/Icons'
 import { HomeIcon, UserIcon, BriefcaseIcon, DocumentTextIcon, BookOpenIcon } from '@/components/Icons'
 import { useRecentArticles } from '@/hooks/useRecentArticles'
 
@@ -52,7 +52,7 @@ function MobileNavItem({ href, children, badge = null }) {
         "block w-full px-4 py-3 rounded-lg transition-all duration-200 text-base font-medium",
         isActive
           ? "bg-sky-500/20 text-sky-400 dark:bg-sky-400/20 dark:text-sky-300"
-          : "text-zinc-200 hover:bg-zinc-800/60 hover:translate-x-1 dark:text-zinc-200 dark:hover:bg-zinc-800/60"
+          : "text-zinc-200 hover:bg-zinc-800/60 dark:text-zinc-200 dark:hover:bg-zinc-800/60"
       )}>
         <div className="flex items-center relative">
           {icon}
@@ -61,7 +61,7 @@ function MobileNavItem({ href, children, badge = null }) {
             {badge && (
               <span 
                 className="absolute -top-3 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]"
-                style={{ transform: 'scale(0)', animation: 'notificationBadge 0.3s forwards ease-out' }}
+                style={{ opacity: '0', animation: 'fadeIn 0.3s forwards ease-out' }}
               >
                 {badge}
               </span>
@@ -95,7 +95,7 @@ function NavItem({ href, children, badge = null }) {
           {badge && (
             <span 
               className="absolute -top-3 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]"
-              style={{ transform: 'scale(0)', animation: 'notificationBadge 0.3s forwards ease-out' }}
+              style={{ opacity: '0', animation: 'fadeIn 0.3s forwards ease-out' }}
             >
               {badge}
             </span>
@@ -131,15 +131,15 @@ function FloatingNavigation(props) {
       className={clsx(
         "fixed top-4 left-0 right-0 mx-auto z-50 w-fit pointer-events-auto hidden md:block",
         isHomePage && "transition-all duration-1000 ease-in-out",
-        isHomePage && (fadeIn ? "opacity-100" : "opacity-0 -translate-y-4")
+        isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
       )}
     >
       <LiquidGlass
-        displacementScale={40}
+        displacementScale={0}
         blurAmount={0.35}
         saturation={200}
         aberrationIntensity={2}
-        elasticity={0.25}
+        elasticity={0}
         cornerRadius={12}
         className="shadow-lg shadow-zinc-800/10"
       >
@@ -159,11 +159,11 @@ function FloatingNavigation(props) {
                 onMouseMove={() => {}}
               >
                 <GlowingEffect
-                  spread={80}
-                  glow={true}
-                  disabled={false}
-                  proximity={120}
-                  inactiveZone={0.01}
+                  spread={0}
+                  glow={false}
+                  disabled={true}
+                  proximity={0}
+                  inactiveZone={1}
                 />
                 <span className="relative z-10">Contact</span>
               </Button>
@@ -181,105 +181,13 @@ function clamp(number, a, b) {
   return Math.min(Math.max(number, min), max)
 }
 
-function ThemeToggleItem({ icon: Icon, theme, label, currentTheme, onClick }) {
-  const isActive = currentTheme === theme
-  
-  return (
-    <button
-      onClick={() => onClick(theme)}
-      className={clsx(
-        "flex items-center w-full px-2.5 py-1.5 text-xs rounded-md transition-all duration-200",
-        isActive 
-          ? "bg-sky-100/80 text-sky-900 dark:bg-sky-800/20 dark:text-sky-400" 
-          : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/50"
-      )}
-    >
-      <Icon className="h-3.5 w-3.5 mr-1.5" />
-      <span>{label}</span>
-    </button>
-  )
-}
-
-function ThemeToggleDropdown() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  const pathname = usePathname()
-  const isHomePage = pathname === '/'
-  const [fadeIn, setFadeIn] = useState(false)
-  const router = useRouter()
-  
-  useEffect(() => {
-    // Add fade-in animation with 2s delay when on home page
-    if (isHomePage) {
-      const timer = setTimeout(() => {
-        setFadeIn(true)
-      }, 2000)
-      
-      return () => clearTimeout(timer)
-    } else {
-      setFadeIn(true) // No delay on other pages
-    }
-  }, [isHomePage])
-
-  const { track } = usePlausible()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  
-  if (!mounted) return null
-  
-  return (
-    <div className="mt-2 w-40 rounded-lg bg-white/90 p-1.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md dark:bg-zinc-800/90 dark:ring-white/10 origin-top-right">
-      <Link 
-        href="/"
-        className={clsx(
-          "flex items-center w-full px-2.5 py-1.5 text-xs rounded-md transition-all duration-200",
-          isHomePage 
-            ? "bg-sky-100/80 text-sky-900 dark:bg-sky-800/20 dark:text-sky-400" 
-            : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/50"
-        )}
-      >
-        <HomeIcon className="h-3.5 w-3.5 mr-1.5" />
-        <span>Home</span>
-      </Link>
-      
-      <div className="h-px bg-zinc-200 dark:bg-zinc-700/40 my-1"></div>
-      
-      <div className="pt-0.5">
-        <p className="px-2.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Theme</p>
-        <ThemeToggleItem 
-          icon={SunIcon} 
-          theme="light" 
-          label="Light" 
-          currentTheme={theme} 
-          onClick={setTheme} 
-        />
-        <ThemeToggleItem 
-          icon={MoonIcon} 
-          theme="dark" 
-          label="Dark" 
-          currentTheme={theme} 
-          onClick={setTheme} 
-        />
-        <ThemeToggleItem 
-          icon={ComputerIcon} 
-          theme="system" 
-          label="System" 
-          currentTheme={theme} 
-          onClick={setTheme} 
-        />
-      </div>
-    </div>
-  )
-}
 
 function AvatarContainer({ className, ...props }) {
   return (
     <div
       className={clsx(
         className,
-        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10 transition duration-300 hover:scale-110 active:scale-95 active:shadow-md active:ring-2 active:ring-sky-500/50 dark:active:ring-sky-400/50'
+        'h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10 transition duration-300 active:shadow-md active:ring-2 active:ring-sky-500/50 dark:active:ring-sky-400/50'
       )}
       {...props}
     />
@@ -288,11 +196,6 @@ function AvatarContainer({ className, ...props }) {
 
 function Avatar({ large = false, className, ...props }) {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const timeoutRef = useRef(null)
-  const hoverTimeoutRef = useRef(null)
-  const dropdownRef = useRef(null)
   const pathname = usePathname()
   const isHomePage = pathname === '/'
   const [fadeIn, setFadeIn] = useState(false)
@@ -311,102 +214,20 @@ function Avatar({ large = false, className, ...props }) {
     }
   }, [isHomePage])
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-    }
-    
-    // Set a delay of 0.5 seconds before showing the popover
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(true)
-      setIsOpen(true)
-    }, 500)
-  }
-
-  const handleMouseLeave = () => {
-    // Clear the hover timeout if the user moves away before the delay completes
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current)
-      hoverTimeoutRef.current = null
-    }
-    
-    timeoutRef.current = setTimeout(() => {
-      setIsHovered(false)
-      setTimeout(() => {
-        setIsOpen(false)
-      }, 150) // Match the leave transition duration
-    }, 100)
-  }
-
   // Handle click for the avatar image - always navigate home
   const handleAvatarClick = (e) => {
     e.preventDefault()
     router.push('/')
   }
 
-  // Handle click for the container - for mobile devices
-  const handleContainerClick = (e) => {
-    // Only handle dropdown toggle if the click wasn't on the avatar image itself
-    if (!e.target.closest('a[aria-label="Home"]')) {
-      if (!isOpen) {
-        e.preventDefault()
-        
-        // Clear any existing hover timeout
-        if (hoverTimeoutRef.current) {
-          clearTimeout(hoverTimeoutRef.current)
-        }
-        
-        // Show immediately on click
-        setIsHovered(true)
-        setIsOpen(true)
-      }
-    }
-  }
-
-  // Clean up timeouts when component unmounts
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsHovered(false)
-        setTimeout(() => {
-          setIsOpen(false)
-        }, 150)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
-
   return (
     <div 
-      ref={dropdownRef}
       className={clsx(
         className, 
         'pointer-events-auto relative',
         isHomePage && "transition-all duration-1000 ease-in-out",
         isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
       )}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleContainerClick}
       {...props}
     >
       <Link
@@ -424,36 +245,19 @@ function Avatar({ large = false, className, ...props }) {
           className={clsx(
             'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800 shadow-md transition-all duration-300',
             large ? 'h-16 w-16' : 'h-8 w-8 md:h-9 md:w-9',
-            isLoaded ? 'opacity-100' : 'opacity-0',
-            isHovered && 'ring-2 ring-sky-500/50 dark:ring-sky-400/50 scale-110'
+            isLoaded ? 'opacity-100' : 'opacity-0'
           )}
           priority
           onLoad={() => setIsLoaded(true)}
         />
       </Link>
-      
-      {isOpen && (
-        <div
-          className={clsx(
-            "absolute right-0 top-full z-50",
-            isHovered ? "opacity-100 animate-bounce-in" : "opacity-0 scale-95",
-            "transition-opacity duration-200 origin-top-right"
-          )}
-        >
-          <ThemeToggleDropdown />
-        </div>
-      )}
     </div>
   )
 }
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const { recentCount, isLoading, error } = useRecentArticles()
-  const router = useRouter()
+  const { recentCount } = useRecentArticles()
   const pathname = usePathname()
-  const plausible = usePlausible()
 
   let isHomePage = usePathname() === '/'
   let headerRef = useRef(null)
@@ -477,8 +281,7 @@ export function Header() {
 
   useEffect(() => {
     let downDelay = 64
-    let upDelay = 64
-
+  
     function setProperty(property, value) {
       document.documentElement.style.setProperty(property, value)
     }
@@ -557,13 +360,13 @@ export function Header() {
         className={clsx(
           "pointer-events-none relative z-50 flex flex-none flex-col",
           isHomePage && "transition-opacity duration-1000 ease-in-out",
-          isHomePage && (fadeIn ? "opacity-100" : "opacity-0 -translate-y-4")
+          isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
         )}
         style={{
           height: 'var(--header-height)',
           marginBottom: 'var(--header-mb)',
           transition: isHomePage 
-            ? 'height 0.3s ease, margin-bottom 0.3s ease, opacity 1s ease-in-out, transform 1s ease-in-out' 
+            ? 'height 0.3s ease, margin-bottom 0.3s ease, opacity 1s ease-in-out' 
             : 'height 0.3s ease, margin-bottom 0.3s ease',
         }}
       >
@@ -577,14 +380,14 @@ export function Header() {
           className="top-0 z-10 h-16 pt-6"
           style={{ 
             position: 'var(--header-position)',
-            transition: 'transform 0.3s ease',
+            transition: 'none',
           }}
         >
           <Container
             className="top-[var(--header-top,theme(spacing.6))] w-full"
             style={{ 
               position: 'var(--header-inner-position)',
-              transition: 'transform 0.3s ease, position 0.3s ease',
+              transition: 'position 0.3s ease',
             }}
           >
             <div className="relative flex gap-4">
@@ -599,11 +402,11 @@ export function Header() {
                 )}>
                   <Popover>
                     <LiquidGlass
-                      displacementScale={30}
+                      displacementScale={0}
                       blurAmount={0.25}
                       saturation={180}
                       aberrationIntensity={1.5}
-                      elasticity={0.2}
+                      elasticity={0}
                       cornerRadius={12}
                       className="shadow-lg shadow-zinc-800/10"
                     >
@@ -629,11 +432,11 @@ export function Header() {
                       <Transition.Child
                         as={Fragment}
                         enter="duration-150 ease-out"
-                        enterFrom="opacity-0 scale-95"
-                        enterTo="opacity-100 scale-100"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
                         leave="duration-150 ease-in"
-                        leaveFrom="opacity-100 scale-100"
-                        leaveTo="opacity-0 scale-95"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
                       >
                         <Popover.Panel
                           focus
@@ -647,7 +450,7 @@ export function Header() {
                                 <div className="flex items-center space-x-3">
                                   <ContactDrawer>
                                     <Button
-                                      className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-4 py-2 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700"
+                                      className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-3 py-1.5 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700 text-sm"
                                       onMouseEnter={() => {}}
                                       onMouseMove={() => {}}
                                     >
@@ -693,28 +496,28 @@ export function Header() {
       {/* Mobile Top Sticky Bar */}
       <div className="md:hidden fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[95vw] max-w-lg">
         <LiquidGlass
-          displacementScale={40}
+          displacementScale={0}
           blurAmount={0.35}
           saturation={200}
           aberrationIntensity={2}
-          elasticity={0.25}
+          elasticity={0}
           cornerRadius={16}
           className="shadow-lg border border-zinc-200 dark:border-zinc-700"
         >
-          <div className="px-4 h-16 flex items-center justify-between gap-x-4">
+          <div className="px-4 h-12 flex items-center justify-between gap-x-4">
             <Avatar large={false} className="flex-shrink-0" />
             <ContactDrawer>
               <Button
-                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-4 py-2 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium"
+                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1.5 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium text-sm"
                 onMouseEnter={() => {}}
                 onMouseMove={() => {}}
               >
                 <GlowingEffect
-                  spread={80}
-                  glow={true}
-                  disabled={false}
-                  proximity={120}
-                  inactiveZone={0.01}
+                  spread={0}
+                  glow={false}
+                  disabled={true}
+                  proximity={0}
+                  inactiveZone={1}
                 />
                 <span className="relative z-10">Contact</span>
               </Button>
@@ -726,53 +529,53 @@ export function Header() {
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto">
         <LiquidGlass
-          displacementScale={40}
+          displacementScale={0}
           blurAmount={0.15}
           saturation={150}
           aberrationIntensity={1}
-          elasticity={0.2}
+          elasticity={0}
           cornerRadius={0}
           className="shadow-lg shadow-zinc-800/20"
         >
-          <div className="px-4 py-3 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md">
+          <div className="px-3 py-2 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md">
             <nav className="flex items-center justify-around">
               <Link
                 href="/"
                 className={clsx(
-                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  'flex flex-col items-center space-y-0.5 px-2 py-1 rounded-lg transition-all duration-200',
                   pathname === '/'
                     ? 'text-sky-500 dark:text-sky-400'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
                 )}
               >
-                <HomeIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">Home</span>
+                <HomeIcon className="h-4 w-4" />
+                <span className="text-[10px] font-medium">Home</span>
               </Link>
               
               <Link
                 href="/about"
                 className={clsx(
-                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  'flex flex-col items-center space-y-0.5 px-2 py-1 rounded-lg transition-all duration-200',
                   pathname === '/about'
                     ? 'text-sky-500 dark:text-sky-400'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
                 )}
               >
-                <UserIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">About</span>
+                <UserIcon className="h-4 w-4" />
+                <span className="text-[10px] font-medium">About</span>
               </Link>
               
               <Link
                 href="/work"
                 className={clsx(
-                  'flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-200',
+                  'flex flex-col items-center space-y-0.5 px-2 py-1 rounded-lg transition-all duration-200',
                   pathname.startsWith('/work')
                     ? 'text-sky-500 dark:text-sky-400'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
                 )}
               >
-                <BriefcaseIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">Work</span>
+                <BriefcaseIcon className="h-4 w-4" />
+                <span className="text-[10px] font-medium">Work</span>
               </Link>
               
               <Link
@@ -784,8 +587,8 @@ export function Header() {
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
                 )}
               >
-                <DocumentTextIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">Notes</span>
+                <DocumentTextIcon className="h-4 w-4" />
+                <span className="text-[10px] font-medium">Notes</span>
               </Link>
               
               <Link
@@ -797,8 +600,8 @@ export function Header() {
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400'
                 )}
               >
-                <BookOpenIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">Reading</span>
+                <BookOpenIcon className="h-4 w-4" />
+                <span className="text-[10px] font-medium">Reading</span>
                 {recentCount > 0 && (
                   <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full min-w-[1.25rem] min-h-[1.25rem]">
                     {recentCount}
@@ -811,7 +614,7 @@ export function Header() {
       </div>
       
       {/* Mobile bottom padding to prevent content being hidden behind nav */}
-      <div className="md:hidden h-20" />
+      <div className="md:hidden h-16" />
     </>
   )
 }

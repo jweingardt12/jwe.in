@@ -5,10 +5,10 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { DocumentArrowDownIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { useSearchParams } from 'next/navigation'
-// import portraitImage from '@/images/portrait.jpg'
-const portraitImage = '/images/portrait.jpg';
+import portraitImage from '@/images/portrait.jpg'
 import { useSwipeable } from 'react-swipeable'
 import { usePlausible } from '@/lib/analytics'
+import { trackWorkClick } from '@/lib/analytics/tracking'
 
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { Timeline } from '@/components/ui/timeline'
@@ -29,14 +29,10 @@ import { Button } from "@/components/ui/button"
 
 import { ExpandedContext } from '@/contexts/expanded'
 
-// import logoCloudKitchens from '@/images/logos/cloudkitchens-clean.svg'
-const logoCloudKitchens = '/images/logos/cloudkitchens-clean.svg';
-// import logoRitual from '@/images/logos/ritual.svg'
-const logoRitual = '/images/logos/ritual.svg';
-// import logoCountable from '@/images/logos/Countable.png'
-const logoCountable = '/images/logos/Countable.png';
-// import logoUber from '@/images/logos/uber.svg'
-const logoUber = '/images/logos/uber.svg';
+import logoCloudKitchens from '@/images/logos/cloudkitchens.svg'
+import logoRitual from '@/images/logos/ritual.svg'
+import logoCountable from '@/images/logos/countable.svg'
+import logoUber from '@/images/logos/uber.svg'
 import { LinkedInIcon } from '@/components/SocialIcons'
 
 // Utility function for combining class names
@@ -296,15 +292,18 @@ const WorkContent = () => {
   }, [jobId])
 
   const handleFaqOpen = (value) => {
-    if (value) {
+    if (value && plausible) {
       const questions = {
-        'item-1': 'What is your management style?',
-        'item-2': 'How do you handle conflict?',
-        'item-3': 'What are your thoughts on AI?',
+        'item-0': 'What makes you unique?',
+        'item-1': 'What type of roles are you interested in?',
+        'item-2': 'How do you work?',
+        'item-3': 'How do you approach product development?',
         'item-4': 'What\'s your experience with remote teams?',
         'item-5': 'Your journey seems to be a bit of a rollercoaster. Where do you see yourself in 5 years?'
       }
-      plausible('faq_open', { props: { question: questions[value] } })
+      if (questions[value]) {
+        plausible('faq_open', { props: { question: questions[value] } })
+      }
     }
   }
 
@@ -320,7 +319,7 @@ const WorkContent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-64 space-y-4 py-4"
         >
-          <a href="https://www.cloudkitchens.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+          <a href="https://www.cloudkitchens.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5" onClick={() => trackWorkClick('company', { company: 'CloudKitchens', url: 'https://www.cloudkitchens.com' })}>
             <Image
               src={logoCloudKitchens}
               alt="CloudKitchens"
@@ -383,7 +382,7 @@ const WorkContent = () => {
                 <li key={index} className="text-emerald-700 dark:text-emerald-400">{point}</li>
               )) || (
                 <>
-                  <li>Led development of <a href="https://www.tryotter.com/products/lockers" target="_blank" rel="noopener noreferrer" className="text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800 dark:hover:text-emerald-300">Otter Lockers</a> - a contactless food pickup solution with temperature-controlled compartments for restaurant order fulfillment.</li>
+                  <li>Led development of <a href="https://www.tryotter.com/products/lockers" target="_blank" rel="noopener noreferrer" className="text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800 dark:hover:text-emerald-300" onClick={() => trackWorkClick('product', { product: 'Otter Lockers', url: 'https://www.tryotter.com/products/lockers' })}>Otter Lockers</a> - a contactless food pickup solution with temperature-controlled compartments for restaurant order fulfillment.</li>
                   <li>Scaled autonomous robotics systems to 100+ facilities in 18 months while keeping NPS scores above 90.</li>
                   <li>Reduced facility technology support escalations by 80% through self-serve ops tooling. </li>
                   <li>Contributed 250+ custom Slack emojis, each designed for maximum hilarity.</li>
@@ -420,7 +419,7 @@ const WorkContent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-64 space-y-4 py-4"
         >
-          <a href="https://www.ritual.co" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+          <a href="https://www.ritual.co" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5" onClick={() => trackWorkClick('company', { company: 'Ritual', url: 'https://www.ritual.co' })}>
             <Image
               src={logoRitual}
               alt="Ritual"
@@ -511,7 +510,7 @@ const WorkContent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-64 space-y-4 py-4"
         >
-          <a href="https://www.countable.us" target="_blank" rel="noopener noreferrer" className="block h-6 md:h-7">
+          <a href="https://www.countable.us" target="_blank" rel="noopener noreferrer" className="block h-6 md:h-7" onClick={() => trackWorkClick('company', { company: 'Countable', url: 'https://www.countable.us' })}>
             <div className="h-full inline-flex items-center px-3 py-1 bg-white rounded">
               <Image
                 src={logoCountable}
@@ -597,7 +596,7 @@ const WorkContent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-64 space-y-4 py-4"
         >
-          <a href="https://www.uber.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5">
+          <a href="https://www.uber.com" target="_blank" rel="noopener noreferrer" className="block h-4 md:h-5" onClick={() => trackWorkClick('company', { company: 'Uber', url: 'https://www.uber.com' })}>
             <Image
               src={logoUber}
               alt="Uber"
@@ -906,16 +905,11 @@ const WorkContent = () => {
                 {/* First row: Bart (60%) and Julia (40%) */}
                 <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-5 mb-6 sm:mb-8">
                   {/* Bart Myers - Featured testimonial (60% width) */}
-                  <figure className="col-span-1 md:col-span-3 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+                  <figure className="col-span-1 md:col-span-3 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col border border-zinc-200 dark:border-zinc-800 hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-400/10 transition-all duration-300">
                     <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
                       <p>{`"`}<span className="font-bold">Jason is terrific</span>{` He brings an incredible amount of energy and creativity to his work. He is also incredibly talented, a human Swiss army knife, bringing an impressive and diverse variety of skills to his work, including: dev. skills, product marketing, GTM, and overall technical prowess.`}</p>
                     </blockquote>
                     <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                      <img
-                        alt=""
-                        src={featuredTestimonial.author.imageUrl}
-                        className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800"
-                      />
                       <div className="flex-auto">
                         <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                           {featuredTestimonial.author.name}
@@ -924,6 +918,10 @@ const WorkContent = () => {
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            onClick={() => trackWorkClick('testimonial', { 
+                              author: featuredTestimonial.author.name,
+                              url: featuredTestimonial.author.linkedIn
+                            })}
                           >
                             <LinkedInIcon className="h-4 w-4 fill-current" />
                           </a>
@@ -936,17 +934,12 @@ const WorkContent = () => {
                   {/* Julia Gasboro (40% width) */}
                   {testimonials[0] && testimonials[0][0] && testimonials[0][0][0] && (
                     <figure 
-                      className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
+                      className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col border border-zinc-200 dark:border-zinc-800 hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-400/10 transition-all duration-300"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
                         <p>{`"`}<span className="font-bold">Most PMs excel at strategy, but lack the execution muscle to make it all happen</span>{` Jason is the exception: he rolls up his sleeves and dives in regularly, and is constantly looking for ways to make our customers' lives better. His curiosity and positivity is infectious, and it makes working with him genuinely fun.`}</p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                        <img 
-                          alt="" 
-                          src={testimonials[0][0][0].author.imageUrl} 
-                          className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                        />
                         <div className="flex-auto">
                           <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                             {testimonials[0][0][0].author.name}
@@ -955,6 +948,11 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                                author: testimonials[0][0][0].author.name,
+                                url: testimonials[0][0][0].author.linkedIn,
+                                type: 'testimonial_linkedin'
+                              })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />
                             </a>
@@ -971,17 +969,12 @@ const WorkContent = () => {
                   {/* Greg Humphreys (40% width) */}
                   {testimonials[0] && testimonials[0][1] && testimonials[0][1][0] && (
                     <figure 
-                      className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
+                      className="col-span-1 md:col-span-2 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col border border-zinc-200 dark:border-zinc-800 hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-400/10 transition-all duration-300"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
                         <p>{`"`}<span className="font-bold">Jason is one of the most unique Product Managers I've worked with</span>{` He never let our engineering team lose sight of their impact to the business, and cared deeply for the problems of our customers. Any product team would be insanely lucky to have him.`}</p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                        <img 
-                          alt="" 
-                          src={testimonials[0][1][0].author.imageUrl} 
-                          className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                        />
                         <div className="flex-auto">
                           <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                             {testimonials[0][1][0].author.name}
@@ -990,6 +983,11 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                                author: testimonials[0][1][0].author.name,
+                                url: testimonials[0][1][0].author.linkedIn,
+                                type: 'testimonial_linkedin'
+                              })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />
                             </a>
@@ -1003,7 +1001,7 @@ const WorkContent = () => {
                   {/* Anthony Prats (60% width) */}
                   {testimonials[0] && testimonials[0][2] && testimonials[0][2][0] && (
                     <figure 
-                      className="col-span-1 md:col-span-3 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col transition duration-300 hover:scale-[1.02] hover:shadow-xl"
+                      className="col-span-1 md:col-span-3 rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-zinc-900 dark:ring-white/10 flex flex-col border border-zinc-200 dark:border-zinc-800 hover:border-sky-500 dark:hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-400/10 transition-all duration-300"
                     >
                       <blockquote className="p-6 text-sm text-gray-900 dark:text-white flex-grow">
                         <p>
@@ -1011,11 +1009,6 @@ const WorkContent = () => {
                         </p>
                       </blockquote>
                       <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                        <img 
-                          alt="" 
-                          src={testimonials[0][2][0].author.imageUrl} 
-                          className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                        />
                         <div className="flex-auto">
                           <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                             {testimonials[0][2][0].author.name}
@@ -1024,6 +1017,11 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                                author: testimonials[0][2][0].author.name,
+                                url: testimonials[0][2][0].author.linkedIn,
+                                type: 'testimonial_linkedin'
+                              })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />
                             </a>
@@ -1074,11 +1072,6 @@ const WorkContent = () => {
                               </p>
                             </blockquote>
                             <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                              <img 
-                                alt="" 
-                                src={testimonials[0][2][0].author.imageUrl} 
-                                className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                              />
                               <div className="flex-auto">
                                 <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                                   {testimonials[0][2][0].author.name}
@@ -1087,6 +1080,11 @@ const WorkContent = () => {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                                    onClick={() => trackWorkClick('testimonial', { 
+                                      author: testimonials[0][2][0].author.name,
+                                      url: testimonials[0][2][0].author.linkedIn,
+                                      location: 'mobile_carousel'
+                                    })}
                                   >
                                     <LinkedInIcon className="h-4 w-4 fill-current" />
                                   </a>
@@ -1128,11 +1126,6 @@ const WorkContent = () => {
                               </p>
                             </blockquote>
                             <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                              <img 
-                                alt="" 
-                                src={testimonials[0][2][0].author.imageUrl} 
-                                className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                              />
                               <div className="flex-auto">
                                 <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                                   {testimonials[0][2][0].author.name}
@@ -1141,6 +1134,11 @@ const WorkContent = () => {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                                    onClick={() => trackWorkClick('testimonial', { 
+                                      author: testimonials[0][2][0].author.name,
+                                      url: testimonials[0][2][0].author.linkedIn,
+                                      location: 'mobile_carousel'
+                                    })}
                                   >
                                     <LinkedInIcon className="h-4 w-4 fill-current" />
                                   </a>
@@ -1180,11 +1178,6 @@ const WorkContent = () => {
                               <p>{`"`}<span className="font-bold">Jason is one of the most unique Product Managers I've worked with</span>{`" He never let our engineering team lose sight of their impact to the business, and cared deeply for the problems of our customers. Any product team would be insanely lucky to have him.`}</p>
                             </blockquote>
                             <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                              <img 
-                                alt="" 
-                                src={testimonials[0][1][0].author.imageUrl} 
-                                className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                              />
                               <div className="flex-auto">
                                 <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                                   {testimonials[0][1][0].author.name}
@@ -1193,6 +1186,11 @@ const WorkContent = () => {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                                    onClick={() => trackWorkClick('testimonial', { 
+                                      author: testimonials[0][1][0].author.name,
+                                      url: testimonials[0][1][0].author.linkedIn,
+                                      location: 'mobile_carousel'
+                                    })}
                                   >
                                     <LinkedInIcon className="h-4 w-4 fill-current" />
                                   </a>
@@ -1232,11 +1230,6 @@ const WorkContent = () => {
                               <p>{`"`}<span className="font-bold">Jason genuinely cares about making teams feel valued and connected</span>{`" creating an environment where everyone does their best work. He's skilled at guiding product development clearly and practically, consistently delivering results that matter.`}</p>
                             </blockquote>
                             <figcaption className="flex items-center gap-x-4 border-t border-gray-900/10 dark:border-white/10 px-6 py-4 mt-auto">
-                              <img 
-                                alt="" 
-                                src={testimonials[0][2][0].author.imageUrl} 
-                                className="size-10 flex-none rounded-full bg-gray-50 dark:bg-zinc-800" 
-                              />
                               <div className="flex-auto">
                                 <div className="flex items-center gap-x-1.5 text-sm font-medium dark:text-white">
                                   {testimonials[0][2][0].author.name}
@@ -1245,6 +1238,11 @@ const WorkContent = () => {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                                    onClick={() => trackWorkClick('testimonial', { 
+                                      author: testimonials[0][2][0].author.name,
+                                      url: testimonials[0][2][0].author.linkedIn,
+                                      location: 'mobile_carousel'
+                                    })}
                                   >
                                     <LinkedInIcon className="h-4 w-4 fill-current" />
                                   </a>

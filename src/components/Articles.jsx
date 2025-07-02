@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from './Card'
 import { useExternalLinkTracking } from '../lib/useExternalLinkTracking'
-import { SafeImage } from './SafeImage'
+// import { Image } from './Image' // Using Image directly
+import { trackArticleClick } from '@/lib/analytics/tracking'
 
 function cleanContent(content) {
   if (!content) {
@@ -75,6 +76,11 @@ export function Articles({ articles = [] }) {
                         trackExternalClick(post.url, {
                           title: post.title
                         })
+                        // Track with centralized utility
+                        trackArticleClick({
+                          title: post.title,
+                          url: post.url
+                        })
                       } else {
                         e.preventDefault()
                       }
@@ -90,9 +96,11 @@ export function Articles({ articles = [] }) {
                       {imageUrl && (
                         <div className="mt-6 w-full">
                           <div className="h-48 w-full overflow-hidden rounded-md bg-zinc-200 dark:bg-zinc-700">
-                            <SafeImage
+                            <Image
                               src={imageUrl}
                               alt=""
+                              width={400}
+                              height={300}
                               className="h-full w-full object-cover"
                               onError={() => console.error('Mobile image failed to load:', imageUrl)}
                             />
@@ -137,9 +145,11 @@ export function Articles({ articles = [] }) {
                 <div className="hidden md:block flex-shrink-0">
                   {imageUrl && (
                     <div className="h-24 w-24 sm:h-32 sm:w-32 lg:h-44 lg:w-44 overflow-hidden rounded-md bg-zinc-200 dark:bg-zinc-700">
-                      <SafeImage
+                      <Image
                         src={imageUrl}
                         alt=""
+                        width={176}
+                        height={176}
                         className="h-full w-full object-cover"
                         onError={() => console.error('Desktop image failed to load:', imageUrl)}
                       />

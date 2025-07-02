@@ -239,7 +239,7 @@ export function LiquidGlass({
             calc(var(--displacement-x) * 0.8 + var(--scroll-displacement-x)), 
             calc(var(--displacement-y) * 0.8 + var(--scroll-displacement-y)), 
             0
-          ) scale(1.01);
+          );
         }
         
         .liquid-glass-container:hover .liquid-glass-overlay {

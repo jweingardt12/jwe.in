@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import OpenPanel from '@/components/analytics/OpenPanel'
+import { trackAuthEvent } from '@/lib/analytics/tracking'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     setIsLoggingOut(true)
     try {
       // Track the logout event
-      OpenPanel.track('admin_logout')
+      trackAuthEvent('logout')
       
       // Call logout API
       const res = await fetch('/api/auth/logout', {

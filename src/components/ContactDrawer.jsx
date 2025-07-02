@@ -55,6 +55,7 @@ export function ContactDrawer({ children }) {
       window.removeEventListener('toggle-contact-drawer', handleToggle)
     }
   }, [plausible])
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [countdown, setCountdown] = useState(3)
@@ -104,7 +105,7 @@ export function ContactDrawer({ children }) {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('https://cloud.activepieces.com/api/v1/webhooks/UuUYOtqy2aDXB8GqKzSq4', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,8 +144,8 @@ export function ContactDrawer({ children }) {
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-2xl px-6">
+      <DrawerContent className="max-h-[90vh]">
+        <div className="mx-auto w-full max-w-2xl px-6 overflow-y-auto">
           <div className="flex flex-col gap-6 py-6">
             <div>
               <DrawerTitle>Get in touch</DrawerTitle>
@@ -219,7 +220,7 @@ export function ContactDrawer({ children }) {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1"
+                      className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center justify-center gap-2">

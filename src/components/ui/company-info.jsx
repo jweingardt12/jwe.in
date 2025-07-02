@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import { trackWorkClick } from '@/lib/analytics/tracking';
 
 export const CompanyInfo = ({ industry, size, location, website, tools, headlines }) => {
   return (
@@ -29,6 +30,11 @@ export const CompanyInfo = ({ industry, size, location, website, tools, headline
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+              onClick={() => trackWorkClick('website', {
+                url: website,
+                company: website.replace(/^https?:\/\/(www\.)?/, '').split('/')[0],
+                location: 'company_info'
+              })}
             >
               {website.replace(/^https?:\/\/(www\.)?/, '')}
             </a>
@@ -49,6 +55,32 @@ export const CompanyInfo = ({ industry, size, location, website, tools, headline
               </span>
             ))}
           </div>
+        </div>
+      )}
+      
+      {headlines && headlines.length > 0 && (
+        <div className="mt-3">
+          <span className="block text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-500 mb-2">In the news</span>
+          <ul className="space-y-1">
+            {headlines.map((headline, index) => (
+              <li key={index} className="text-xs">
+                <a 
+                  href={headline.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+                  onClick={() => trackWorkClick('headline', {
+                    title: headline.title,
+                    publication: headline.publication,
+                    url: headline.url,
+                    location: 'company_info'
+                  })}
+                >
+                  "{headline.title}" - {headline.publication}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
