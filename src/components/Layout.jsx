@@ -2,6 +2,7 @@
 
 import { Footer } from './Footer'
 import { Header } from './Header'
+import { ContactDrawer } from './ContactDrawer'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 
@@ -30,6 +31,10 @@ export function Layout({ children }) {
         </main>
         <Footer />
       </div>
+      {/* Single ContactDrawer instance for the entire app */}
+      <ContactDrawer>
+        <div className="hidden" />
+      </ContactDrawer>
     </>
   )
 }

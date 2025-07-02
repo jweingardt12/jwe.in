@@ -10,7 +10,6 @@ import { useTheme } from 'next-themes'
 import { usePlausible } from '@/lib/analytics'
 
 import { Container } from './Container'
-import { ContactDrawer } from './ContactDrawer'
 const avatarImage = '/images/photos/avatar.jpg'
 import { Button } from '@/components/ui/button'
 import { GlowingEffect } from '@/components/ui/glowing-effect'
@@ -152,22 +151,26 @@ function FloatingNavigation(props) {
           <NavItem href="/notes">Notes</NavItem>
           <NavItem href="/reading" badge={recentCount > 0 ? recentCount : null}>Reading</NavItem>
           <li className="flex items-center pl-3">
-            <ContactDrawer>
-              <Button 
-                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
-                onMouseEnter={() => {}}
-                onMouseMove={() => {}}
-              >
-                <GlowingEffect
-                  spread={0}
-                  glow={false}
-                  disabled={true}
-                  proximity={0}
-                  inactiveZone={1}
-                />
-                <span className="relative z-10">Contact</span>
-              </Button>
-            </ContactDrawer>
+            <Button 
+              className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group"
+              onMouseEnter={() => {}}
+              onMouseMove={() => {}}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const event = new Event('toggle-contact-drawer');
+                window.dispatchEvent(event);
+              }}
+            >
+              <GlowingEffect
+                spread={0}
+                glow={false}
+                disabled={true}
+                proximity={0}
+                inactiveZone={1}
+              />
+              <span className="relative z-10">Contact</span>
+            </Button>
           </li>
         </ul>
       </LiquidGlass>
@@ -448,15 +451,6 @@ export function Header() {
                               <div className="flex items-center justify-between p-4">
                                 <Avatar className="flex-shrink-0" />
                                 <div className="flex items-center space-x-3">
-                                  <ContactDrawer>
-                                    <Button
-                                      className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 rounded-lg px-3 py-1.5 font-medium shadow-sm border border-zinc-200 dark:border-zinc-700 text-sm"
-                                      onMouseEnter={() => {}}
-                                      onMouseMove={() => {}}
-                                    >
-                                      Contact
-                                    </Button>
-                                  </ContactDrawer>
                                   <Popover.Button aria-label="Close menu" className="rounded-full p-2 hover:bg-zinc-800/50 dark:hover:bg-zinc-800/50">
                                     <CloseIcon className="h-5 w-5 text-zinc-400 dark:text-zinc-400" />
                                   </Popover.Button>
@@ -506,22 +500,26 @@ export function Header() {
         >
           <div className="px-4 h-12 flex items-center justify-between gap-x-4">
             <Avatar large={false} className="flex-shrink-0" />
-            <ContactDrawer>
-              <Button
-                className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1.5 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium text-sm"
-                onMouseEnter={() => {}}
-                onMouseMove={() => {}}
-              >
-                <GlowingEffect
-                  spread={0}
-                  glow={false}
-                  disabled={true}
-                  proximity={0}
-                  inactiveZone={1}
-                />
-                <span className="relative z-10">Contact</span>
-              </Button>
-            </ContactDrawer>
+            <Button
+              className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1.5 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium text-sm"
+              onMouseEnter={() => {}}
+              onMouseMove={() => {}}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const event = new Event('toggle-contact-drawer');
+                window.dispatchEvent(event);
+              }}
+            >
+              <GlowingEffect
+                spread={0}
+                glow={false}
+                disabled={true}
+                proximity={0}
+                inactiveZone={1}
+              />
+              <span className="relative z-10">Contact</span>
+            </Button>
           </div>
         </LiquidGlass>
       </div>
