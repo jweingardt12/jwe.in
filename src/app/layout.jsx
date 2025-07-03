@@ -1,7 +1,6 @@
 import { ThemeProvider } from 'next-themes'
 import { Layout } from '../components/Layout'
 // import { Toaster } from '../components/ui/toaster' // Using Sonner instead
-import { HighlightInit } from '@highlight-run/next/client'
 import { Toaster as SonnerToaster } from 'sonner'
 import { MDXWrapper } from '../components/MDXWrapper'
 import { Analytics } from '@vercel/analytics/react'
@@ -34,17 +33,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <>
-      <HighlightInit
-        projectId={'3ej74nve'}
-        serviceName="my-nextjs-frontend"
-        tracingOrigins
-        networkRecording={{
-          enabled: true,
-          recordHeadersAndBody: true,
-          urlBlocklist: [],
-          excludedHostnames: ['localhost', '192.168.86.*'],
-        }}
-      />
       <html lang="en" className="h-full antialiased" suppressHydrationWarning>
         <head>
           {/* No Plausible script here */}

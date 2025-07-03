@@ -1,5 +1,3 @@
-import OpenPanel from '@/components/analytics/OpenPanel';
-
 /**
  * Centralized analytics tracking utilities for consistent event tracking
  */
@@ -49,22 +47,48 @@ export const EventNames = {
   
   // Auth
   ADMIN_LOGOUT: 'admin_logout',
+  
+  // Session
+  SESSION_START: 'session_start',
+  SESSION_END: 'session_end',
+  
+  // Navigation
+  SCREEN_VIEW: 'screen_view',
+  EXTERNAL_LINK_CLICK: 'external_link_click',
 };
 
 /**
  * Base tracking function with common properties
  */
 function trackEvent(eventName, properties = {}) {
+  if (typeof window === 'undefined') return;
+  
   const commonProps = {
     timestamp: Date.now(),
-    path: typeof window !== 'undefined' ? window.location.pathname : undefined,
-    referrer: typeof document !== 'undefined' ? document.referrer : undefined,
+    path: window.location.pathname,
+    referrer: document.referrer || undefined,
   };
   
-  OpenPanel.track(eventName, {
-    ...commonProps,
-    ...properties,
-  });
+  try {
+    // Use the global window.op function that OpenPanel SDK provides
+    if (window.op && typeof window.op === 'function') {
+      window.op('track', eventName, {
+        ...commonProps,
+        ...properties,
+      });
+    } else {
+      // Queue events if OpenPanel isn't loaded yet
+      window.op = window.op || function(...args) {
+        (window.op.q = window.op.q || []).push(args);
+      };
+      window.op('track', eventName, {
+        ...commonProps,
+        ...properties,
+      });
+    }
+  } catch (error) {
+    // Silently fail
+  }
 }
 
 /**

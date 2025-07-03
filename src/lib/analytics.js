@@ -1,6 +1,6 @@
 /**
  * Utility functions for OpenPanel Analytics
- * This provides a compatible API for components transitioning from OpenPanel
+ * This provides a compatible API for components transitioning from Plausible to OpenPanel
  */
 
 /**
@@ -12,41 +12,24 @@ export function trackEvent(eventName, props = {}) {
   if (typeof window === 'undefined') return;
   
   try {
-    // Get Highlight.io session ID if available
-    let highlightSessionId = null;
-    let highlightSessionUrl = null;
-    
-    if (window.H && typeof window.H.getSessionURL === 'function') {
-      highlightSessionUrl = window.H.getSessionURL();
-      // Extract session ID from URL if available
-      if (highlightSessionUrl && typeof highlightSessionUrl === 'string') {
-        const urlParts = highlightSessionUrl.split('/');
-        highlightSessionId = urlParts[urlParts.length - 1];
-      }
+    // First, try to use the OpenPanel React hook if available
+    if (window.__OPENPANEL_HOOK__) {
+      window.__OPENPANEL_HOOK__.track(eventName, props);
+      return;
     }
     
-    // Create and dispatch a custom event that OpenPanel will capture
-    const event = new CustomEvent('openpanel', { 
-      detail: {
-        name: eventName,
-        properties: {
-          ...props,
-          highlightSessionId: highlightSessionId,
-          highlightSessionUrl: highlightSessionUrl
-        }
-      }
-    });
-    window.dispatchEvent(event);
-    
-    // Log events in development for debugging
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[OpenPanel] Event tracked: ${eventName}`, {
-        ...props,
-        highlightSessionId,
-        highlightSessionUrl
-      });
+    // Use the global window.op function that OpenPanel SDK provides
+    if (window.op && typeof window.op === 'function') {
+      window.op('track', eventName, props);
+    } else {
+      // Queue events if OpenPanel isn't loaded yet
+      window.op = window.op || function(...args) {
+        (window.op.q = window.op.q || []).push(args);
+      };
+      window.op('track', eventName, props);
     }
   } catch (error) {
+    // Silently fail in production
     if (process.env.NODE_ENV === 'development') {
       console.error('[OpenPanel] Error tracking event:', error);
     }

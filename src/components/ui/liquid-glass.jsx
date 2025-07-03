@@ -17,18 +17,21 @@ export function LiquidGlass({
   const containerRef = useRef(null)
   const canvasRef = useRef(null)
   const animationRef = useRef(null)
-  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 })
+  const mousePositionRef = useRef({ x: 0.5, y: 0.5 })
   const [targetPosition, setTargetPosition] = useState({ x: 0.5, y: 0.5 })
   const [isHovered, setIsHovered] = useState(false)
   const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 })
+  const [, forceUpdate] = useState({})
 
   // Smooth animation using elasticity
   const animatePosition = useCallback(() => {
-    setMousePosition(prev => ({
-      x: prev.x + (targetPosition.x - prev.x) * elasticity,
-      y: prev.y + (targetPosition.y - prev.y) * elasticity
-    }))
+    const current = mousePositionRef.current
+    mousePositionRef.current = {
+      x: current.x + (targetPosition.x - current.x) * elasticity,
+      y: current.y + (targetPosition.y - current.y) * elasticity
+    }
     
+    forceUpdate({}) // Force re-render to update canvas
     animationRef.current = requestAnimationFrame(animatePosition)
   }, [targetPosition, elasticity])
 
@@ -85,8 +88,8 @@ export function LiquidGlass({
   }, [])
 
   const glassStyle = {
-    '--mouse-x': `${mousePosition.x * 100}%`,
-    '--mouse-y': `${mousePosition.y * 100}%`,
+    '--mouse-x': `${mousePositionRef.current.x * 100}%`,
+    '--mouse-y': `${mousePositionRef.current.y * 100}%`,
     '--scroll-x': `${scrollOffset.x * 100}%`,
     '--scroll-y': `${scrollOffset.y * 100}%`,
     '--displacement-scale': displacementScale,
@@ -96,8 +99,8 @@ export function LiquidGlass({
     '--elasticity': elasticity,
     '--corner-radius': `${cornerRadius}px`,
     '--opacity': isHovered ? 1 : 0.8,
-    '--displacement-x': `${(mousePosition.x - 0.5) * (displacementScale * 0.3)}px`,
-    '--displacement-y': `${(mousePosition.y - 0.5) * (displacementScale * 0.3)}px`,
+    '--displacement-x': `${(mousePositionRef.current.x - 0.5) * (displacementScale * 0.3)}px`,
+    '--displacement-y': `${(mousePositionRef.current.y - 0.5) * (displacementScale * 0.3)}px`,
     '--scroll-displacement-x': `${scrollOffset.x * 8}px`,
     '--scroll-displacement-y': `${scrollOffset.y * 8}px`,
     '--aberration-offset': `${aberrationIntensity}px`,
@@ -168,7 +171,7 @@ export function LiquidGlass({
              style={{
                left: 'var(--mouse-x)',
                top: 'var(--mouse-y)',
-               transform: `translate(-50%, -50%) scale(${isHovered ? 1.4 : 0.6}) rotate(${mousePosition.x * 45}deg)`,
+               transform: `translate(-50%, -50%) scale(${isHovered ? 1.4 : 0.6}) rotate(${mousePositionRef.current.x * 45}deg)`,
                background: `radial-gradient(circle, 
                  rgba(59, 130, 246, ${0.15 * (isHovered ? 1.5 : 0.8)}) 0%, 
                  rgba(147, 51, 234, ${0.1 * (isHovered ? 1.5 : 0.8)}) 50%, 
@@ -182,8 +185,8 @@ export function LiquidGlass({
              style={{
                left: 'var(--mouse-x)',
                top: 'var(--mouse-y)',
-               transform: `translate(-50%, -50%) scale(${isHovered ? 2 : 1}) rotate(${-mousePosition.y * 30}deg)`,
-               background: `conic-gradient(from ${mousePosition.x * 360}deg, 
+               transform: `translate(-50%, -50%) scale(${isHovered ? 2 : 1}) rotate(${-mousePositionRef.current.y * 30}deg)`,
+               background: `conic-gradient(from ${mousePositionRef.current.x * 360}deg, 
                  rgba(34, 197, 94, ${0.08 * (isHovered ? 1.2 : 0.6)}) 0%, 
                  rgba(168, 85, 247, ${0.06 * (isHovered ? 1.2 : 0.6)}) 50%, 
                  rgba(59, 130, 246, ${0.04 * (isHovered ? 1.2 : 0.6)}) 100%)`,

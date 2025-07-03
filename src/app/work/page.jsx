@@ -948,10 +948,10 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                              onClick={() => trackWorkClick('testimonial', { 
                                 author: testimonials[0][0][0].author.name,
                                 url: testimonials[0][0][0].author.linkedIn,
-                                type: 'testimonial_linkedin'
+                                location: 'work_page_testimonial'
                               })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />
@@ -983,10 +983,10 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                              onClick={() => trackWorkClick('testimonial', { 
                                 author: testimonials[0][1][0].author.name,
                                 url: testimonials[0][1][0].author.linkedIn,
-                                type: 'testimonial_linkedin'
+                                location: 'work_page_testimonial'
                               })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />
@@ -1017,10 +1017,10 @@ const WorkContent = () => {
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                              onClick={() => OpenPanel.track('testimonial_linkedin_click', { 
+                              onClick={() => trackWorkClick('testimonial', { 
                                 author: testimonials[0][2][0].author.name,
                                 url: testimonials[0][2][0].author.linkedIn,
-                                type: 'testimonial_linkedin'
+                                location: 'work_page_testimonial'
                               })}
                             >
                               <LinkedInIcon className="h-4 w-4 fill-current" />

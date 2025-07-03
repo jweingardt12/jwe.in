@@ -5,7 +5,7 @@ import { SimpleLayout } from '@/components/SimpleLayout'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import OpenPanel from '@/components/analytics/OpenPanel'
+import { trackNoteAction } from '@/lib/analytics/tracking'
 import dynamic from 'next/dynamic'
 
 // Dynamically import the WYSIWYG editor to avoid SSR issues
@@ -200,9 +200,10 @@ export default function CreateNotePage() {
       toast.success('Note updated successfully')
       
       // Track the edit event
-      OpenPanel.track('note_edited', {
+      trackNoteAction('edit', {
         noteId: editingNote.id,
-        title: updatedNote.title
+        title: updatedNote.title,
+        slug: updatedNote.slug
       })
     } catch (error) {
       console.error('Error updating note:', error)
@@ -277,9 +278,10 @@ export default function CreateNotePage() {
       toast.success('Note saved successfully')
       
       // Track the creation event
-      OpenPanel.track('note_created', {
-        noteId,
-        title: noteData.title
+      trackNoteAction('create', {
+        noteId: result.note.id,
+        title: noteData.title,
+        slug: result.note.slug
       })
     } catch (error) {
       console.error('Error saving note:', error)
@@ -322,7 +324,7 @@ export default function CreateNotePage() {
       toast.success('Note published successfully')
       
       // Track the publish event
-      OpenPanel.track('note_published', {
+      trackNoteAction('publish', {
         noteId: note.id,
         title: note.title,
         slug: data.slug
@@ -348,7 +350,7 @@ export default function CreateNotePage() {
     setTimeout(() => setCopiedId(null), 2000)
     
     // Track the copy event
-    OpenPanel.track('note_link_copied', {
+    trackNoteAction('copy_link', {
       noteId: note.id,
       title: note.title,
       slug: note.slug
@@ -380,9 +382,10 @@ export default function CreateNotePage() {
       
       // Track the delete event if not silent
       if (!silent) {
-        OpenPanel.track('note_deleted', {
+        trackNoteAction('delete', {
           noteId: note.id,
-          title: note.title
+          title: note.title,
+          slug: note.slug || ''
         })
       }
     } catch (error) {
