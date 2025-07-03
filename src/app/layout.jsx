@@ -5,7 +5,8 @@ import { Toaster as SonnerToaster } from 'sonner'
 import { MDXWrapper } from '../components/MDXWrapper'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { DotBackground, MixpanelTrackerComponent, OpenPanelComponent } from '../components/ClientComponents'
+import { DotBackground, MixpanelTrackerComponent } from '../components/ClientComponents'
+import OpenPanelWrapper from '../components/OpenPanelWrapper'
 import './globals.css'
 import '@radix-ui/themes/styles.css'
 import mixpanel from '@/lib/mixpanel'
@@ -52,7 +53,7 @@ export default function RootLayout({ children }) {
               <Analytics />
               <SpeedInsights />
               <MixpanelTrackerComponent />
-              <OpenPanelComponent />
+              <OpenPanelWrapper />
             </MDXWrapper>
           </ThemeProvider>
         </body>
