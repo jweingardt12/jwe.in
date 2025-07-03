@@ -34,17 +34,33 @@ export default function AnalyticsCheck() {
       'window.op': window.op,
       'window.__OPENPANEL_HOOK__': window.__OPENPANEL_HOOK__
     });
+  }, []); // Run only once on mount
 
-    // Try to send a test event
-    if (op) {
+  // Send test event in a separate effect
+  useEffect(() => {
+    if (op && !status.testSent) {
       console.log('[Analytics Check] Sending test event...');
       op.track('analytics_check_page_view', {
         timestamp: new Date().toISOString(),
         env: process.env.NODE_ENV
       });
       setStatus(prev => ({ ...prev, testSent: true }));
+      
+      // Check for OpenPanel script
+      setTimeout(() => {
+        const scripts = Array.from(document.getElementsByTagName('script'));
+        const opScript = scripts.find(s => s.src && s.src.includes('openpanel'));
+        console.log('[Analytics Check] OpenPanel script found:', opScript?.src || 'NOT FOUND');
+        
+        // Check network activity
+        if (window.performance && window.performance.getEntriesByType) {
+          const resources = window.performance.getEntriesByType('resource');
+          const openpanelRequests = resources.filter(r => r.name.includes('openpanel'));
+          console.log('[Analytics Check] OpenPanel network requests:', openpanelRequests);
+        }
+      }, 2000);
     }
-  }, [op]);
+  }, [op, status.testSent]);
 
   const sendManualEvent = () => {
     if (op) {
