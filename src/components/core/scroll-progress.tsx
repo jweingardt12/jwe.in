@@ -4,7 +4,7 @@ import * as React from 'react'
 import { motion, useScroll, useSpring, useMotionValueEvent } from 'framer-motion'
 
 interface ScrollProgressProps {
-  containerRef: React.RefObject<HTMLElement>
+  containerRef?: React.RefObject<HTMLElement>
   className?: string
 }
 
@@ -13,54 +13,39 @@ export function ScrollProgress({
   className = 'h-1',
 }: ScrollProgressProps) {
   const [isVisible, setIsVisible] = React.useState(false)
-  const scrollTimeout = React.useRef<NodeJS.Timeout | undefined>(undefined)
 
-  const { scrollYProgress } = useScroll({
-    container: containerRef,
-  })
+  // Track scroll progress of the window
+  const { scrollYProgress } = useScroll()
 
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 280,
-    damping: 18,
-    mass: 0.3,
+    stiffness: 400,
+    damping: 30,
+    restDelta: 0.001
   })
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Only show the progress bar if we've scrolled down a meaningful amount
-    // Increased threshold to avoid showing the bar when user hasn't actually scrolled
-    const shouldBeVisible = latest > 0.01
-    
-    setIsVisible(shouldBeVisible)
-    
-    // If we're showing the progress bar, set a timeout to hide it after scrolling stops
-    if (shouldBeVisible) {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current)
-      }
-      scrollTimeout.current = setTimeout(() => {
-        // Keep it visible if we're still scrolled down, just not actively scrolling
-        // Don't hide it completely when inactive
-      }, 1000)
-    }
+    // Show the progress bar as soon as there's any scroll
+    setIsVisible(latest > 0)
   })
-
-  React.useEffect(() => {
-    return () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current)
-      }
-    }
-  }, [])
 
   return (
     <motion.div
       className={className}
-      style={{ scaleX, transformOrigin: 'left' }}
+      style={{ 
+        scaleX, 
+        transformOrigin: 'left',
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+      }}
+      initial={{ opacity: 0 }}
       animate={{
         opacity: isVisible ? 1 : 0
       }}
       transition={{
-        opacity: { duration: 0.3 }
+        opacity: { duration: 0.2 }
       }}
     />
   )

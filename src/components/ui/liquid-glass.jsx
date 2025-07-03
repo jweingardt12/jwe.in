@@ -12,6 +12,7 @@ export function LiquidGlass({
   aberrationIntensity = 2,
   elasticity = 0.15,
   cornerRadius = 999,
+  disableScrollEffect = false,
   ...props 
 }) {
   const containerRef = useRef(null)
@@ -46,6 +47,8 @@ export function LiquidGlass({
 
   // Handle scroll-based displacement
   useEffect(() => {
+    if (disableScrollEffect) return;
+    
     const handleScroll = () => {
       const scrollX = window.scrollX
       const scrollY = window.scrollY
@@ -57,7 +60,7 @@ export function LiquidGlass({
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [disableScrollEffect])
 
   useEffect(() => {
     const container = containerRef.current
@@ -101,8 +104,8 @@ export function LiquidGlass({
     '--opacity': isHovered ? 1 : 0.8,
     '--displacement-x': `${(mousePositionRef.current.x - 0.5) * (displacementScale * 0.3)}px`,
     '--displacement-y': `${(mousePositionRef.current.y - 0.5) * (displacementScale * 0.3)}px`,
-    '--scroll-displacement-x': `${scrollOffset.x * 8}px`,
-    '--scroll-displacement-y': `${scrollOffset.y * 8}px`,
+    '--scroll-displacement-x': disableScrollEffect ? '0px' : `${scrollOffset.x * 8}px`,
+    '--scroll-displacement-y': disableScrollEffect ? '0px' : `${scrollOffset.y * 8}px`,
     '--aberration-offset': `${aberrationIntensity}px`,
   }
 

@@ -141,6 +141,7 @@ function FloatingNavigation(props) {
         elasticity={0}
         cornerRadius={12}
         className="shadow-lg shadow-zinc-800/10"
+        disableScrollEffect={true}
       >
         <ul className="flex items-center px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
           <li className="flex items-center pr-3 border-r border-zinc-200 dark:border-zinc-700 mr-2">
@@ -264,9 +265,6 @@ export function Header() {
 
   let isHomePage = usePathname() === '/'
   let headerRef = useRef(null)
-  let isInitial = useRef(true)
-  let lastScrollY = useRef(0)
-  let scrollAnimationFrame = useRef(null)
   const [fadeIn, setFadeIn] = useState(false)
 
   useEffect(() => {
@@ -282,80 +280,6 @@ export function Header() {
     }
   }, [isHomePage])
 
-  useEffect(() => {
-    let downDelay = 64
-  
-    function setProperty(property, value) {
-      document.documentElement.style.setProperty(property, value)
-    }
-
-    function removeProperty(property) {
-      document.documentElement.style.removeProperty(property)
-    }
-
-    function updateHeaderStyles() {
-      if (!isHomePage || !headerRef.current) {
-        return
-      }
-
-      let { top } = headerRef.current.getBoundingClientRect()
-      let scrollY = clamp(
-        window.scrollY,
-        0,
-        Math.max(0, document.body.scrollHeight - window.innerHeight)
-      )
-
-      // Only update if scroll position changed significantly
-      if (Math.abs(scrollY - lastScrollY.current) < 2) {
-        return;
-      }
-      
-      lastScrollY.current = scrollY;
-
-      if (scrollY <= 0) {
-        setProperty('--header-height', `${Math.max(downDelay, 64)}px`)
-        setProperty('--header-mb', `${-Math.max(downDelay, 64) + 64}px`)
-      } else if (scrollY < downDelay) {
-        let factor = 1 - scrollY / downDelay
-        setProperty('--header-height', `${Math.max(0, Math.round(downDelay * factor + 64))}px`)
-        setProperty('--header-mb', `${Math.max(0, Math.round(-downDelay * factor - 64) + 64)}px`)
-      } else {
-        setProperty('--header-height', '64px')
-        setProperty('--header-mb', '0px')
-      }
-
-      if (top === 0 && scrollY > 0 && scrollY >= downDelay) {
-        setProperty('--header-inner-position', 'fixed')
-        removeProperty('--header-top')
-      } else {
-        removeProperty('--header-inner-position')
-        setProperty('--header-top', '0px')
-      }
-    }
-
-    function updateStyles() {
-      if (scrollAnimationFrame.current) {
-        cancelAnimationFrame(scrollAnimationFrame.current);
-      }
-      
-      scrollAnimationFrame.current = requestAnimationFrame(() => {
-        updateHeaderStyles();
-        isInitial.current = false;
-      });
-    }
-
-    updateStyles()
-    window.addEventListener('scroll', updateStyles, { passive: true })
-    window.addEventListener('resize', updateStyles)
-
-    return () => {
-      if (scrollAnimationFrame.current) {
-        cancelAnimationFrame(scrollAnimationFrame.current);
-      }
-      window.removeEventListener('scroll', updateStyles)
-      window.removeEventListener('resize', updateStyles)
-    }
-  }, [isHomePage])
 
   return (
     <>
@@ -366,11 +290,9 @@ export function Header() {
           isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
         )}
         style={{
-          height: 'var(--header-height)',
-          marginBottom: 'var(--header-mb)',
-          transition: isHomePage 
-            ? 'height 0.3s ease, margin-bottom 0.3s ease, opacity 1s ease-in-out' 
-            : 'height 0.3s ease, margin-bottom 0.3s ease',
+          height: '64px',
+          marginBottom: '0px',
+          transition: isHomePage ? 'opacity 1s ease-in-out' : undefined,
         }}
       >
         {isHomePage && (
@@ -382,16 +304,11 @@ export function Header() {
           ref={headerRef}
           className="top-0 z-10 h-16 pt-6"
           style={{ 
-            position: 'var(--header-position)',
-            transition: 'none',
+            position: 'relative',
           }}
         >
           <Container
-            className="top-[var(--header-top,theme(spacing.6))] w-full"
-            style={{ 
-              position: 'var(--header-inner-position)',
-              transition: 'position 0.3s ease',
-            }}
+            className="w-full"
           >
             <div className="relative flex gap-4">
               <div className="flex flex-1">
@@ -412,6 +329,7 @@ export function Header() {
                       elasticity={0}
                       cornerRadius={12}
                       className="shadow-lg shadow-zinc-800/10"
+                      disableScrollEffect={true}
                     >
                       <div className="inline-flex items-center px-3 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                         <Avatar className="mr-1.5" />
@@ -483,12 +401,13 @@ export function Header() {
           </Container>
         </div>
       </header>
-      {isHomePage && (
-        <div className="flex-none" style={{ height: 'var(--content-offset)' }} />
-      )}
       
-      {/* Mobile Top Sticky Bar */}
-      <div className="md:hidden fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[95vw] max-w-lg">
+      {/* Mobile Top Bar */}
+      <div className={clsx(
+        "md:hidden relative mx-auto mt-1 w-[95vw] max-w-lg",
+        isHomePage && "transition-all duration-1000 ease-in-out",
+        isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
+      )}>
         <LiquidGlass
           displacementScale={0}
           blurAmount={0.35}
@@ -497,11 +416,12 @@ export function Header() {
           elasticity={0}
           cornerRadius={16}
           className="shadow-lg border border-zinc-200 dark:border-zinc-700"
+          disableScrollEffect={true}
         >
-          <div className="px-4 h-12 flex items-center justify-between gap-x-4">
-            <Avatar large={false} className="flex-shrink-0" />
+          <div className="px-3 h-10 flex items-center justify-between gap-x-3 bg-zinc-50/90 dark:bg-zinc-900/90">
+            <Avatar large={false} className="flex-shrink-0 scale-90" />
             <Button
-              className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-3 py-1.5 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium text-sm"
+              className="bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm px-2.5 py-1 h-auto dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 relative overflow-hidden group rounded-md font-medium text-xs"
               onMouseEnter={() => {}}
               onMouseMove={() => {}}
               onClick={(e) => {
@@ -525,7 +445,11 @@ export function Header() {
       </div>
       
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto">
+      <div className={clsx(
+        "md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto",
+        isHomePage && "transition-all duration-1000 ease-in-out",
+        isHomePage && (fadeIn ? "opacity-100" : "opacity-0")
+      )}>
         <LiquidGlass
           displacementScale={0}
           blurAmount={0.15}
@@ -534,6 +458,7 @@ export function Header() {
           elasticity={0}
           cornerRadius={0}
           className="shadow-lg shadow-zinc-800/20"
+          disableScrollEffect={true}
         >
           <div className="px-3 py-2 bg-white/80 dark:bg-zinc-900/90 backdrop-blur-md">
             <nav className="flex items-center justify-around">

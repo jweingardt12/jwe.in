@@ -5,12 +5,10 @@ import { Container } from '@/components/Container'
 import { Prose } from '@/components/Prose'
 import { formatDate } from '@/lib/formatDate'
 import Image from 'next/image'
-import { useRef } from 'react'
 import { ScrollProgress } from '@/components/core/scroll-progress'
 
 export function ArticleLayout({ article, children }) {
   const router = useRouter()
-  const containerRef = useRef(null)
 
   if (!article) {
     return null
@@ -18,15 +16,12 @@ export function ArticleLayout({ article, children }) {
 
   return (
     <div className="relative min-h-screen">
-      <div className="sticky top-0 z-50 w-full">
-        <div className="h-1 w-full">
-          <ScrollProgress
-            containerRef={containerRef}
-            className="h-1 bg-[#0090FF]"
-          />
-        </div>
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-zinc-200 dark:bg-zinc-800">
+        <ScrollProgress
+          className="h-full bg-sky-500 dark:bg-sky-400"
+        />
       </div>
-      <Container className="mt-16 lg:mt-32" ref={containerRef}>
+      <Container className="mt-16 lg:mt-32">
         <div className="xl:relative">
           <div className="mx-auto max-w-2xl">
           <button

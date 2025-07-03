@@ -221,8 +221,15 @@ p a:hover {
 
 /* Add this at the top of the file */
 html {
-  overflow-y: overlay;
+  overflow-y: auto;
   scrollbar-gutter: stable;
+  overscroll-behavior: none;
+}
+
+/* Prevent elastic scrolling on the body */
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Customize scrollbar appearance */
