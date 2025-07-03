@@ -53,7 +53,13 @@ export default function OpenPanelWrapper() {
         !el.href.startsWith('#');
       const isInternalLink = isLink && !isExternalLink;
 
-      // Collect details
+      // Skip tracking clicks on internal navigation links
+      // These will be tracked as screen_view events automatically
+      if (isInternalLink) {
+        return;
+      }
+
+      // Collect details for non-navigation clicks
       const details = {
         tag: el.tagName,
         id: el.id || undefined,
@@ -68,21 +74,13 @@ export default function OpenPanelWrapper() {
           .reduce((acc, attr) => { acc[attr.name] = attr.value; return acc; }, {}),
         path: window.location.pathname,
         isExternal: isExternalLink || undefined,
-        isInternal: isInternalLink || undefined,
       };
       
-      // Track general click event
+      // Track general click event (excluding internal navigation)
       op.track('click', details);
       
-      // Track specific navigation events
-      if (isInternalLink) {
-        // Internal navigation - will trigger screen_view automatically via trackScreenViews
-        op.track('internal_link_click', {
-          from: window.location.pathname,
-          to: new URL(el.href, window.location.origin).pathname,
-          text: el.innerText?.slice(0, 120) || undefined,
-        });
-      } else if (isExternalLink) {
+      // Track external link clicks specifically
+      if (isExternalLink) {
         op.track('external_link_click', {
           url: el.href,
           text: el.innerText?.slice(0, 120) || undefined,
